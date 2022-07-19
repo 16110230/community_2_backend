@@ -1,5 +1,6 @@
 package com.lawencon.community.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -11,7 +12,10 @@ public class File extends BaseEntity{
 
 	private static final long serialVersionUID = -5196455701225322056L;
 	
+	@Column(name="file_name")
 	private String fileName;
+	
+	@Column(name="file_ext")
 	private String fileExt;
 	
 	public String getFileName() {

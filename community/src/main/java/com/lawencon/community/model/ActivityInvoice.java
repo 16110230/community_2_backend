@@ -1,5 +1,6 @@
 package com.lawencon.community.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,6 +26,8 @@ public class ActivityInvoice extends BaseEntity{
 	@OneToOne
 	@JoinColumn
 	private File file;
+	
+	@Column(name="is_approved")
 	private Boolean isApproved;
 	
 	public Users getUser() {

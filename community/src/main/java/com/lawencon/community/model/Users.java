@@ -1,5 +1,6 @@
 package com.lawencon.community.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -23,10 +24,15 @@ public class Users extends BaseEntity {
 	
 	private static final long serialVersionUID = -5196455701225322056L;
 	
+	@Column(name="full_name")
 	private String fullName;
 	private String username;
+	
+	@Column(name="user_password")
 	private String userPassword;
 	private String email;
+	
+	@Column(name="verification_code")
 	private String verificationCode;
 	
 	@OneToOne
