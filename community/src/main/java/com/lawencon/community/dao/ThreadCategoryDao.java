@@ -1,5 +1,8 @@
 package com.lawencon.community.dao;
 
-public class ThreadCategoryDao {
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.community.model.ThreadCategory;
+
+public class ThreadCategoryDao extends AbstractJpaDao<ThreadCategory>{
 
 }
