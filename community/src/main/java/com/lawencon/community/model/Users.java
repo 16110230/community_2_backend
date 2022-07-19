@@ -48,7 +48,14 @@ public class Users extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name="file_id")
 	private File file;
+	private Integer balance;
 	
+	public Integer getBalance() {
+		return balance;
+	}
+	public void setBalance(Integer balance) {
+		this.balance = balance;
+	}
 	public String getFullName() {
 		return fullName;
 	}
