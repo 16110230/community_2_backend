@@ -1,9 +1,5 @@
 package com.lawencon.community.dao;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
@@ -45,30 +41,22 @@ public class UsersDao extends AbstractJpaDao<Users> {
 		return response;
 	}
 	
-	public List<Users> findAllByToday() {
+	public Long countAllByToday() {
 		StringBuilder sqlBuilder = new StringBuilder()
-				.append("SELECT fullName ")
+				.append("SELECT COUNT(id) users_count ")
 				.append("FROM users ")
-				.append("WHERE created_at = :date");
+				.append("WHERE DATE(created_at) = DATE(NOW())");
 		
-		List<Users> users = new ArrayList<Users>();
+		Long response = 0l;
 		
-		try {			
-			List<?> result = createNativeQuery(sqlBuilder.toString())
-					.setParameter("date", LocalDateTime.now())
-					.getResultList();
-			
-			result.forEach(obj -> {
-				Object[] objArr = (Object[]) obj;
-				Users user = new Users();
-				
-				user.setFullName(objArr[0].toString());
-				users.add(user);
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
+		Object result = createNativeQuery(sqlBuilder.toString())
+				.getSingleResult();
+		
+		if(result != null) {
+			response = Long.valueOf(result.toString());
 		}
 		
-		return users;
+		
+		return response;
 	}
 }

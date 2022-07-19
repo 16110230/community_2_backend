@@ -1,5 +1,6 @@
 package com.lawencon.community.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -17,7 +18,10 @@ public class Position extends BaseEntity{
 	
 	private static final long serialVersionUID = -5196455701225322056L;
 	
+	@Column(name="position_name")
 	private String positionName;
+	
+	@Column(name="position_code")
 	private String positionCode;
 	
 	public String getPositionName() {
