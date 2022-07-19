@@ -1,5 +1,6 @@
 package com.lawencon.community.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -17,7 +18,10 @@ public class Company extends BaseEntity{
 	
 	private static final long serialVersionUID = -5196455701225322056L;
 	
+	@Column(name="company_name")
 	private String companyName;
+	
+	@Column(name="company_code")
 	private String companyCode;
 	private String address;
 	private String email;

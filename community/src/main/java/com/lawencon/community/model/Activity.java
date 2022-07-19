@@ -2,6 +2,7 @@ package com.lawencon.community.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -15,15 +16,24 @@ public class Activity extends BaseEntity{
 	
 	private static final long serialVersionUID = -5196455701225322056L;
 	
+	@Column(name="activity_title")
 	private String activityTitle;
+	
+	@Column(name="activity_content")
 	private String activityContent;
 	
 	@OneToOne
 	@JoinColumn(name = "activity_category_id")
 	private ActivityCategory activityCategory;
+	
+	@Column(name="started_at")
 	private LocalDateTime startedAt;
+	
+	@Column(name="ended_at")
 	private LocalDateTime endedAt;
 	private Integer fee;
+	
+	@Column(name="is_limit")
 	private Boolean isLimit;
 	private String provider;
 	private String trainer;

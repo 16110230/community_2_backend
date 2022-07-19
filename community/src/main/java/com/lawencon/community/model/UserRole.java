@@ -1,5 +1,6 @@
 package com.lawencon.community.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -20,7 +21,10 @@ public class UserRole extends BaseEntity{
 	
 	private static final long serialVersionUID = -5196455701225322056L;
 	
+	@Column(name="role_name")
 	private String roleName;
+	
+	@Column(name="role_code")
 	private String roleCode;
 	
 	public String getRoleName() {
