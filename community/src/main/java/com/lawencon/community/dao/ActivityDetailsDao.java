@@ -7,5 +7,5 @@ import com.lawencon.community.model.ActivityDetails;
 
 @Repository
 public class ActivityDetailsDao extends AbstractJpaDao<ActivityDetails>{
-
+	//find by activity id
 }
