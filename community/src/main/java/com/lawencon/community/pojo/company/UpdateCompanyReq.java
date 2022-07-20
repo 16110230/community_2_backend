@@ -1,11 +1,25 @@
 package com.lawencon.community.pojo.company;
 
 public class UpdateCompanyReq {
+	private String id;
 	private String companyName;
 	private String companyCode;
+	private String address;
 	private Integer version;
 	private Boolean isActive;
 	
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getId() {
+		return id;
+	}
 	public String getCompanyName() {
 		return companyName;
 	}

@@ -5,7 +5,7 @@ public class InsertCompanyReq {
 	private String companyCode;
 	private String email;
 	private String address;
-	private String isActive;
+	private Boolean isActive;
 	
 	public String getCompanyName() {
 		return companyName;
@@ -31,10 +31,10 @@ public class InsertCompanyReq {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getIsActive() {
+	public Boolean getIsActive() {
 		return isActive;
 	}
-	public void setIsActive(String isActive) {
+	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
 }
