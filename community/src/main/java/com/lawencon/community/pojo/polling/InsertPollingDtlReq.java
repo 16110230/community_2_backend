@@ -1,14 +1,14 @@
 package com.lawencon.community.pojo.polling;
 
 public class InsertPollingDtlReq {
-	private String polling;
 	private String pollingDetailsName;
+	private Boolean isActive;
 	
-	public void setPolling(String polling) {
-		this.polling = polling;
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
-	public String getPolling() {
-		return polling;
+	public Boolean getIsActive() {
+		return isActive;
 	}
 	public void setPollingDetailsName(String pollingDetailsName) {
 		this.pollingDetailsName = pollingDetailsName;
