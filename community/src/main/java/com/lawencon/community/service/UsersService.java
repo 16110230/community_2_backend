@@ -23,8 +23,8 @@ import com.lawencon.community.pojo.PojoUpdateResData;
 import com.lawencon.community.pojo.users.InsertUserReq;
 import com.lawencon.community.pojo.users.PojoUsers;
 import com.lawencon.community.pojo.users.ShowUserById;
-import com.lawencon.community.pojo.users.ShowUsers;
 import com.lawencon.community.pojo.users.UpdateUserReq;
+import com.lawencon.model.SearchQuery;
 
 public class UsersService extends BaseCoreService {
 	
@@ -40,11 +40,11 @@ public class UsersService extends BaseCoreService {
 	@Autowired
 	private IndustryDao industryDao;
 	
-	public ShowUsers showAll() {
-		List<Users> users = userDao.getAll();
+	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
 		List<PojoUsers> result = new ArrayList<PojoUsers>();
 		
-		users.forEach(val -> {
+		users.getData().forEach(val -> {
 			PojoUsers user = new PojoUsers();
 			Company company = companyDao.getById(val.getCompany().getId());
 			Industry industry = industryDao.getById(val.getIndustry().getId());
@@ -58,7 +58,7 @@ public class UsersService extends BaseCoreService {
 			user.setVersion(val.getVersion());
 			user.setCompany(company.getId());
 			user.setCompanyName(company.getCompanyName());
-			user.setIndustryName(industry.getId());
+			user.setIndustry(industry.getId());
 			user.setIndustryName(industry.getIndustryName());
 			user.setPosition(position.getId());
 			user.setPositionName(position.getPositionName());
@@ -66,8 +66,9 @@ public class UsersService extends BaseCoreService {
 			result.add(user);
 		});
 		
-		ShowUsers response = new ShowUsers();
+		SearchQuery<PojoUsers> response = new SearchQuery<PojoUsers>();
 		response.setData(result);
+		response.setCount(users.getCount());
 		
 		return response;
 	}
@@ -88,7 +89,7 @@ public class UsersService extends BaseCoreService {
 		user.setVersion(users.getVersion());
 		user.setCompany(company.getId());
 		user.setCompanyName(company.getCompanyName());
-		user.setIndustryName(industry.getId());
+		user.setIndustry(industry.getId());
 		user.setIndustryName(industry.getIndustryName());
 		user.setPosition(position.getId());
 		user.setPositionName(position.getPositionName());
