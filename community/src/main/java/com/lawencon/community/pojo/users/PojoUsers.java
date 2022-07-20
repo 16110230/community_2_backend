@@ -8,6 +8,7 @@ public class PojoUsers {
 	private Integer balance;
 	private String company;
 	private String companyName;
+	private String industry;
 	private String industryName;
 	private String position;
 	private String positionName;
@@ -62,6 +63,12 @@ public class PojoUsers {
 	}
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+	public void setIndustry(String industry) {
+		this.industry = industry;
+	}
+	public String getIndustry() {
+		return industry;
 	}
 	public String getIndustryName() {
 		return industryName;
