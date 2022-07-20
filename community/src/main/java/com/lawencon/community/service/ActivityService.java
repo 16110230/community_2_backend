@@ -11,10 +11,10 @@ import com.lawencon.community.dao.ActivityCategoryDao;
 import com.lawencon.community.dao.ActivityDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityCategory;
+import com.lawencon.community.pojo.PojoDeleteRes;
+import com.lawencon.community.pojo.PojoDeleteResData;
 import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivityById;
-import com.lawencon.community.pojo.activityCategory.PojoActivityCategory;
-import com.lawencon.community.pojo.activityCategory.ShowActivityCategoryById;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -60,19 +60,53 @@ public class ActivityService extends BaseCoreService{
 		return response;
 	}
 	
-//	public ShowActivityById showById(String id) {
-//		ActivityCategory actCats = activityCategoryDao.getById(id);
-//		PojoActivityCategory actCat = new PojoActivityCategory();
-//
-//		actCat.setId(actCats.getId());
-//		actCat.setCategoryCode(actCats.getCategoryCode());
-//		actCat.setCategoryName(actCats.getCategoryName());
-//		actCat.setIsActive(actCats.getIsActive());
-//		actCat.setVersion(actCats.getVersion());
-//
-//		ShowActivityCategoryById response = new ShowActivityCategoryById();
-//		response.setData(actCat);
-//
-//		return response;
-//	}
+	public ShowActivityById showById(String id) {
+		Activity acts = activityDao.getById(id);
+		PojoActivity act = new PojoActivity();
+		ActivityCategory actCat = activityCategoryDao.getById(acts.getActivityCategory().getId());
+		
+		act.setId(acts.getId());
+		act.setActivityTitle(acts.getActivityTitle());
+		act.setActivityContent(acts.getActivityContent());
+		act.setActivityCategory(actCat.getId());
+		act.setActivityCategoryName(actCat.getCategoryName());
+		act.setStartedAt(acts.getStartedAt());
+		act.setEndedAt(acts.getEndedAt());
+		act.setFee(acts.getFee());
+		act.setQuantity(acts.getQuantity());
+		act.setIsLimit(acts.getIsLimit());
+		act.setProvider(acts.getProvider());
+		act.setTrainer(acts.getTrainer());
+		act.setIsActive(acts.getIsActive());
+		act.setVersion(acts.getVersion());
+
+		ShowActivityById response = new ShowActivityById();
+		response.setData(act);
+
+		return response;
+	}
+	
+	
+	
+	public PojoDeleteRes delete(String id) throws Exception {
+		PojoDeleteResData resData = new PojoDeleteResData();
+		PojoDeleteRes response = new PojoDeleteRes();
+		
+		try {
+			begin();
+			boolean result = activityCategoryDao.deleteById(id);
+			commit();
+			
+			if(result) {				
+				resData.setMessage("Successfully delete the data!");
+				response.setData(response);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
+		
+		return response;
+	}
 }
