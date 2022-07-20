@@ -35,7 +35,7 @@ public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
 	
 	public Long countBookmarkByThreadId(Long id) {
 		StringBuilder sqlBuilder = new StringBuilder()
-				.append("SELECT COUNT(ta.thread_id) like_count ")
+				.append("SELECT COUNT(ta.thread_id) book_count ")
 				.append("FROM thread_activity ta")
 				.append("JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id")
 				.append("WHERE ta.thread.id = :threadId")
