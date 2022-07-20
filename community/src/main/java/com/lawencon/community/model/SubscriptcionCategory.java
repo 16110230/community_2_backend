@@ -11,7 +11,7 @@ public class SubscriptcionCategory extends BaseEntity {
 	
 	private static final long serialVersionUID = -5196455701225322056L;
 	private String description;
-	private Integer price;
+	private Long price;
 	
 	public String getDescription() {
 		return description;
@@ -19,10 +19,10 @@ public class SubscriptcionCategory extends BaseEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Integer getPrice() {
+	public Long getPrice() {
 		return price;
 	}
-	public void setPrice(Integer price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
 	public static long getSerialversionuid() {
