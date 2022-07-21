@@ -19,7 +19,7 @@ import com.lawencon.community.pojo.polling.PojoPolling;
 import com.lawencon.community.pojo.polling.ShowPollingById;
 import com.lawencon.model.SearchQuery;
 
-public class PollingService extends BaseCoreService {
+public class PollingService extends BaseCoreService<Polling> {
 	@Autowired
 	private PollingDao pollingDao;
 	
@@ -82,7 +82,6 @@ public class PollingService extends BaseCoreService {
 		try {
 			begin();
 			Polling result = pollingDao.save(insert);
-			commit();
 			
 			data.getDetails().forEach(val -> {
 				PollingDetails detail = new PollingDetails();
@@ -90,10 +89,8 @@ public class PollingService extends BaseCoreService {
 				detail.setPollingDetailsName(val.getPollingDetailsName());
 				detail.setIsActive(val.getIsActive());
 				
-				try {
-					begin();				
+				try {			
 					detailsDao.save(detail);
-					commit();
 					
 					resData.setId(result.getId());
 					resData.setMessage("Successfully add new data!");
@@ -101,14 +98,16 @@ public class PollingService extends BaseCoreService {
 				} catch (Exception e) {
 					e.printStackTrace();
 					rollback();
+					throw new RuntimeException(e);
 				}
 			});
+			
+			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
-		
 		
 		return response;
 	}

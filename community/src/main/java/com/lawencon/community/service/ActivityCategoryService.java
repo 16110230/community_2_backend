@@ -22,7 +22,7 @@ import com.lawencon.community.pojo.activityCategory.UpdateActivityCategoryReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ActivityCategoryService extends BaseCoreService {
+public class ActivityCategoryService extends BaseCoreService<ActivityCategory> {
 
 	@Autowired
 	private ActivityCategoryDao activityCategoryDao;
