@@ -58,4 +58,3 @@ public class BaseCoreService<T extends BaseEntity> {
 		}
 	}
 }
-
