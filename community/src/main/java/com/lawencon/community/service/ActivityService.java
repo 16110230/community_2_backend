@@ -18,7 +18,7 @@ import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ActivityService extends BaseCoreService{
+public class ActivityService extends BaseCoreService<Activity>{
 	
 	@Autowired
 	private ActivityDao activityDao;

@@ -22,7 +22,7 @@ import com.lawencon.community.pojo.company.UpdateCompanyReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class CompanyService extends BaseCoreService {
+public class CompanyService extends BaseCoreService<Company> {
 	@Autowired
 	private CompanyDao companyDao;
 	

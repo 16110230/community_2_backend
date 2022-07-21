@@ -28,7 +28,7 @@ import com.lawencon.community.pojo.users.UpdateUserReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class UsersService extends BaseCoreService {
+public class UsersService extends BaseCoreService<Users> {
 	
 	@Autowired
 	private UsersDao userDao;
@@ -121,7 +121,7 @@ public class UsersService extends BaseCoreService {
 		try {
 			begin();
 			
-			Users result = userDao.save(insert);
+			Users result = save(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
