@@ -81,8 +81,9 @@ public class PollingService extends BaseCoreService<Polling> {
 		
 		try {
 			begin();
-			Polling result = pollingDao.save(insert);
-			
+			Polling result = save(insert);
+			commit();
+      
 			data.getDetails().forEach(val -> {
 				PollingDetails detail = new PollingDetails();
 				detail.setPolling(result);
