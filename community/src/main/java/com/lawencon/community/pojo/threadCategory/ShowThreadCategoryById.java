@@ -1,6 +1,6 @@
 package com.lawencon.community.pojo.threadCategory;
 
-public class ShowThreadActivityCategoryById {
+public class ShowThreadCategoryById {
 	
 	private PojoThreadCategory data;
 	

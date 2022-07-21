@@ -5,6 +5,9 @@ public class InsertThreadReq {
 	private String threadContent;
 	private String file;
 	private String threadCategory;
+	private String fileName;
+	private String fileExt;
+	private Boolean isActive;
 
 	public String getThreadTitle() {
 		return threadTitle;
@@ -38,4 +41,29 @@ public class InsertThreadReq {
 		this.threadCategory = threadCategory;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileExt() {
+		return fileExt;
+	}
+
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	
 }

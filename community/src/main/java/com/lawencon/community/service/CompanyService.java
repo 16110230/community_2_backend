@@ -22,7 +22,7 @@ import com.lawencon.community.pojo.company.UpdateCompanyReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class CompanyService extends BaseCoreService {
+public class CompanyService extends BaseCoreService<Company> {
 	@Autowired
 	private CompanyDao companyDao;
 	
@@ -79,7 +79,7 @@ public class CompanyService extends BaseCoreService {
 		
 		try {
 			begin();
-			Company result = companyDao.save(insert);
+			Company result = save(insert);
 			commit();
 			
 			resData.setId(result.getId());
@@ -108,7 +108,7 @@ public class CompanyService extends BaseCoreService {
 		
 		try {
 			begin();
-			Company result = companyDao.save(update);
+			Company result = save(update);
 			commit();
 			
 			resData.setVersion(result.getVersion());

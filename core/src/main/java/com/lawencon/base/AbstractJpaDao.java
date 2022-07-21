@@ -29,7 +29,14 @@ public class AbstractJpaDao<T extends BaseEntity> {
 	}
 
 	public T getById(final String id) {
-		return em().find(clazz, id);
+		T data = em().find(clazz, id);
+		em().detach(data);
+		return data;
+	}
+
+	public T getByIdWithoutDetach(final String id) {
+		T data = em().find(clazz, id);
+		return data;
 	}
 
 	public List<T> getAll() {
@@ -58,7 +65,7 @@ public class AbstractJpaDao<T extends BaseEntity> {
 
 		return data;
 	}
-	
+
 	public SearchQuery<T> findAll(String query, Integer startPage, Integer maxPage, String... fields) throws Exception {
 		SearchQuery<T> sq = new SearchQuery<>();
 		List<T> data = null;
@@ -99,7 +106,7 @@ public class AbstractJpaDao<T extends BaseEntity> {
 	public boolean deleteById(final Object entityId) throws Exception {
 		T entity = null;
 		if (entityId != null && entityId instanceof String) {
-			entity = getById((String) entityId);
+			entity = em().find(clazz, (String) entityId);
 		}
 
 		if (entity != null) {

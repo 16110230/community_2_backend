@@ -13,12 +13,18 @@ import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityCategory;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoDeleteResData;
+import com.lawencon.community.pojo.PojoInsertRes;
+import com.lawencon.community.pojo.PojoInsertResData;
+import com.lawencon.community.pojo.PojoUpdateRes;
+import com.lawencon.community.pojo.PojoUpdateResData;
+import com.lawencon.community.pojo.activity.InsertActivityReq;
 import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivityById;
+import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ActivityService extends BaseCoreService{
+public class ActivityService extends BaseCoreService<Activity>{
 	
 	@Autowired
 	private ActivityDao activityDao;
@@ -56,6 +62,82 @@ public class ActivityService extends BaseCoreService{
 
 		SearchQuery<PojoActivity> response = new SearchQuery<PojoActivity>();
 		response.setData(result);
+
+		return response;
+	}
+	
+	public PojoInsertRes insert(InsertActivityReq data)throws Exception{
+		Activity insert  = new Activity();
+		PojoInsertResData resData = new PojoInsertResData();
+		PojoInsertRes response = new PojoInsertRes();
+		
+		ActivityCategory  actCat = activityCategoryDao.getById(data.getActivityCategory());
+		
+		insert.setActivityTitle(data.getActivityTitle());
+		insert.setActivityContent(data.getActivityContent());
+		insert.setActivityCategory(actCat);
+		insert.setStartedAt(data.getStartedAt());
+		insert.setEndedAt(data.getEndedAt());
+		insert.setFee(data.getFee());
+		insert.setQuantity(data.getQuantity());
+		insert.setIsLimit(data.getIsLimit());
+		insert.setProvider(data.getProvider());
+		insert.setTrainer(data.getTrainer());
+		insert.setIsActive(true);
+		
+		try {
+			begin();
+
+			Activity result = save(insert);
+			resData.setId(result.getId());
+			resData.setMessage("Successfully insert new data!");
+			response.setData(resData);
+
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
+
+		return response;
+		
+	}
+	
+	public PojoUpdateRes update(UpdateActivityReq data)throws Exception{
+		Activity update = new Activity();
+		PojoUpdateResData resData = new PojoUpdateResData();
+		PojoUpdateRes response = new PojoUpdateRes();
+
+		ActivityCategory  actCat = activityCategoryDao.getById(data.getActivityCategory());
+		
+		update.setActivityTitle(data.getActivityTitle());
+		update.setActivityContent(data.getActivityContent());
+		update.setActivityCategory(actCat);
+		update.setStartedAt(data.getStartedAt());
+		update.setEndedAt(data.getEndedAt());
+		update.setFee(data.getFee());
+		update.setQuantity(data.getQuantity());
+		update.setIsLimit(data.getIsLimit());
+		update.setProvider(data.getProvider());
+		update.setTrainer(data.getTrainer());
+		update.setVersion(data.getVersion());
+		update.setIsActive(data.getIsActive());
+		
+		try {
+			begin();
+
+			Activity result = save(update);
+			resData.setVersion(result.getVersion());
+			resData.setMessage("Successfully update the data!");
+			response.setData(resData);
+
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
 
 		return response;
 	}
