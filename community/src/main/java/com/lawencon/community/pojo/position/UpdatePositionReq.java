@@ -1,11 +1,18 @@
 package com.lawencon.community.pojo.position;
 
 public class UpdatePositionReq {
+	private String id;
 	private String positionName;
 	private String positionCode;
 	private Boolean isActive;
 	private Integer version;
 	
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getId() {
+		return id;
+	}
 	public String getPositionName() {
 		return positionName;
 	}

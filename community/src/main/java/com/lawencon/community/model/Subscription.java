@@ -32,7 +32,7 @@ public class Subscription extends BaseEntity {
 	
 	@OneToOne
 	@JoinColumn(name="subs_category_id")
-	private SubscriptcionCategory subscriptionCategory;
+	private SubscriptionCategory subscriptionCategory;
 	
 	public Users getUser() {
 		return user;
@@ -58,10 +58,10 @@ public class Subscription extends BaseEntity {
 	public void setIsApproved(Boolean isApproved) {
 		this.isApproved = isApproved;
 	}
-	public SubscriptcionCategory getSubscriptionCategory() {
+	public SubscriptionCategory getSubscriptionCategory() {
 		return subscriptionCategory;
 	}
-	public void setSubscriptionCategory(SubscriptcionCategory subscriptionCategory) {
+	public void setSubscriptionCategory(SubscriptionCategory subscriptionCategory) {
 		this.subscriptionCategory = subscriptionCategory;
 	}
 	public static long getSerialversionuid() {

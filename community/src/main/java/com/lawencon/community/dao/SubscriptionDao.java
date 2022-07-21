@@ -6,6 +6,6 @@ import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.model.Subscription;
 
 @Repository
-public class SubcriptionDao extends AbstractJpaDao<Subscription>{
+public class SubscriptionDao extends AbstractJpaDao<Subscription>{
 
 }

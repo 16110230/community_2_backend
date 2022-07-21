@@ -4,7 +4,14 @@ public class InsertSubsCategoryReq {
 	private String description;
 	private Long price;
 	private Boolean isActive;
+	private Integer duration;
 	
+	public void setDuration(Integer duration) {
+		this.duration = duration;
+	}
+	public Integer getDuration() {
+		return duration;
+	}
 	public String getDescription() {
 		return description;
 	}

@@ -6,7 +6,14 @@ public class PojoSubscriptionCategory {
 	private Long price;
 	private Integer version;
 	private Boolean isActive;
+	private Integer duration;
 	
+	public void setDuration(Integer duration) {
+		this.duration = duration;
+	}
+	public Integer getDuration() {
+		return duration;
+	}
 	public Integer getVersion() {
 		return version;
 	}
