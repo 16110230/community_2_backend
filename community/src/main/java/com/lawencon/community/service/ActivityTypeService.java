@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.ActivityTypeDao;
@@ -20,6 +21,7 @@ import com.lawencon.community.pojo.activityType.ShowActivityTypeById;
 import com.lawencon.community.pojo.activityType.UpdateActivityTypeReq;
 import com.lawencon.model.SearchQuery;
 
+@Service
 public class ActivityTypeService extends BaseCoreService<ActivityType> {
 
 	@Autowired
