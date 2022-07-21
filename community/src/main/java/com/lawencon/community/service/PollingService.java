@@ -19,7 +19,7 @@ import com.lawencon.community.pojo.polling.PojoPolling;
 import com.lawencon.community.pojo.polling.ShowPollingById;
 import com.lawencon.model.SearchQuery;
 
-public class PollingService extends BaseCoreService {
+public class PollingService extends BaseCoreService<Polling> {
 	@Autowired
 	private PollingDao pollingDao;
 	
