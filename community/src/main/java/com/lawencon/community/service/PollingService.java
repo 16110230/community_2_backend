@@ -83,17 +83,15 @@ public class PollingService extends BaseCoreService<Polling> {
 			begin();
 			Polling result = save(insert);
 			commit();
-			
+      
 			data.getDetails().forEach(val -> {
 				PollingDetails detail = new PollingDetails();
 				detail.setPolling(result);
 				detail.setPollingDetailsName(val.getPollingDetailsName());
 				detail.setIsActive(val.getIsActive());
 				
-				try {
-					begin();				
+				try {			
 					detailsDao.save(detail);
-					commit();
 					
 					resData.setId(result.getId());
 					resData.setMessage("Successfully add new data!");
@@ -101,14 +99,16 @@ public class PollingService extends BaseCoreService<Polling> {
 				} catch (Exception e) {
 					e.printStackTrace();
 					rollback();
+					throw new RuntimeException(e);
 				}
 			});
+			
+			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
-		
 		
 		return response;
 	}
