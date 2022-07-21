@@ -75,7 +75,7 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 		
 		try {
 			begin();
-			UserRole result = roleDao.save(insert);
+			UserRole result = save(insert);
 			commit();
 			
 			resData.setId(result.getId());
@@ -103,7 +103,7 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 		
 		try {
 			begin();
-			UserRole result = new UserRole();
+			UserRole result = save(update);
 			commit();
 			
 			resData.setVersion(result.getVersion());
