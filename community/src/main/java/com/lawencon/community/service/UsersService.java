@@ -121,7 +121,7 @@ public class UsersService extends BaseCoreService<Users> {
 		try {
 			begin();
 			
-			Users result = save(insert);
+			Users result = saveNonLogin(insert, () -> userDao.findByRoleCode("ADMIN"));
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -156,7 +156,7 @@ public class UsersService extends BaseCoreService<Users> {
 		try {
 			begin();
 			
-			Users result = userDao.save(update);
+			Users result = save(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);

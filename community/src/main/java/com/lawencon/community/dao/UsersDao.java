@@ -59,4 +59,23 @@ public class UsersDao extends AbstractJpaDao<Users> {
 		
 		return response;
 	}
+	
+	public String findByRoleCode(String roleCode) {
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT u.id ")
+				.append("FROM users u ")
+				.append("INNER JOIN user_role r ON u.role_id = r.id ")
+				.append("WHERE r.role_code = :roleCode");
+		
+		Object result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("roleCode", roleCode)
+				.getSingleResult();
+		
+		String response = "";
+		if(result != null) {
+			response = result.toString();
+		}
+		
+		return response;
+	}
 }
