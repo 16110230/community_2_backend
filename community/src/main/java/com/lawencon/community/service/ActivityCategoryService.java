@@ -77,7 +77,7 @@ public class ActivityCategoryService extends BaseCoreService<ActivityCategory> {
 		try {
 			begin();
 
-			ActivityCategory result = activityCategoryDao.save(insert);
+			ActivityCategory result = save(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -99,12 +99,13 @@ public class ActivityCategoryService extends BaseCoreService<ActivityCategory> {
 
 		update.setCategoryCode(data.getCategoryCode());
 		update.setCategoryName(data.getCategoryName());
+		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
 
 		try {
 			begin();
 
-			ActivityCategory result = activityCategoryDao.save(update);
+			ActivityCategory result = save(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
