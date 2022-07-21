@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.PollingDao;
@@ -19,6 +20,7 @@ import com.lawencon.community.pojo.polling.PojoPolling;
 import com.lawencon.community.pojo.polling.ShowPollingById;
 import com.lawencon.model.SearchQuery;
 
+@Service
 public class PollingService extends BaseCoreService<Polling> {
 	@Autowired
 	private PollingDao pollingDao;

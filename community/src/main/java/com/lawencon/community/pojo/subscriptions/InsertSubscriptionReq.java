@@ -8,10 +8,24 @@ public class InsertSubscriptionReq {
 	private LocalDateTime expiredDate;
 	private Boolean isApproved;
 	private String subscriptionCategory;
-	private String isActive;
+	private Boolean isActive;
+	private String fileName;
+	private String fileExt;
 	
 	public String getUser() {
 		return user;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getFileExt() {
+		return fileExt;
+	}
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
 	}
 	public void setUser(String user) {
 		this.user = user;
@@ -40,10 +54,10 @@ public class InsertSubscriptionReq {
 	public void setSubscriptionCategory(String subscriptionCategory) {
 		this.subscriptionCategory = subscriptionCategory;
 	}
-	public String getIsActive() {
+	public Boolean getIsActive() {
 		return isActive;
 	}
-	public void setIsActive(String isActive) {
+	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
 }
