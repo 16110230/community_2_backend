@@ -1,10 +1,23 @@
 package com.lawencon.community.pojo.subscategory;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class UpdateSubsCategoryReq {
+	
+	@NotBlank(message = "Id Can't Be Null")
 	private String id;
+	
+	@NotBlank(message = "Description Can't Be Null")
 	private String description;
+	
+	@NotNull(message = "Price Can't Be Null")
 	private Long price;
+	
+	@NotNull(message = "Version Can't Be Null")
 	private Integer version;
+	
+	@NotNull(message = "Active Can't Be Null")
 	private Boolean isActive;
 	
 	public String getId() {

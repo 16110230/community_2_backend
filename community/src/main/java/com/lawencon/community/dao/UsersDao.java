@@ -9,30 +9,33 @@ import com.lawencon.community.model.Users;
 @Repository
 public class UsersDao extends AbstractJpaDao<Users> {
 	
-	public Users findByUsernameAndPassword(String username, String userPassword) {
-		Users response = new Users();
+	public Users findByUsernameAndPassword(String username) {
+		Users response = null;
 		
 		StringBuilder sqlBuilder = new StringBuilder()
-				.append("SELECT u.fullName, u.username, r.role_code ")
+				.append("SELECT u.full_name, u.username, r.role_code, u.user_password, u.id ")
 				.append("FROM users u ")
 				.append("INNER JOIN user_role r ON u.role_id = r.id ")
-				.append("WHERE username = :username AND u.user_password = :password");
+				.append("WHERE username = :username");
 		
 		try {			
 			Object result = createNativeQuery(sqlBuilder.toString())
 					.setParameter("username", username)
-					.setParameter("password", userPassword)
 					.getSingleResult();
 			
 			if(result != null) {
 				Object[] objArr = (Object[]) result;
 				
-				Users user = new Users();
+				response = new Users();
 				UserRole role = new UserRole();
-				user.setFullName(objArr[0].toString());
-				user.setUsername(objArr[1].toString());
+				role.setRoleCode(username);
+				response.setFullName(objArr[0].toString());
+				response.setUsername(objArr[1].toString());
+				role.setRoleCode(objArr[2].toString());
+				response.setUserPassword(objArr[3].toString());
+				response.setId(objArr[4].toString());
 				
-				user.setRole(role);
+				response.setRole(role);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

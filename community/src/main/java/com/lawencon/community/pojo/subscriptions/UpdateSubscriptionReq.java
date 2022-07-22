@@ -1,10 +1,22 @@
 package com.lawencon.community.pojo.subscriptions;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdateSubscriptionReq {
+	
+	@NotNull(message = "Id can't be null")
 	private String id;
+	
+	@NotNull(message = "Is approved can't be null")
 	private Boolean isApproved;
+	
+	@NotNull(message = "Subscription category can't be null")
 	private String subscriptionCategory;
+	
+	@NotNull(message = "Version can't be null")
 	private Integer version;
+	
+	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
 	
 	public String getId() {

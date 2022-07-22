@@ -1,8 +1,17 @@
 package com.lawencon.community.pojo.industry;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class InsertIndustryReq {
+	
+	@NotBlank(message = "Industry name can't be empty")
 	private String industryName;
+	
+	@NotBlank(message = "Industry code can't be empty")
 	private String industryCode;
+	
+	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
 	
 	public String getIndustryName() {

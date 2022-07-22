@@ -1,10 +1,23 @@
 package com.lawencon.community.pojo.industry;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class UpdateIndustryReq {
+	
+	@NotNull(message = "Id can't be null")
 	private String id;
+	
+	@NotBlank(message = "Industry name can't be empty")
 	private String industryName;
+	
+	@NotBlank(message = "Industry code can't be empty")
 	private String industryCode;
+	
+	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
+	
+	@NotNull(message = "Version can't be null")
 	private Integer version;
 	
 	public String getId() {
