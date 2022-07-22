@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.threadActivityCategory.InsertThreadActivityCategoryReq;
-import com.lawencon.community.pojo.threadActivityCategory.ShowThreadActivityCategories;
+import com.lawencon.community.pojo.threadActivityCategory.PojoThreadActivityCategory;
 import com.lawencon.community.pojo.threadActivityCategory.ShowThreadActivityCategoryById;
 import com.lawencon.community.pojo.threadActivityCategory.UpdateThreadActivityCategoryReq;
 import com.lawencon.community.service.ThreadActivityCategoryService;
+import com.lawencon.model.SearchQuery;
 
 @RestController
 @RequestMapping("thread-activity-categories")
@@ -30,11 +32,12 @@ public class ThreadActivityCategoryController {
 	@Autowired
 	private ThreadActivityCategoryService threadActivityCategoryService;
 
-//	@GetMapping
-//	public ResponseEntity<ShowThreadActivityCategories> getAll() throws Exception {
-//		ShowThreadActivityCategories data = threadActivityCategoryService.showAll(null, null, null);
-//		return new ResponseEntity<ShowThreadActivityCategories>(data, HttpStatus.OK);
-//	}
+	@GetMapping
+	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage,
+			@RequestParam("maxPage") Integer maxPage) throws Exception {
+		SearchQuery<PojoThreadActivityCategory> result = threadActivityCategoryService.showAll(query, startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ShowThreadActivityCategoryById> getById(@PathVariable String id) throws Exception {
