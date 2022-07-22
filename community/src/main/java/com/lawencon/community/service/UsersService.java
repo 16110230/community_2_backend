@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.base.BaseCoreService;
@@ -11,6 +15,7 @@ import com.lawencon.community.dao.CompanyDao;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.UsersDao;
+import com.lawencon.community.exception.InvalidLoginException;
 import com.lawencon.community.model.Company;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
@@ -28,7 +33,7 @@ import com.lawencon.community.pojo.users.UpdateUserReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class UsersService extends BaseCoreService<Users> {
+public class UsersService extends BaseCoreService<Users> implements UserDetailsService {
 	
 	@Autowired
 	private UsersDao userDao;
@@ -191,5 +196,27 @@ public class UsersService extends BaseCoreService<Users> {
 		}
 		
 		return response;
+	}
+	
+	public Users login(String username) throws Exception {
+		Users user = userDao.findByUsernameAndPassword(username);
+		
+		return user;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Users user = new Users();
+		
+		try {
+			user = userDao.findByUsernameAndPassword(username);
+			if(user == null) {
+				throw new InvalidLoginException(username);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new User(username, user.getUserPassword(), new ArrayList<>());
 	}
 }

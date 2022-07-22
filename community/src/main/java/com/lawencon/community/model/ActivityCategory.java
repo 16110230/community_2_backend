@@ -11,7 +11,7 @@ import com.lawencon.base.BaseEntity;
 @Table(name="activity_category", uniqueConstraints = {
 		@UniqueConstraint(
 				name = "activity_category_bk",
-				columnNames = "category"
+				columnNames = "category_code"
 		)
 	})
 public class ActivityCategory extends BaseEntity{
