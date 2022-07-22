@@ -1,8 +1,17 @@
 package com.lawencon.community.pojo.position;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class InsertPositionReq {
+	
+	@NotBlank(message = "Position Name Can't Be Null")
 	private String positionName;
+	
+	@NotBlank(message = "Position Code Can't Be Null")
 	private String positionCode;
+	
+	@NotNull(message = "Active Can't Be Null")
 	private Boolean isActive;
 	
 	public String getPositionName() {
