@@ -16,8 +16,8 @@ public class ThreadController {
 	@Autowired
 	private ThreadService threadService;
 	
-	@GetMapping
-	public ResponseEntity<ShowThreads> showAllThread() throws Exception {
-		
-	}
+//	@GetMapping
+//	public ResponseEntity<ShowThreads> showAllThread() throws Exception {
+//		
+//	}
 }
