@@ -1,8 +1,16 @@
 package com.lawencon.community.pojo.threadActivity;
 
+import javax.validation.constraints.NotNull;
+
 public class InsertThreadActivityReq {
+	
+	@NotNull(message = "Thread can't be null")
 	private String thread;
+	
+	@NotNull(message = "Thread activity category can't be null")
 	private String threadActivityCategory;
+	
+	@NotNull(message = "User id can't be null")
 	private String userId;
 
 	public String getThread() {

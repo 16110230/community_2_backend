@@ -2,12 +2,28 @@ package com.lawencon.community.pojo.subscriptions;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class InsertSubscriptionReq {
+	
+	@NotNull(message = "User can't be null")
 	private String user;
+	
 	private String file;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	@NotNull(message = "Expire date can't be empty")
 	private LocalDateTime expiredDate;
+	
+	@NotNull(message = "Is approved can't be null")
 	private Boolean isApproved;
+	
+	@NotNull(message = "Subscription category can't be null")
 	private String subscriptionCategory;
+	
+	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
 	private String fileName;
 	private String fileExt;
