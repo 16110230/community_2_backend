@@ -1,11 +1,24 @@
 package com.lawencon.community.pojo.thread;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class UpdateThreadReq {
+	
+	@NotBlank(message = "Thread Title can't be empty")
 	private String threadTitle;
+	
+	@NotBlank(message = "Thread Title can't be empty")
 	private String threadContent;
 	private String file;
+	
+	@NotNull(message = "Thread category can't be null")
 	private String threadCategory;
+	
+	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
+	
+	@NotNull()
 	private Integer version;
 
 	public String getThreadTitle() {

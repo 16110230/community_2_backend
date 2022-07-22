@@ -1,10 +1,21 @@
 package com.lawencon.community.pojo.thread;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class InsertThreadReq {
+	
+	@NotBlank(message = "Thread Title can't be empty")
 	private String threadTitle;
+	
+	@NotBlank(message = "Thread Content can't be empty")
 	private String threadContent;
+	
 	private String file;
+		
+	@NotNull(message = "Thread category can't be null")
 	private String threadCategory;
+	
 	private String fileName;
 	private String fileExt;
 	private Boolean isActive;
