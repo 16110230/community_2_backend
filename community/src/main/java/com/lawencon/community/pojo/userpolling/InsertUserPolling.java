@@ -1,8 +1,16 @@
 package com.lawencon.community.pojo.userpolling;
 
+import javax.validation.constraints.NotNull;
+
 public class InsertUserPolling {
+	
+	@NotNull(message = "User can't be null")
 	private String user;
+	
+	@NotNull(message = "Polling details can't be null")
 	private String pollingDetails;
+	
+	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
 	
 	public String getUser() {
