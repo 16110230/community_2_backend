@@ -1,10 +1,22 @@
 package com.lawencon.community.pojo.position;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class UpdatePositionReq {
+	@NotBlank(message = "Id Can't Ve Null")
 	private String id;
+	
+	@NotBlank(message = "Position Name Can't Be Null")
 	private String positionName;
+	
+	@NotBlank(message = "Position Code Can't Be Null")
 	private String positionCode;
+	
+	@NotNull(message = "Active Can't Be Null")
 	private Boolean isActive;
+	
+	@NotNull(message = "Version Can't Be Null")
 	private Integer version;
 	
 	public void setId(String id) {

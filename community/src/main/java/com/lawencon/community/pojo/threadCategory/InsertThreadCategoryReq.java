@@ -1,8 +1,17 @@
 package com.lawencon.community.pojo.threadCategory;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class InsertThreadCategoryReq {
+	
+	@NotBlank(message = "Category Name Can't Be Null")
 	private String categoryName;
+	
+	@NotBlank(message = "Category Code Can't Be Null")
 	private String categoryCode;
+	
+	@NotNull(message = "Active Can't Be Null")
 	private Boolean isActive;
 	
 	public Boolean getIsActive() {
