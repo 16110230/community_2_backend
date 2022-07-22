@@ -1,5 +1,7 @@
 package com.lawencon.community.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,48 +18,50 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
-import com.lawencon.community.pojo.thread.InsertThreadReq;
-import com.lawencon.community.pojo.thread.PojoThread;
-import com.lawencon.community.pojo.thread.ShowThreadById;
-import com.lawencon.community.pojo.thread.UpdateThreadReq;
-import com.lawencon.community.service.ThreadService;
+import com.lawencon.community.pojo.activity.InsertActivityReq;
+import com.lawencon.community.pojo.activity.PojoActivity;
+import com.lawencon.community.pojo.activity.ShowActivityById;
+import com.lawencon.community.pojo.activity.UpdateActivityReq;
+import com.lawencon.community.pojo.activityType.InsertActivityTypeReq;
+import com.lawencon.community.pojo.activityType.ShowActivityTypeById;
+import com.lawencon.community.pojo.activityType.UpdateActivityTypeReq;
+import com.lawencon.community.service.ActivityService;
 import com.lawencon.model.SearchQuery;
 
 @RestController
-@RequestMapping("threads")
-public class ThreadController {
-
+@RequestMapping("activities")
+public class ActivityController {
+	
 	@Autowired
-	private ThreadService threadService;
+	private ActivityService activityService;
 	
 	@GetMapping
 	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage, @RequestParam("maxPage") Integer maxPage) throws Exception {
-		SearchQuery<PojoThread> result = threadService.showAll(query, startPage, maxPage);
+		SearchQuery<PojoActivity> result = activityService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<?> getById(@PathVariable("id") String id) throws Exception {
-		ShowThreadById result = threadService.showById(id);
+	public ResponseEntity<ShowActivityById> getById(@PathVariable("id") String id) throws Exception {
+		ShowActivityById result = activityService.showById(id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@RequestBody InsertThreadReq data) throws Exception {
-		PojoInsertRes result = threadService.insert(data);
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertActivityReq data) throws Exception {
+		PojoInsertRes result = activityService.insert(data);
 		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<PojoUpdateRes> update(@RequestBody UpdateThreadReq data) throws Exception {
-		PojoUpdateRes result = threadService.update(data);
+	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdateActivityReq data) throws Exception {
+		PojoUpdateRes result = activityService.update(data);
 		return new ResponseEntity<PojoUpdateRes>(result, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
-		PojoDeleteRes result = threadService.delete(id);
-		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
+		PojoDeleteRes data = activityService.delete(id);
+		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
-
 }

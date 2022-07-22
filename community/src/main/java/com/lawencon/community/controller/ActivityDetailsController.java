@@ -18,48 +18,48 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
-import com.lawencon.community.pojo.activityCategory.InsertActivityCategoryReq;
-import com.lawencon.community.pojo.activityCategory.PojoActivityCategory;
-import com.lawencon.community.pojo.activityCategory.ShowActivityCategoryById;
-import com.lawencon.community.pojo.activityCategory.UpdateActivityCategoryReq;
-import com.lawencon.community.service.ActivityCategoryService;
+import com.lawencon.community.pojo.activityDetails.InsertActivityDetailsReq;
+import com.lawencon.community.pojo.activityDetails.PojoActivityDetails;
+import com.lawencon.community.pojo.activityDetails.ShowActivityDetailById;
+import com.lawencon.community.pojo.activityDetails.UpdateActivityDetailsReq;
+import com.lawencon.community.service.ActivityDetailService;
 import com.lawencon.model.SearchQuery;
 
 @RestController
-@RequestMapping("activity-categories")
-public class ActivityCategoryController {
+@RequestMapping("activity-details")
+public class ActivityDetailsController {
 
 	@Autowired
-	private ActivityCategoryService activityCategoryService;
+	private ActivityDetailService activityDetailService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<PojoActivityCategory> result = activityCategoryService.showAll(query, startPage, maxPage);
+	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage,
+			@RequestParam("maxPage") Integer maxPage) throws Exception {
+		SearchQuery<PojoActivityDetails> result = activityDetailService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<ShowActivityCategoryById> getById(@PathVariable("id") String id) throws Exception {
-		ShowActivityCategoryById result = activityCategoryService.showById(id);
+	public ResponseEntity<ShowActivityDetailById> getById(@PathVariable("id") String id) throws Exception {
+		ShowActivityDetailById result = activityDetailService.showById(id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertActivityCategoryReq data) throws Exception {
-		PojoInsertRes result = activityCategoryService.insert(data);
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertActivityDetailsReq data) throws Exception {
+		PojoInsertRes result = activityDetailService.insert(data);
 		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public ResponseEntity<PojoUpdateRes> update(@RequestBody UpdateActivityCategoryReq data) throws Exception {
-		PojoUpdateRes result = activityCategoryService.update(data);
+	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdateActivityDetailsReq data) throws Exception {
+		PojoUpdateRes result = activityDetailService.update(data);
 		return new ResponseEntity<PojoUpdateRes>(result, HttpStatus.OK);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
-		PojoDeleteRes data = activityCategoryService.delete(id);
+		PojoDeleteRes data = activityDetailService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
-
 }
