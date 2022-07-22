@@ -1,7 +1,9 @@
 package com.lawencon.community.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -22,14 +24,18 @@ import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoDeleteResData;
+import com.lawencon.community.pojo.PojoEmailReq;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
+import com.lawencon.community.pojo.PojoVerificationCode;
 import com.lawencon.community.pojo.users.InsertUserReq;
 import com.lawencon.community.pojo.users.PojoUsers;
 import com.lawencon.community.pojo.users.ShowUserById;
 import com.lawencon.community.pojo.users.UpdateUserReq;
+import com.lawencon.community.util.EmailComponent;
+import com.lawencon.community.util.GenerateCode;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -46,6 +52,12 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 	
 	@Autowired
 	private IndustryDao industryDao;
+	
+	@Autowired
+	private EmailComponent emailComponent;
+	
+	@Autowired
+	private GenerateCode generateCode;
 	
 	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
@@ -218,5 +230,15 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		}
 		
 		return new User(username, user.getUserPassword(), new ArrayList<>());
+	}
+	
+	public PojoVerificationCode sendVerificationCode(PojoEmailReq email) throws Exception {
+		String code = generateCode.generate();
+		PojoVerificationCode response = new PojoVerificationCode();
+		Map<String, Object> template = new HashMap<String, Object>();
+		template.put("code", code);
+		emailComponent.sendMessageUsingFreemarkerTemplate(email.getEmail(), "Your sign-up verification code!", template);
+		
+		return response;
 	}
 }
