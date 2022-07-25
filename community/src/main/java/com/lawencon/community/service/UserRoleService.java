@@ -92,7 +92,7 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 	public PojoUpdateRes update(UpdateUserRoleReq data) throws Exception {
 		PojoUpdateRes response = new PojoUpdateRes();
 		PojoUpdateResData resData = new PojoUpdateResData();
-		UserRole update = new UserRole();
+		UserRole update = roleDao.getById(data.getId());
 
 		update.setId(data.getId());
 		update.setRoleName(data.getRoleName());
