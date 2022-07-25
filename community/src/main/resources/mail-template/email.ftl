@@ -13,7 +13,7 @@
 		<div>		
 			<span style="font-size: 1.5em;">To continue creating your new account, please copy and paste this code in the form.</span>
 		</div>
-		<div style="background-color: #deddd7; margin: 5vh 35vh 0 35vh;padding: 1vh">		
+		<div style="background-color: #deddd7; margin: 5vh 35vh 0 35vh; padding: 1vh">		
 			<div style="text-align: center;">	
 				<h1>${code}</h1>
 			</div>

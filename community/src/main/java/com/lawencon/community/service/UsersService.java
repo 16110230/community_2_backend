@@ -128,11 +128,12 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 
 		insert.setFullName(data.getFullName());
 		insert.setUsername(data.getUsername());
-		insert.setEmail(data.getFullName());
+		insert.setEmail(data.getEmail());
 		insert.setVerificationCode(data.getVerificationCode());
 		insert.setCompany(company);
 		insert.setIndustry(industry);
 		insert.setPosition(position);
+		insert.setUserPassword(data.getUserPassword());
 
 		try {
 			begin();
