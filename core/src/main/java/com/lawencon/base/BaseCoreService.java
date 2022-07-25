@@ -61,7 +61,7 @@ public class BaseCoreService<T extends BaseEntity> {
 		}
 	}
 	
-	public SearchQuery<T> findAll(Supplier<List<T>> getAllFunc) throws Exception {
+	protected SearchQuery<T> findAll(Supplier<List<T>> getAllFunc) throws Exception {
 		SearchQuery<T> sq = new SearchQuery<>();
 		List<T> data = getAllFunc.get();
 		int count = abstractJpaDao.countAll().intValue();
@@ -72,4 +72,3 @@ public class BaseCoreService<T extends BaseEntity> {
 		return sq;
 	}
 }
-

@@ -9,7 +9,14 @@ public class InsertUserReq {
 	private String industry;
 	private String position;
 	private String userPassword;
+	private String role;
 	
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getRole() {
+		return role;
+	}
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
