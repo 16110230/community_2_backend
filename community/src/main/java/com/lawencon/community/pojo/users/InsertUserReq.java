@@ -8,7 +8,14 @@ public class InsertUserReq {
 	private String company;
 	private String industry;
 	private String position;
+	private String userPassword;
 	
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+	public String getUserPassword() {
+		return userPassword;
+	}
 	public String getFullName() {
 		return fullName;
 	}

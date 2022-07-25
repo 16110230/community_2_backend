@@ -33,8 +33,8 @@ public class ThreadCategoryController {
 	private ThreadCategoryService threadCategoryService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage,
-			@RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage,
+			@RequestParam(value = "maxPage", required = false) Integer maxPage) throws Exception {
 		SearchQuery<PojoThreadCategory> result = threadCategoryService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -46,7 +46,7 @@ public class ThreadCategoryController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@PathVariable @Valid InsertThreadCategoryReq create) throws Exception {
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertThreadCategoryReq create) throws Exception {
 		PojoInsertRes response = threadCategoryService.insert(create);
 		return new ResponseEntity<PojoInsertRes>(response, HttpStatus.CREATED);
 	}

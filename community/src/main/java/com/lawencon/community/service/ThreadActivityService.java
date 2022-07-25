@@ -28,6 +28,9 @@ import com.lawencon.model.SearchQuery;
 
 @Service
 public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
+	
+	@Autowired
+	private BaseService baseService;
 
 	@Autowired
 	private ThreadActivityDao threadActivityDao;
@@ -98,7 +101,7 @@ public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
 		Thread thread = threadDao.getById(data.getThread());
 		ThreadActivityCategory threadActivityCategory = threadActivityCategoryDao
 				.getById(data.getThreadActivityCategory());
-		Users user = usersDao.getById(data.getUserId());
+		Users user = usersDao.getById(baseService.getUserId());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 
