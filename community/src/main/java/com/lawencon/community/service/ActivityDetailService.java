@@ -40,6 +40,9 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private BaseService baseService;
 
 	public SearchQuery<PojoActivityDetails> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ActivityDetails> users = activityDetailsDao.findAll(query, startPage, maxPage);
@@ -75,7 +78,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 		PojoInsertRes response = new PojoInsertRes();
 		
 		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(data.getUser());
+		Users usr = usersDao.getById(baseService.getUserId());
 		File fileIns = new File();
 		
 		fileIns.setFileName(data.getFileName());
@@ -111,7 +114,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 		PojoUpdateRes response = new PojoUpdateRes();
 		
 		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(data.getUser());
+		Users usr = usersDao.getById(baseService.getUserId());
 		File file = fileDao.getById(data.getFile());
 		
 		update.setActivity(act);
