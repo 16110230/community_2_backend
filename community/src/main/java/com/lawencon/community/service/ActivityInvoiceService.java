@@ -77,17 +77,20 @@ public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
 
 		Activity act = activityDao.getById(data.getActivity());
 		Users usr = usersDao.getById(data.getUser());
-		File file = fileDao.getById(data.getFile());
+		File fileIns = new File();
+		
+		fileIns.setFileName(data.getFileName());
+		fileIns.setFileExt(data.getFileExt());
 
 		insert.setActivity(act);
 		insert.setUser(usr);
-		insert.setFile(file);
 		insert.setIsApproved(data.getIsApproved());
 		insert.setIsActive(true);
 
 		try {
 			begin();
-
+			File res = fileDao.save(fileIns);
+			insert.setFile(res);
 			ActivityInvoice result = save(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
@@ -114,13 +117,18 @@ public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
 
 		update.setActivity(act);
 		update.setUser(usr);
-		update.setFile(file);
 		update.setIsActive(data.getIsActive());
 		update.setVersion(data.getVersion());
 
 		try {
 			begin();
+			
+			file.setFileName(data.getFileName());
+			file.setFileExt(data.getFileExt());
+			file.setVersion(data.getVersion());
+			File res = fileDao.save(file);
 
+			update.setFile(res);
 			ActivityInvoice result = save(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");

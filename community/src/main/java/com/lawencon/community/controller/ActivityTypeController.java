@@ -33,7 +33,7 @@ public class ActivityTypeController {
 	private ActivityTypeService activityTypeService;
 	
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage, @RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoActivityType> result = activityTypeService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
