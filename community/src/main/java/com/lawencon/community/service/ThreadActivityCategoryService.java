@@ -92,7 +92,7 @@ public class ThreadActivityCategoryService extends BaseCoreService<ThreadActivit
 	}
 
 	public PojoUpdateRes update(UpdateThreadActivityCategoryReq data) throws Exception {
-		ThreadActivityCategory update = new ThreadActivityCategory();
+		ThreadActivityCategory update = threadActivityCategoryDao.getById(data.getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 

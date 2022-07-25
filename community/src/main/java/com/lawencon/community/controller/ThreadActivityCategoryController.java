@@ -33,8 +33,8 @@ public class ThreadActivityCategoryController {
 	private ThreadActivityCategoryService threadActivityCategoryService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage,
-			@RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage,
+			Integer maxPage) throws Exception {
 		SearchQuery<PojoThreadActivityCategory> result = threadActivityCategoryService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -46,20 +46,20 @@ public class ThreadActivityCategoryController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@PathVariable @Valid InsertThreadActivityCategoryReq create)
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertThreadActivityCategoryReq create)
 			throws Exception {
 		PojoInsertRes response = threadActivityCategoryService.insert(create);
 		return new ResponseEntity<PojoInsertRes>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update")
+	@PutMapping
 	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdateThreadActivityCategoryReq update)
 			throws Exception {
 		PojoUpdateRes response = threadActivityCategoryService.update(update);
 		return new ResponseEntity<PojoUpdateRes>(response, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable String id) throws Exception {
 		PojoDeleteRes response = threadActivityCategoryService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(response, HttpStatus.OK);
