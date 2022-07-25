@@ -237,8 +237,16 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		PojoVerificationCode response = new PojoVerificationCode();
 		Map<String, Object> template = new HashMap<String, Object>();
 		template.put("code", code);
-		emailComponent.sendMessageUsingFreemarkerTemplate(email.getEmail(), "Your sign-up verification code!", template);
 		
+		new Thread(() -> {
+			try {
+				emailComponent.sendMessageUsingFreemarkerTemplate(email.getEmail(), "Your sign-up verification code!", template);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+		
+		response.setCode(code);
 		return response;
 	}
 }
