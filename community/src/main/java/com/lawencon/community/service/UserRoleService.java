@@ -10,7 +10,6 @@ import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.UserRoleDao;
 import com.lawencon.community.model.UserRole;
 import com.lawencon.community.pojo.PojoDeleteRes;
-import com.lawencon.community.pojo.PojoDeleteResData;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
@@ -25,11 +24,11 @@ import com.lawencon.model.SearchQuery;
 public class UserRoleService extends BaseCoreService<UserRole> {
 	@Autowired
 	private UserRoleDao roleDao;
-	
+
 	public SearchQuery<PojoUserRole> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<UserRole> roles = roleDao.findAll(query, startPage, maxPage);
 		List<PojoUserRole> result = new ArrayList<PojoUserRole>();
-		
+
 		roles.getData().forEach(val -> {
 			PojoUserRole role = new PojoUserRole();
 			role.setId(val.getId());
@@ -37,47 +36,47 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 			role.setRoleCode(val.getRoleCode());
 			role.setVersion(val.getVersion());
 			role.setIsActive(val.getIsActive());
-			
+
 			result.add(role);
 		});
-		
+
 		SearchQuery<PojoUserRole> response = new SearchQuery<PojoUserRole>();
 		response.setCount(roles.getCount());
 		response.setData(result);
-		
+
 		return response;
 	}
-	
+
 	public ShowUserRoleById showById(String id) throws Exception {
 		UserRole role = roleDao.getById(id);
 		ShowUserRoleById response = new ShowUserRoleById();
 		PojoUserRole result = new PojoUserRole();
-		
+
 		result.setId(role.getId());
 		result.setRoleName(role.getRoleName());
 		result.setRoleCode(role.getRoleCode());
 		result.setVersion(role.getVersion());
 		result.setIsActive(role.getIsActive());
-		
+
 		response.setData(result);
-		
+
 		return response;
 	}
-	
+
 	public PojoInsertRes insert(InsertUserRoleReq data) throws Exception {
 		PojoInsertRes response = new PojoInsertRes();
 		PojoInsertResData resData = new PojoInsertResData();
 		UserRole insert = new UserRole();
-		
+
 		insert.setRoleName(data.getRoleName());
 		insert.setRoleCode(data.getRoleCode());
 		insert.setIsActive(data.getIsActive());
-		
+
 		try {
 			begin();
 			UserRole result = save(insert);
 			commit();
-			
+
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -86,26 +85,26 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 			rollback();
 			throw new Exception(e);
 		}
-		
+
 		return response;
 	}
-	
+
 	public PojoUpdateRes update(UpdateUserRoleReq data) throws Exception {
 		PojoUpdateRes response = new PojoUpdateRes();
 		PojoUpdateResData resData = new PojoUpdateResData();
 		UserRole update = new UserRole();
-		
+
 		update.setId(data.getId());
 		update.setRoleName(data.getRoleName());
 		update.setRoleCode(data.getRoleCode());
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
-		
+
 		try {
 			begin();
 			UserRole result = save(update);
 			commit();
-			
+
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
@@ -114,29 +113,27 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 			rollback();
 			throw new Exception(e);
 		}
-		
+
 		return response;
 	}
-	
+
 	public PojoDeleteRes delete(String id) throws Exception {
 		PojoDeleteRes response = new PojoDeleteRes();
-		PojoDeleteResData resData = new PojoDeleteResData();
-		
+
 		try {
 			begin();
 			boolean result = roleDao.deleteById(id);
 			commit();
-			
-			if(result) {				
-				resData.setMessage("Successfully delete the data!");
-				response.setData(resData);
+
+			if (result) {
+				response.setMessage("Successfully delete the data!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
-		
+
 		return response;
 	}
 }
