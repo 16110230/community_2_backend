@@ -35,6 +35,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 			data.setId(val.getId());
 			data.setDescription(val.getDescription());
 			data.setPrice(val.getPrice());
+			data.setDuration(val.getDuration());
 			data.setIsActive(val.getIsActive());
 			data.setVersion(val.getVersion());
 
@@ -56,6 +57,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 		result.setId(category.getId());
 		result.setDescription(category.getDescription());
 		result.setPrice(category.getPrice());
+		result.setDuration(category.getDuration());
 		result.setIsActive(category.getIsActive());
 		result.setVersion(category.getVersion());
 
@@ -71,6 +73,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 
 		insert.setDescription(data.getDescription());
 		insert.setPrice(data.getPrice());
+		insert.setDuration(data.getDuration());
 		insert.setIsActive(data.getIsActive());
 
 		try {
@@ -98,6 +101,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 		update.setId(data.getId());
 		update.setDescription(data.getDescription());
 		update.setPrice(data.getPrice());
+		update.setDuration(data.getDuration());
 		update.setIsActive(data.getIsActive());
 		update.setVersion(data.getVersion());
 

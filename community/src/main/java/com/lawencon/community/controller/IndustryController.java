@@ -33,7 +33,7 @@ public class IndustryController {
 	private IndustryService industryService;
 	
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage, @RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoIndustry> result = industryService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -56,9 +56,11 @@ public class IndustryController {
 		return new ResponseEntity<PojoUpdateRes>(result, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("id")
+	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
-		PojoDeleteRes result = industryService.delete(id);
-		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
+		PojoDeleteRes data = industryService.delete(id);
+		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
+	
+	
 }

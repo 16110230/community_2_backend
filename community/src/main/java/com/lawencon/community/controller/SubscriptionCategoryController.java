@@ -33,8 +33,7 @@ public class SubscriptionCategoryController {
 	private SubsCategoryService subsCategoryService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage,
-			@RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoSubscriptionCategory> result = subsCategoryService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -46,18 +45,18 @@ public class SubscriptionCategoryController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@PathVariable @Valid InsertSubsCategoryReq create) throws Exception {
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertSubsCategoryReq create) throws Exception {
 		PojoInsertRes response = subsCategoryService.insert(create);
 		return new ResponseEntity<PojoInsertRes>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update")
+	@PutMapping("")
 	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdateSubsCategoryReq update) throws Exception {
 		PojoUpdateRes response = subsCategoryService.update(update);
 		return new ResponseEntity<PojoUpdateRes>(response, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable String id) throws Exception {
 		PojoDeleteRes response = subsCategoryService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(response, HttpStatus.OK);
