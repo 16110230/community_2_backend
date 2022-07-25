@@ -31,7 +31,6 @@
 		    <artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-
 		<dependency>
 			<groupId>com.lawencon</groupId>
 			<artifactId>core</artifactId>
