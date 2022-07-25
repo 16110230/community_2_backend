@@ -18,16 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
-import com.lawencon.community.pojo.activityDetails.InsertActivityDetailsReq;
-import com.lawencon.community.pojo.activityDetails.PojoActivityDetails;
-import com.lawencon.community.pojo.activityDetails.ShowActivityDetailById;
-import com.lawencon.community.pojo.activityDetails.UpdateActivityDetailsReq;
 import com.lawencon.community.pojo.activityInvoice.InsertActivityInvoiceReq;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
-import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoiceById;
 import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
-import com.lawencon.community.service.ActivityDetailService;
 import com.lawencon.community.service.ActivityInvoiceService;
 import com.lawencon.model.SearchQuery;
 

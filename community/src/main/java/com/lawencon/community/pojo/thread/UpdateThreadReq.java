@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 
 public class UpdateThreadReq {
 	
+	@NotNull(message = "Thread id can't be null")
+	private String id;
+	
 	@NotBlank(message = "Thread Title can't be empty")
 	private String threadTitle;
 	
@@ -18,8 +21,16 @@ public class UpdateThreadReq {
 	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
 	
-	@NotNull()
+	@NotNull(message = "Version can't be null")
 	private Integer version;
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getThreadTitle() {
 		return threadTitle;

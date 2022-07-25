@@ -16,7 +16,6 @@ import com.lawencon.community.model.ActivityInvoice;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
-import com.lawencon.community.pojo.PojoDeleteResData;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
@@ -160,7 +159,6 @@ public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
 	}
 
 	public PojoDeleteRes delete(String id) throws Exception {
-		PojoDeleteResData resData = new PojoDeleteResData();
 		PojoDeleteRes response = new PojoDeleteRes();
 
 		try {
@@ -169,8 +167,7 @@ public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
 			commit();
 
 			if (result) {
-				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setMessage("Successfully delete the data!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

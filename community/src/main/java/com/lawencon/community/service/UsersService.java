@@ -23,7 +23,6 @@ import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
-import com.lawencon.community.pojo.PojoDeleteResData;
 import com.lawencon.community.pojo.PojoEmailReq;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
@@ -40,35 +39,35 @@ import com.lawencon.model.SearchQuery;
 
 @Service
 public class UsersService extends BaseCoreService<Users> implements UserDetailsService {
-	
+
 	@Autowired
 	private UsersDao userDao;
-	
+
 	@Autowired
 	private CompanyDao companyDao;
-	
+
 	@Autowired
 	private PositionDao positionDao;
-	
+
 	@Autowired
 	private IndustryDao industryDao;
-	
+
 	@Autowired
 	private EmailComponent emailComponent;
-	
+
 	@Autowired
 	private GenerateCode generateCode;
-	
+
 	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
 		List<PojoUsers> result = new ArrayList<PojoUsers>();
-		
+
 		users.getData().forEach(val -> {
 			PojoUsers user = new PojoUsers();
 			Company company = companyDao.getById(val.getCompany().getId());
 			Industry industry = industryDao.getById(val.getIndustry().getId());
 			Position position = positionDao.getById(val.getPosition().getId());
-			
+
 			user.setId(val.getId());
 			user.setFullName(val.getFullName());
 			user.setEmail(val.getEmail());
@@ -81,25 +80,25 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 			user.setIndustryName(industry.getIndustryName());
 			user.setPosition(position.getId());
 			user.setPositionName(position.getPositionName());
-			
+
 			result.add(user);
 		});
-		
+
 		SearchQuery<PojoUsers> response = new SearchQuery<PojoUsers>();
 		response.setData(result);
 		response.setCount(users.getCount());
-		
+
 		return response;
 	}
-	
+
 	public ShowUserById showById(String id) {
 		Users users = userDao.getById(id);
 		PojoUsers user = new PojoUsers();
-		
+
 		Company company = companyDao.getById(users.getCompany().getId());
 		Industry industry = industryDao.getById(users.getIndustry().getId());
 		Position position = positionDao.getById(users.getPosition().getId());
-		
+
 		user.setId(users.getId());
 		user.setFullName(users.getFullName());
 		user.setEmail(users.getEmail());
@@ -112,13 +111,13 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		user.setIndustryName(industry.getIndustryName());
 		user.setPosition(position.getId());
 		user.setPositionName(position.getPositionName());
-		
+
 		ShowUserById response = new ShowUserById();
 		response.setData(user);
-		
+
 		return response;
 	}
-	
+
 	public PojoInsertRes insert(InsertUserReq data) throws Exception {
 		Users insert = new Users();
 		Company company = companyDao.getById(data.getCompany());
@@ -126,7 +125,7 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		Position position = positionDao.getById(data.getPosition());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
-		
+
 		insert.setFullName(data.getFullName());
 		insert.setUsername(data.getUsername());
 		insert.setEmail(data.getFullName());
@@ -134,25 +133,25 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		insert.setCompany(company);
 		insert.setIndustry(industry);
 		insert.setPosition(position);
-		
+
 		try {
 			begin();
-			
+
 			Users result = saveNonLogin(insert, () -> userDao.findByRoleCode("ADMIN"));
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
-			
+
 			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
-		
+
 		return response;
 	}
-	
+
 	public PojoUpdateRes update(UpdateUserReq data) throws Exception {
 		Users update = new Users();
 		Company company = companyDao.getById(data.getCompany());
@@ -160,7 +159,7 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		Position position = positionDao.getById(data.getPosition());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
-		
+
 		update.setId(data.getId());
 		update.setFullName(data.getFullName());
 		update.setUsername(data.getUsername());
@@ -169,76 +168,83 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		update.setPosition(position);
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
-		
+
 		try {
 			begin();
-			
+
 			Users result = save(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
-			
+
 			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
-		
+
 		return response;
 	}
-	
+
 	public PojoDeleteRes delete(String id) throws Exception {
-		PojoDeleteResData resData = new PojoDeleteResData();
 		PojoDeleteRes response = new PojoDeleteRes();
-		
+
 		try {
 			begin();
 			boolean result = userDao.deleteById(id);
 			commit();
-			
-			if(result) {				
-				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+
+			if (result) {
+				response.setMessage("Successfully delete the data!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
-		
+
 		return response;
 	}
-	
+
 	public Users login(String username) throws Exception {
 		Users user = userDao.findByUsernameAndPassword(username);
-		
+
 		return user;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Users user = new Users();
-		
+
 		try {
 			user = userDao.findByUsernameAndPassword(username);
-			if(user == null) {
+			if (user == null) {
 				throw new InvalidLoginException(username);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return new User(username, user.getUserPassword(), new ArrayList<>());
 	}
-	
+
 	public PojoVerificationCode sendVerificationCode(PojoEmailReq email) throws Exception {
 		String code = generateCode.generate();
 		PojoVerificationCode response = new PojoVerificationCode();
 		Map<String, Object> template = new HashMap<String, Object>();
 		template.put("code", code);
-		emailComponent.sendMessageUsingFreemarkerTemplate(email.getEmail(), "Your sign-up verification code!", template);
-		
+
+		new Thread(() -> {
+			try {
+				emailComponent.sendMessageUsingFreemarkerTemplate(email.getEmail(), "Your sign-up verification code!",
+						template);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+
+		response.setCode(code);
 		return response;
 	}
 }

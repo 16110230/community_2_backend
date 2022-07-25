@@ -10,7 +10,6 @@ import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.ActivityCategoryDao;
 import com.lawencon.community.model.ActivityCategory;
 import com.lawencon.community.pojo.PojoDeleteRes;
-import com.lawencon.community.pojo.PojoDeleteResData;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
@@ -93,7 +92,8 @@ public class ActivityCategoryService extends BaseCoreService<ActivityCategory> {
 	}
 
 	public PojoUpdateRes update(UpdateActivityCategoryReq data) throws Exception {
-		ActivityCategory update = new ActivityCategory();
+		
+		ActivityCategory update = activityCategoryDao.getById(data.getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
@@ -121,7 +121,6 @@ public class ActivityCategoryService extends BaseCoreService<ActivityCategory> {
 	}
 
 	public PojoDeleteRes delete(String id) throws Exception {
-		PojoDeleteResData resData = new PojoDeleteResData();
 		PojoDeleteRes response = new PojoDeleteRes();
 
 		try {
@@ -130,8 +129,7 @@ public class ActivityCategoryService extends BaseCoreService<ActivityCategory> {
 			commit();
 
 			if (result) {
-				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setMessage("Successfully delete the data!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
