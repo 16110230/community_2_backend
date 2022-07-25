@@ -84,26 +84,25 @@ public class PollingService extends BaseCoreService<Polling> {
 		try {
 			begin();
 			Polling result = save(insert);
-			commit();
       
 			data.getDetails().forEach(val -> {
 				PollingDetails detail = new PollingDetails();
 				detail.setPolling(result);
 				detail.setPollingDetailsName(val.getPollingDetailsName());
 				detail.setIsActive(val.getIsActive());
+				detail.setCreatedBy(result.getCreatedBy());
 				
 				try {			
 					detailsDao.save(detail);
-					
-					resData.setId(result.getId());
-					resData.setMessage("Successfully add new data!");
-					response.setData(resData);
 				} catch (Exception e) {
 					e.printStackTrace();
 					rollback();
 					throw new RuntimeException(e);
 				}
 			});
+			resData.setId(result.getId());
+			resData.setMessage("Successfully add new data!");
+			response.setData(resData);
 			
 			commit();
 		} catch (Exception e) {

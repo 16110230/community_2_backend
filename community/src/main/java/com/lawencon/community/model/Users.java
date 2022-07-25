@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.lawencon.base.BaseEntity;
+import com.lawencon.security.RefreshTokenEntity;
 
 @Entity
 @Table(name="users", uniqueConstraints = {
@@ -56,6 +57,16 @@ public class Users extends BaseEntity {
 	private File file;
 	private Integer balance;
 	
+	@OneToOne
+	@JoinColumn(name="token_id")
+	private RefreshTokenEntity token;
+	
+	public void setToken(RefreshTokenEntity token) {
+		this.token = token;
+	}
+	public RefreshTokenEntity getToken() {
+		return token;
+	}
 	public Integer getBalance() {
 		return balance;
 	}

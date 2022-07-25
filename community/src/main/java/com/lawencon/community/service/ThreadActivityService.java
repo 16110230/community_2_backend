@@ -28,6 +28,9 @@ import com.lawencon.model.SearchQuery;
 
 @Service
 public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
+	
+	@Autowired
+	private BaseService baseService;
 
 	@Autowired
 	private ThreadActivityDao threadActivityDao;
@@ -83,7 +86,9 @@ public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
 		threadActivity.setId(threadActivities.getId());
 		threadActivity.setThread(thread.getId());
 		threadActivity.setThreadActivityCategory(threadActivityCategory.getId());
+		threadActivity.setThreadActivityCategoryName(threadActivityCategory.getThreadActivityName());
 		threadActivity.setUserId(users.getId());
+		threadActivity.setUserName(users.getFullName());
 		threadActivity.setIsActive(threadActivities.getIsActive());
 		threadActivity.setVersion(threadActivities.getVersion());
 
@@ -98,13 +103,14 @@ public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
 		Thread thread = threadDao.getById(data.getThread());
 		ThreadActivityCategory threadActivityCategory = threadActivityCategoryDao
 				.getById(data.getThreadActivityCategory());
-		Users user = usersDao.getById(data.getUserId());
+		Users user = usersDao.getById(baseService.getUserId());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 
 		insert.setThread(thread);
 		insert.setThreadActivityCategory(threadActivityCategory);
 		insert.setUser(user);
+		insert.setIsActive(data.getIsActive());
 
 		try {
 			begin();
@@ -125,17 +131,15 @@ public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
 	}
 
 	public PojoUpdateRes update(UpdateThreadActivityReq data) throws Exception {
-		ThreadActivity update = new ThreadActivity();
+		ThreadActivity update = threadActivityDao.getById(data.getId());
 		Thread thread = threadDao.getById(data.getThread());
 		ThreadActivityCategory threadActivityCategory = threadActivityCategoryDao
 				.getById(data.getThreadActivityCategory());
-		Users user = usersDao.getById(data.getUserId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
 		update.setThread(thread);
 		update.setThreadActivityCategory(threadActivityCategory);
-		update.setUser(user);
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
 

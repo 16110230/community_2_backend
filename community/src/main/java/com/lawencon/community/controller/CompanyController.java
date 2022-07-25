@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.pojo.PojoDeleteRes;
@@ -33,7 +32,7 @@ public class CompanyController {
 	private CompanyService companyService;
 	
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage, @RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoCompany> result = companyService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -56,9 +55,9 @@ public class CompanyController {
 		return new ResponseEntity<PojoUpdateRes>(result, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("id")
+	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
-		PojoDeleteRes result = companyService.delete(id);
-		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
+		PojoDeleteRes data = companyService.delete(id);
+		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
 }

@@ -17,47 +17,47 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
-import com.lawencon.community.pojo.activityType.InsertActivityTypeReq;
-import com.lawencon.community.pojo.activityType.PojoActivityType;
-import com.lawencon.community.pojo.activityType.ShowActivityTypeById;
-import com.lawencon.community.pojo.activityType.UpdateActivityTypeReq;
-import com.lawencon.community.service.ActivityTypeService;
+import com.lawencon.community.pojo.threadDetails.InsertThreadDetailsReq;
+import com.lawencon.community.pojo.threadDetails.PojoThreadDetails;
+import com.lawencon.community.pojo.threadDetails.ShowThreadDetailById;
+import com.lawencon.community.pojo.threadDetails.UpdateThreadDetailsReq;
+import com.lawencon.community.service.ThreadDetailService;
 import com.lawencon.model.SearchQuery;
 
 @RestController
-@RequestMapping("activity-types")
-public class ActivityTypeController {
+@RequestMapping("thread-details")
+public class ThreadDetailController {
 
 	@Autowired
-	private ActivityTypeService activityTypeService;
+	private ThreadDetailService threadDetailService;
 	
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<PojoActivityType> result = activityTypeService.showAll(query, startPage, maxPage);
+		SearchQuery<PojoThreadDetails> result = threadDetailService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<?> getById(@PathVariable("id") String id) throws Exception {
-		ShowActivityTypeById result = activityTypeService.showById(id);
-		return new ResponseEntity<>(result, HttpStatus.OK);
+	public ResponseEntity<ShowThreadDetailById> getById(@PathVariable("id") String id) throws Exception {
+		ShowThreadDetailById result = threadDetailService.showById(id);
+		return new ResponseEntity<ShowThreadDetailById>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertActivityTypeReq data) throws Exception {
-		PojoInsertRes result = activityTypeService.insert(data);
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertThreadDetailsReq data) throws Exception {
+		PojoInsertRes result = threadDetailService.insert(data);
 		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdateActivityTypeReq data) throws Exception {
-		PojoUpdateRes result = activityTypeService.update(data);
+	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdateThreadDetailsReq data) throws Exception {
+		PojoUpdateRes result = threadDetailService.update(data);
 		return new ResponseEntity<PojoUpdateRes>(result, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
-		PojoDeleteRes data = activityTypeService.delete(id);
-		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
+		PojoDeleteRes result = threadDetailService.delete(id);
+		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
 	}
 }

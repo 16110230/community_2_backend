@@ -32,8 +32,7 @@ public class ThreadCategoryController {
 	private ThreadCategoryService threadCategoryService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll(String query, Integer startPage,
-			Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoThreadCategory> result = threadCategoryService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}

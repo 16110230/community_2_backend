@@ -40,6 +40,9 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private BaseService baseService;
 
 	public SearchQuery<PojoActivityDetails> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ActivityDetails> users = activityDetailsDao.findAll(query, startPage, maxPage);
@@ -75,17 +78,21 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 		PojoInsertRes response = new PojoInsertRes();
 		
 		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(data.getUser());
-		File file = fileDao.getById(data.getFile());
+		Users usr = usersDao.getById(baseService.getUserId());
+		File fileIns = new File();
+		
+		fileIns.setFileName(data.getFileName());
+		fileIns.setFileExt(data.getFileExt());
+		
 		
 		insert.setActivity(act);
-		insert.setFile(file);
 		insert.setUser(usr);
 		insert.setIsActive(true);
 		
 		try {
 			begin();
-
+			File res = fileDao.save(fileIns);
+			insert.setFile(res);
 			ActivityDetails result = save(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
@@ -102,24 +109,28 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 	}
 	
 	public PojoUpdateRes update(UpdateActivityDetailsReq data)throws Exception {
-		ActivityDetails update = new ActivityDetails();
+		ActivityDetails update = activityDetailsDao.getById(data.getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 		
 		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(data.getUser());
+		Users usr = usersDao.getById(baseService.getUserId());
 		File file = fileDao.getById(data.getFile());
 		
 		update.setActivity(act);
 		update.setUser(usr);
-		update.setFile(file);
 		update.setIsActive(data.getIsActive());
 		update.setVersion(data.getVersion());
 		
 		
 		try {
 			begin();
-
+			file.setFileName(data.getFileName());
+			file.setFileExt(data.getFileExt());
+			file.setVersion(data.getVersion());
+			File res = fileDao.save(file);
+			
+			update.setFile(res);
 			ActivityDetails result = save(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
@@ -162,7 +173,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 
 		try {
 			begin();
-			boolean result = activityDao.deleteById(id);
+			boolean result = activityDetailsDao.deleteById(id);
 			commit();
 
 			if (result) {
