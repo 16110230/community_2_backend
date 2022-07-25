@@ -1,9 +1,9 @@
 package com.lawencon.community.pojo.threadDetails;
 
 public class UpdateThreadDetailsReq {
+	
 	private String thread;
 	private String threadDesc;
-	private String userId;
 	private Boolean isActive;
 	private Integer version;
 
@@ -21,14 +21,6 @@ public class UpdateThreadDetailsReq {
 
 	public void setThreadDesc(String threadDesc) {
 		this.threadDesc = threadDesc;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 
 	public Boolean getIsActive() {

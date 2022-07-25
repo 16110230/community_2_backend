@@ -35,6 +35,9 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 
 	@Autowired
 	private UsersDao usersDao;
+	
+	@Autowired
+	private BaseService baseService;
 
 	public SearchQuery<PojoThreadDetails> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ThreadDetails> threadDetails = threadDetailsDao.findAll(query, startPage, maxPage);
@@ -63,11 +66,11 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 		return response;
 	}
 
-	public ShowThreadDetailById showById(String id) {
+	public ShowThreadDetailById showById(String id) throws Exception {
 		ThreadDetails threadDetails = threadDetailsDao.getById(id);
 		PojoThreadDetails threadDetail = new PojoThreadDetails();
 
-		Thread thread = threadDao.getById(threadDetails.getId());
+		Thread thread = threadDao.getById(threadDetails.getThread().getId());
 		Users user = usersDao.getById(threadDetails.getUser().getId());
 
 		threadDetail.setId(threadDetails.getId());
@@ -87,11 +90,10 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 	public PojoInsertRes insert(InsertThreadDetailsReq data) throws Exception {
 		ThreadDetails insert = new ThreadDetails();
 		Thread thread = threadDao.getById(data.getThread());
-		Users user = usersDao.getById(data.getUserId());
+		Users user = usersDao.getById(baseService.getUserId());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 
-		insert.setThread(thread);
 		insert.setThread(thread);
 		insert.setThreadDesc(data.getThreadDesc());
 		insert.setUser(user);
@@ -117,14 +119,12 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 	public PojoUpdateRes update(UpdateThreadDetailsReq data) throws Exception {
 		ThreadDetails update = new ThreadDetails();
 		Thread thread = threadDao.getById(data.getThread());
-		Users user = usersDao.getById(data.getUserId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
 		update.setThread(thread);
 		update.setThread(thread);
 		update.setThreadDesc(data.getThreadDesc());
-		update.setUser(user);
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
 
