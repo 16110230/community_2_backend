@@ -174,7 +174,7 @@ public class ActivityService extends BaseCoreService<Activity>{
 
 		try {
 			begin();
-			boolean result = activityCategoryDao.deleteById(id);
+			boolean result = activityDao.deleteById(id);
 			commit();
 
 			if (result) {

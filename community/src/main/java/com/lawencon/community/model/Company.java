@@ -23,7 +23,11 @@ public class Company extends BaseEntity{
 	
 	@Column(name="company_code")
 	private String companyCode;
+	
+	@Column(name="address")
 	private String address;
+	
+	@Column(name="email")
 	private String email;
 	
 	public String getCompanyName() {

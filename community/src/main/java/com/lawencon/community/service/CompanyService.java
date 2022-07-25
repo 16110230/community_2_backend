@@ -34,6 +34,7 @@ public class CompanyService extends BaseCoreService<Company> {
 			data.setId(val.getId());
 			data.setCompanyName(val.getCompanyName());
 			data.setCompanyCode(val.getCompanyCode());
+			data.setEmail(val.getEmail());
 			data.setAddress(val.getAddress());
 			data.setVersion(val.getVersion());
 			data.setIsActive(val.getIsActive());
@@ -56,6 +57,7 @@ public class CompanyService extends BaseCoreService<Company> {
 		result.setId(company.getId());
 		result.setCompanyName(company.getCompanyName());
 		result.setCompanyCode(company.getCompanyCode());
+		result.setEmail(company.getEmail());
 		result.setAddress(company.getAddress());
 		result.setVersion(company.getVersion());
 		result.setIsActive(company.getIsActive());
