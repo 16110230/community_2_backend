@@ -1,13 +1,13 @@
 package com.lawencon.community.pojo;
 
 public class PojoDeleteRes {
-	private PojoDeleteRes data;
+	private PojoDeleteResData data;
 	
-	public void setData(PojoDeleteRes data) {
+	public void setData(PojoDeleteResData data) {
 		this.data = data;
 	}
 	
-	public PojoDeleteRes getData() {
+	public PojoDeleteResData getData() {
 		return data;
 	}
 }

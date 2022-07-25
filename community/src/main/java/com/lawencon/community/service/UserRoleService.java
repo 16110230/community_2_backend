@@ -129,7 +129,7 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 			
 			if(result) {				
 				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setData(resData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -105,7 +105,7 @@ public class ActivityService extends BaseCoreService<Activity>{
 	}
 	
 	public PojoUpdateRes update(UpdateActivityReq data)throws Exception{
-		Activity update = new Activity();
+		Activity update = activityDao.getById(data.getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
@@ -181,7 +181,7 @@ public class ActivityService extends BaseCoreService<Activity>{
 			
 			if(result) {				
 				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setData(resData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -132,7 +132,7 @@ public class ActivityTypeService extends BaseCoreService<ActivityType> {
 
 			if (result) {
 				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setData(resData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

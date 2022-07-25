@@ -165,7 +165,7 @@ public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
 			
 			if(result) {				
 				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setData(resData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

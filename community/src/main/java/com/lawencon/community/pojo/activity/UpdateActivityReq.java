@@ -2,19 +2,54 @@ package com.lawencon.community.pojo.activity;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class UpdateActivityReq {
+	
+	@NotBlank(message = "Id Can't Be Null")
+	private String id;
+	
+	@NotBlank(message = "Title Can't Be Null")
 	private String activityTitle;
+	
+	@NotBlank(message = "Content Can't Be Null")
 	private String activityContent;
+	
+	@NotBlank(message = "Category Can't Be Null")
 	private String activityCategory;
+	
 	private LocalDateTime startedAt;
 	private LocalDateTime endedAt;
+	
+	@NotNull(message = "Fee Can't Be Null")
 	private Integer fee;
+	
+	@NotNull(message = "Qty Can't Be Null")
 	private Integer quantity;
+	
+	@NotNull(message = "Limit Can't Be Null")
 	private Boolean isLimit;
+	
+	@NotBlank(message = "Provider Can't Be Null")
 	private String provider;
+	
+	@NotBlank(message = "Trainer Can't Be Null")
 	private String trainer;
+	
+	@NotNull(message = "Is Active Can't Be Null")
 	private Boolean isActive;
+	
+	@NotNull(message = "Version Can't Be Null")
 	private Integer version;
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
 	
 	public String getActivityTitle() {
 		return activityTitle;

@@ -169,7 +169,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 			
 			if(result) {				
 				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setData(resData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

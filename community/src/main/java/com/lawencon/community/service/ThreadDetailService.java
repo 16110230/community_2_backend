@@ -158,7 +158,7 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 			
 			if(result) {				
 				resData.setMessage("Successfully delete the data!");
-				response.setData(response);
+				response.setData(resData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

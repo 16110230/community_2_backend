@@ -2,16 +2,36 @@ package com.lawencon.community.pojo.activity;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class InsertActivityReq {
+	
+	@NotBlank(message = "Title Can't Be Null")
 	private String activityTitle;
+	
+	@NotBlank(message = "Content Can't Be Null")
 	private String activityContent;
+	
+	@NotBlank(message = "Category Can't Be Null")
 	private String activityCategory;
+	
 	private LocalDateTime startedAt;
 	private LocalDateTime endedAt;
+	
+	@NotNull(message = "Fee Can't Be Null")
 	private Integer fee;
+	
+	@NotNull(message = "Qty Can't Be Null")
 	private Integer quantity;
+	
+	@NotNull(message = "Limit Can't Be Null")
 	private Boolean isLimit;
+	
+	@NotBlank(message = "Provider Can't Be Null")
 	private String provider;
+	
+	@NotBlank(message = "Trainer Can't Be Null")
 	private String trainer;
 	
 	public String getActivityTitle() {
