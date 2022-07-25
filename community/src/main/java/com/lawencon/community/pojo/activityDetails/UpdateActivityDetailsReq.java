@@ -4,35 +4,32 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class UpdateActivityDetailsReq {
-	
+
 	@NotBlank(message = "Id Can't Be Null")
 	private String id;
-	
+
 	@NotBlank(message = "Activity Can't Be Null")
 	private String activity;
-	
-	@NotBlank(message = "User Can't Be Null")
-	private String user;
-	
+
 	@NotBlank(message = "File Id Can't Be Null")
 	private String file;
-	
+
 	@NotBlank(message = "File Name Id Can't Be Null")
 	private String fileName;
-	
+
 	@NotBlank(message = "File Ext Can't Be Null")
 	private String fileExt;
-	
+
 	@NotNull(message = "Is Active Can't Be Null")
 	private Boolean isActive;
-	
+
 	@NotNull(message = "Version Id Can't Be Null")
 	private Integer version;
-	
+
 	public String getId() {
 		return id;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -59,14 +56,6 @@ public class UpdateActivityDetailsReq {
 
 	public void setActivity(String activity) {
 		this.activity = activity;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
 	}
 
 	public String getFile() {

@@ -7,8 +7,6 @@ public class InsertActivityDetailsReq {
 	@NotBlank(message = "Activity Can't Null")
 	private String activity;
 	
-	@NotBlank(message = "User Can't Null")
-	private String user;
 	private String file;
 	private String fileName;
 	private String fileExt;
@@ -35,14 +33,6 @@ public class InsertActivityDetailsReq {
 
 	public void setActivity(String activity) {
 		this.activity = activity;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
 	}
 
 	public String getFile() {

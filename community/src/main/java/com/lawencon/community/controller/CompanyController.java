@@ -55,9 +55,9 @@ public class CompanyController {
 		return new ResponseEntity<PojoUpdateRes>(result, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("id")
+	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
-		PojoDeleteRes result = companyService.delete(id);
-		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
+		PojoDeleteRes data = companyService.delete(id);
+		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
 }
