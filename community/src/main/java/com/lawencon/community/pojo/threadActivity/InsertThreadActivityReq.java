@@ -10,8 +10,8 @@ public class InsertThreadActivityReq {
 	@NotNull(message = "Thread activity category can't be null")
 	private String threadActivityCategory;
 	
-	@NotNull(message = "User id can't be null")
-	private String userId;
+	@NotNull(message = "Is active can't be null")
+	private Boolean isActive;
 
 	public String getThread() {
 		return thread;
@@ -29,12 +29,12 @@ public class InsertThreadActivityReq {
 		this.threadActivityCategory = threadActivityCategory;
 	}
 
-	public String getUserId() {
-		return userId;
+	public Boolean getIsActive() {
+		return isActive;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
-
+	
 }

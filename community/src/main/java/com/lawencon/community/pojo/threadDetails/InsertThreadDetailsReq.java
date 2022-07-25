@@ -1,9 +1,18 @@
 package com.lawencon.community.pojo.threadDetails;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class InsertThreadDetailsReq {
+	
+	@NotNull(message = "Thread can't be null")
 	private String thread;
+	
+	@NotBlank(message = "Thread Description can't be empty")
 	private String threadDesc;
-	private String userId;
+	
+	@NotNull(message = "Is active can't be null")
+	private Boolean isActive;
 
 	public String getThread() {
 		return thread;
@@ -21,12 +30,12 @@ public class InsertThreadDetailsReq {
 		this.threadDesc = threadDesc;
 	}
 
-	public String getUserId() {
-		return userId;
+	public Boolean getIsActive() {
+		return isActive;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
-
+	
 }
