@@ -103,6 +103,7 @@ public class CompanyService extends BaseCoreService<Company> {
 		update.setId(data.getId());
 		update.setCompanyName(data.getCompanyName());
 		update.setCompanyCode(data.getCompanyCode());
+		update.setEmail(data.getEmail());
 		update.setAddress(data.getAddress());
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
