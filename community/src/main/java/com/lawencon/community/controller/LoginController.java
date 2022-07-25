@@ -55,6 +55,7 @@ public class LoginController {
 		resData.setUsername(user.getUsername());
 		resData.setRoleCode(user.getRole().getRoleCode());
 		resData.setToken(token);
+		resData.setRefreshToken(userService.updateToken(user.getId())); 
 		
 		response.setData(resData);
 		

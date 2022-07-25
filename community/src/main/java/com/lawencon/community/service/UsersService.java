@@ -13,14 +13,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.base.BaseCoreService;
+import com.lawencon.base.ConnHandler;
+import com.lawencon.community.constant.Role;
 import com.lawencon.community.dao.CompanyDao;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
+import com.lawencon.community.dao.UserRoleDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.exception.InvalidLoginException;
 import com.lawencon.community.model.Company;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
+import com.lawencon.community.model.UserRole;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoEmailReq;
@@ -36,6 +40,9 @@ import com.lawencon.community.pojo.users.UpdateUserReq;
 import com.lawencon.community.util.EmailComponent;
 import com.lawencon.community.util.GenerateCode;
 import com.lawencon.model.SearchQuery;
+import com.lawencon.security.RefreshTokenEntity;
+import com.lawencon.security.RefreshTokenService;
+import com.lawencon.util.JwtUtil;
 
 @Service
 public class UsersService extends BaseCoreService<Users> implements UserDetailsService {
@@ -53,11 +60,20 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 	private IndustryDao industryDao;
 
 	@Autowired
+	private UserRoleDao roleDao;
+	
+	@Autowired
 	private EmailComponent emailComponent;
 
 	@Autowired
 	private GenerateCode generateCode;
 
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@Autowired
+	private RefreshTokenService tokenService;
+	
 	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
 		List<PojoUsers> result = new ArrayList<PojoUsers>();
@@ -122,9 +138,11 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		Users insert = new Users();
 		Company company = companyDao.getById(data.getCompany());
 		Industry industry = industryDao.getById(data.getIndustry());
+		UserRole role = roleDao.getIdByRoleCode(Role.MEMBER.name());
 		Position position = positionDao.getById(data.getPosition());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
+		
 
 		insert.setFullName(data.getFullName());
 		insert.setUsername(data.getUsername());
@@ -133,12 +151,13 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		insert.setCompany(company);
 		insert.setIndustry(industry);
 		insert.setPosition(position);
+		insert.setRole(role);
 		insert.setUserPassword(data.getUserPassword());
 
 		try {
 			begin();
-
-			Users result = saveNonLogin(insert, () -> userDao.findByRoleCode("ADMIN"));
+			
+			Users result = saveNonLogin(insert, () -> userDao.findByRoleCode(Role.ADMIN.name()));
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -248,4 +267,26 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		response.setCode(code);
 		return response;
 	}
+	
+	public String updateToken(String id) throws Exception {
+        Users user = userDao.getById(id);
+
+        RefreshTokenEntity refreshToken = jwtUtil.generateRefreshToken();
+        if(user.getToken() != null) {                        
+            RefreshTokenEntity token = ConnHandler.getManager().find(RefreshTokenEntity.class, user.getToken().getId());
+            token.setToken(refreshToken.getToken());
+            token.setExpiredDate(refreshToken.getExpiredDate());
+            begin();
+            tokenService.saveToken(token);
+        } else {
+            begin();
+            RefreshTokenEntity tokenNew = tokenService.saveToken(refreshToken);
+            user.setToken(tokenNew);
+        }
+        
+        Users res = save(user);
+        String token = res.getToken().getToken();
+        commit();
+        return token;
+    }
 }

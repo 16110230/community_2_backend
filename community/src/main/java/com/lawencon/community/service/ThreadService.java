@@ -37,7 +37,7 @@ public class ThreadService extends BaseCoreService<Thread> {
 	private FileDao fileDao;
 
 	public SearchQuery<PojoThread> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage);
+		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage, "threadTitle", "threadContent");
 		List<PojoThread> result = new ArrayList<PojoThread>();
 
 		threads.getData().forEach(val -> {

@@ -4,7 +4,14 @@ public class PojoLoginResData {
 	private String username;
 	private String roleCode;
 	private String token;
+	private String refreshToken;
 	
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+	public String getRefreshToken() {
+		return refreshToken;
+	}
 	public String getUsername() {
 		return username;
 	}
