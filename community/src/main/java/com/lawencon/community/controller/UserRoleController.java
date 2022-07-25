@@ -46,18 +46,18 @@ public class UserRoleController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@PathVariable @Valid InsertUserRoleReq create) throws Exception {
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertUserRoleReq create) throws Exception {
 		PojoInsertRes response = userRoleService.insert(create);
 		return new ResponseEntity<PojoInsertRes>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update")
+	@PutMapping
 	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdateUserRoleReq update) throws Exception {
 		PojoUpdateRes response = userRoleService.update(update);
 		return new ResponseEntity<PojoUpdateRes>(response, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable String id) throws Exception {
 		PojoDeleteRes response = userRoleService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(response, HttpStatus.OK);

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.pojo.PojoDeleteRes;
@@ -33,8 +32,7 @@ public class PositionController {
 	private PositionService positionService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage,
-			@RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoPosition> result = positionService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -46,18 +44,18 @@ public class PositionController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PojoInsertRes> insert(@PathVariable @Valid InsertPositionReq create) throws Exception {
+	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertPositionReq create) throws Exception {
 		PojoInsertRes response = positionService.insert(create);
 		return new ResponseEntity<PojoInsertRes>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update")
+	@PutMapping
 	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdatePositionReq update) throws Exception {
 		PojoUpdateRes response = positionService.update(update);
 		return new ResponseEntity<PojoUpdateRes>(response, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable String id) throws Exception {
 		PojoDeleteRes response = positionService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(response, HttpStatus.OK);

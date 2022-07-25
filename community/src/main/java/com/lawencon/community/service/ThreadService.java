@@ -108,7 +108,7 @@ public class ThreadService extends BaseCoreService<Thread> {
 			fileDao.save(file);
 
 			insert.setFile(file);
-			Thread result = threadDao.save(insert);
+			Thread result = save(insert);
 
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");

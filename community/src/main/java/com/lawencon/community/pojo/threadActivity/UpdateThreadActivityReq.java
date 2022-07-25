@@ -1,10 +1,22 @@
 package com.lawencon.community.pojo.threadActivity;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdateThreadActivityReq {
+	
+	@NotNull(message = "Thread can't be  null")
 	private String thread;
+	
+	@NotNull(message = "Thread Activity Category")
 	private String threadActivityCategory;
+	
+	@NotNull(message = "User id can't be null")
 	private String userId;
+	
+	@NotNull(message = "Is active can't be null")
 	private Boolean isActive;
+	
+	@NotNull(message = "Version can't be null")
 	private Integer version;
 
 	public String getThread() {

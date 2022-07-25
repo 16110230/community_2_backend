@@ -93,7 +93,7 @@ public class PositionService extends BaseCoreService<Position> {
 	public PojoUpdateRes update(UpdatePositionReq data) throws Exception {
 		PojoUpdateRes response = new PojoUpdateRes();
 		PojoUpdateResData resData = new PojoUpdateResData();
-		Position update = new Position();
+		Position update = positionDao.getById(data.getId());
 
 		update.setId(data.getId());
 		update.setPositionName(data.getPositionName());
