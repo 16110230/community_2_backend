@@ -2,7 +2,6 @@ package com.lawencon.community.util;
 
 import java.util.Map;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class EmailComponent {
 	@Autowired
 	private FreeMarkerConfigurer freemarkerConfigurer;
 
-	public void sendHtmlMessage(String to, String subject, String htmlBody) throws MessagingException {
+	public void sendHtmlMessage(String to, String subject, String htmlBody) throws Exception {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 		helper.setTo(to);
