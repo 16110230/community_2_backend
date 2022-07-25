@@ -126,7 +126,7 @@ public class ThreadService extends BaseCoreService<Thread> {
 	}
 	
 	public PojoUpdateRes update(UpdateThreadReq data) throws Exception {
-		Thread update = new Thread();
+		Thread update = threadDao.getById(data.getId());
 		ThreadCategory threadCategory = threadCategoryDao.getById(data.getThreadCategory());
 		
 		PojoUpdateResData resData = new PojoUpdateResData();
