@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.pojo.PojoDeleteRes;
@@ -23,30 +22,30 @@ import com.lawencon.community.service.UserPollingService;
 import com.lawencon.model.SearchQuery;
 
 @RestController
-@RequestMapping("user-polling")
+@RequestMapping("user-pollings")
 public class UserPollingController {
 
 	@Autowired
 	private UserPollingService userPollingService;
-	
+
 	@GetMapping
-	public ResponseEntity<?> getAll(@RequestParam("query") String query, @RequestParam("startPage") Integer startPage, @RequestParam("maxPage") Integer maxPage) throws Exception {
+	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoUserPolling> result = userPollingService.showAll(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("{id}")
 	public ResponseEntity<?> getById(@PathVariable("id") String id) throws Exception {
 		ShowUserPollingById result = userPollingService.showById(id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertUserPolling data) throws Exception {
 		PojoInsertRes result = userPollingService.insert(data);
 		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
 	}
-	
+
 	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
 		PojoDeleteRes result = userPollingService.delete(id);
