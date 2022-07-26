@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 
 public class UpdateActivityTypeReq {
 	
+	@NotBlank(message = "Id Can't Be Empty")
+	private String id;
+	
 	@NotBlank(message = "Type name can't be empty")
 	private String typeName;
 	

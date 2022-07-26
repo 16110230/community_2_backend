@@ -16,7 +16,7 @@ public class RefreshTokenEntity extends BaseEntity {
 	@Column(name = "refresh_token", columnDefinition = "TEXT", nullable = false, unique = true)
 	private String token;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name="expired_date")
 	private LocalDateTime expiredDate;
 
 	public String getToken() {
