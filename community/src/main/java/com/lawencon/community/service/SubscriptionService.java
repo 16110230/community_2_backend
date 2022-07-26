@@ -45,6 +45,9 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 
 	@Autowired
 	private UserSubscriptionDao userSubsDao;
+	
+	@Autowired
+	private BaseService baseService;
 
 	public SearchQuery<PojoSubscription> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
@@ -55,6 +58,7 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 			data.setId(val.getId());
 			data.setUser(val.getUser().getId());
 			data.setFullName(val.getUser().getFullName());
+			data.setSubscriptionCategory(val.getSubscriptionCategory().getId());
 			data.setIsApproved(val.getIsApproved());
 			data.setIsActive(val.getIsActive());
 			data.setVersion(val.getVersion());
@@ -80,7 +84,6 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 		result.setFile(subscription.getFile().getId());
 		result.setIsApproved(subscription.getIsApproved());
 		result.setSubscriptionCategory(subscription.getSubscriptionCategory().getId());
-		result.setExpiredDate(subscription.getExpiredDate());
 		result.setIsActive(subscription.getIsActive());
 		result.setVersion(subscription.getVersion());
 
@@ -105,10 +108,9 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 
 			File fileResult = fileDao.save(fileInsert);
 
-			insert.setExpiredDate(data.getExpiredDate());
 			insert.setFile(fileResult);
-			insert.setIsActive(false);
-			insert.setIsApproved(data.getIsApproved());
+			insert.setIsActive(true);
+			insert.setIsApproved(null);
 			insert.setSubscriptionCategory(category);
 			insert.setUser(user);
 
@@ -133,28 +135,37 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 		PojoUpdateResData resData = new PojoUpdateResData();
 		Subscription update = subscriptionDao.getById(data.getId());
 		SubscriptionCategory category = subsCategoryDao.getById(data.getSubscriptionCategory());
-		UserSubscription checkSubs = userSubsDao.findByUserId(update.getUser().getId());
 		UserSubscription userSubs = new UserSubscription();
 
 		try {
 			begin();
-
+			UserSubscription checkSubs = userSubsDao.findByUserId(update.getUser().getId());
+			
 			update.setId(data.getId());
 			update.setIsActive(true);
 			update.setVersion(data.getVersion());
-			update.setIsApproved(true);
+			update.setIsApproved(data.getIsApproved());
 			Subscription result = subscriptionDao.save(update);
 
+	
 			userSubs.setExpiredDate(LocalDateTime.now().plusDays(category.getDuration()));
-			if (checkSubs != null) {
-				userSubs.setId(checkSubs.getId());
-				userSubs.setVersion(checkSubs.getVersion());
-			} else {
-				Users user = userDao.getById(update.getUser().getId());
-				userSubs.setUser(user);
-				userSubs.setIsActive(true);
+			if(result.getIsApproved()) {
+				if (checkSubs != null) {
+					userSubs.setId(checkSubs.getId());
+					userSubs.setUser(checkSubs.getUser());
+					userSubs.setVersion(checkSubs.getVersion());
+					userSubs.setCreatedAt(checkSubs.getCreatedAt());
+					userSubs.setCreatedBy(checkSubs.getCreatedBy());
+					userSubs.setUpdatedBy(baseService.getUserId());
+					userSubs.setIsActive(checkSubs.getIsActive());
+				} else {
+					Users user = userDao.getById(update.getUser().getId());
+					userSubs.setUser(user);
+					userSubs.setIsActive(true);
+					userSubs.setCreatedBy(baseService.getUserId());
+				}
+				userSubsDao.save(userSubs);				
 			}
-			userSubsDao.save(userSubs);
 
 			commit();
 
