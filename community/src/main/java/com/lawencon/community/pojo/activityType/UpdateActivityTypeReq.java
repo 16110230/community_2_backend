@@ -4,21 +4,29 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class UpdateActivityTypeReq {
-	
+
 	@NotBlank(message = "Id Can't Be Empty")
 	private String id;
-	
+
 	@NotBlank(message = "Type name can't be empty")
 	private String typeName;
-	
+
 	@NotBlank(message = "Type code can't be empty")
 	private String typeCode;
-	
+
 	@NotNull(message = "Is active activity type can't be null")
 	private Boolean isActive;
-	
+
 	@NotNull(message = "Version activity type can't be null")
 	private Integer version;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getTypeName() {
 		return typeName;
