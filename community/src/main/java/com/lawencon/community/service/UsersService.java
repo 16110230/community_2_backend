@@ -264,7 +264,7 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 			}
 		}).start();
 
-		response.setCode(code);
+		response.setMessage(code);
 		return response;
 	}
 	
