@@ -92,24 +92,23 @@ public class ThreadService extends BaseCoreService<Thread> {
 
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
+		
+		File file = new File();
+		file.setFileName(data.getFileName());
+		file.setFileExt(data.getFileExt());
+		file.setIsActive(data.getIsActive());
+		fileDao.save(file);
 
 		insert.setThreadTitle(data.getThreadTitle());
 		insert.setThreadContent(data.getThreadContent());
 		insert.setThreadCategory(threadCategory);
 		insert.setIsActive(data.getIsActive());
+		insert.setFile(file);
 
 		try {
 			begin();
 
-			File file = new File();
-			file.setFileName(data.getFileName());
-			file.setFileExt(data.getFileExt());
-			file.setIsActive(data.getIsActive());
-			fileDao.save(file);
-
-			insert.setFile(file);
 			Thread result = save(insert);
-
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
