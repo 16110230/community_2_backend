@@ -33,7 +33,17 @@ public class Thread extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "thread_category_id")
 	private ThreadCategory threadCategory;
-
+	
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	private Users user;
+	
+	public void setUser(Users user) {
+		this.user = user;
+	}
+	public Users getUser() {
+		return user;
+	}
 	public String getThreadTitle() {
 		return threadTitle;
 	}

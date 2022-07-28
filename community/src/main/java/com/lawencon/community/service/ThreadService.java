@@ -10,9 +10,11 @@ import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
 import com.lawencon.community.dao.ThreadDao;
+import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadCategory;
+import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
@@ -35,6 +37,15 @@ public class ThreadService extends BaseCoreService<Thread> {
 
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private BaseService baseService;
+	
+	@Autowired
+	private UsersDao userDao;
+	
+	@Autowired
+	private PollingService pollingService;
 
 	public SearchQuery<PojoThread> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage, "threadTitle", "threadContent");
@@ -89,6 +100,7 @@ public class ThreadService extends BaseCoreService<Thread> {
 	public PojoInsertRes insert(InsertThreadReq data) throws Exception {
 		Thread insert = new Thread();
 		ThreadCategory threadCategory = threadCategoryDao.getById(data.getThreadCategory());
+		Users user = userDao.getById(baseService.getUserId());
 
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
@@ -104,11 +116,17 @@ public class ThreadService extends BaseCoreService<Thread> {
 		insert.setThreadCategory(threadCategory);
 		insert.setIsActive(data.getIsActive());
 		insert.setFile(file);
+		insert.setUser(user);
 
 		try {
 			begin();
 
 			Thread result = save(insert);
+			
+			if(data.getPolling() != null) {
+				pollingService.insert(data.getPolling(), result.getId());
+			}
+			
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
