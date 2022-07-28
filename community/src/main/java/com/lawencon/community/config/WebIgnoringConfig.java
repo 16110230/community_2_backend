@@ -17,6 +17,9 @@ public class WebIgnoringConfig {
 	public List<RequestMatcher> antMatchers(){
 		matchers.add(new AntPathRequestMatcher("/register", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/users", HttpMethod.POST.name()));
+		matchers.add(new AntPathRequestMatcher("/companies", HttpMethod.GET.name()));
+		matchers.add(new AntPathRequestMatcher("/industries", HttpMethod.GET.name()));
+		matchers.add(new AntPathRequestMatcher("/positions", HttpMethod.GET.name()));
 		return matchers;
 	}
 }
