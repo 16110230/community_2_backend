@@ -1,5 +1,7 @@
 package com.lawencon.community.pojo.thread;
 
+import java.time.LocalDateTime;
+
 public class PojoThread {
 	private String id;
 	private String threadTitle;
@@ -9,6 +11,33 @@ public class PojoThread {
 	private String threadCategoryName;
 	private Boolean isActive;
 	private Integer version;
+	private String user;
+	private String userName;
+	private LocalDateTime createdAt;
+	
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	public String getId() {
 		return id;

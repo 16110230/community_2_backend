@@ -1,12 +1,12 @@
 package com.lawencon.community.constant;
 
-public enum ActivityTyoe {
+public enum ActivityType {
 	
 	EVENT("event"), COURSE("course");
 	
 	private String code;
 	
-	private ActivityTyoe(String code) {
+	private ActivityType(String code) {
 		this.code = code;
 	}
 	
