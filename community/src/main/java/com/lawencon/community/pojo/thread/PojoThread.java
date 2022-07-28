@@ -1,5 +1,9 @@
 package com.lawencon.community.pojo.thread;
 
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class PojoThread {
 	private String id;
 	private String threadTitle;
@@ -9,6 +13,53 @@ public class PojoThread {
 	private String threadCategoryName;
 	private Boolean isActive;
 	private Integer version;
+	private String user;
+	private String userName;
+	private Integer countLike;
+	private Integer countBook;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	private LocalDateTime createdAt;
+
+	public Integer getCountLike() {
+		return countLike;
+	}
+
+	public void setCountLike(Integer countLike) {
+		this.countLike = countLike;
+	}
+
+	public Integer getCountBook() {
+		return countBook;
+	}
+
+	public void setCountBook(Integer countBook) {
+		this.countBook = countBook;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	public String getId() {
 		return id;
