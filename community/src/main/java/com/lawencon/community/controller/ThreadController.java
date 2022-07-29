@@ -62,6 +62,12 @@ public class ThreadController {
 		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
 	}
 	
+	@PostMapping("article")
+	public ResponseEntity<PojoInsertRes> insertArticle(@RequestBody InsertThreadReq data) throws Exception {
+		PojoInsertRes result = threadService.insertArticle(data);
+		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
+	}
+	
 	@PutMapping
 	public ResponseEntity<PojoUpdateRes> update(@RequestBody UpdateThreadReq data) throws Exception {
 		PojoUpdateRes result = threadService.update(data);

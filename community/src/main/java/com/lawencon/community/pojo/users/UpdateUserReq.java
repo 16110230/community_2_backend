@@ -3,7 +3,9 @@ package com.lawencon.community.pojo.users;
 public class UpdateUserReq {
 	private String id;
 	private String fullName;
+	private String email;
 	private String username;
+	private String userPassword;
 	private String company;
 	private String industry;
 	private String position;
@@ -13,6 +15,11 @@ public class UpdateUserReq {
 	private String fileName;
 	private String fileExt;
 	
+	public String getUserPassword() {
+		return userPassword;
+	}
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	public String getFile() {
 		return file;
 	}
@@ -33,6 +40,12 @@ public class UpdateUserReq {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getId() {
 		return id;
