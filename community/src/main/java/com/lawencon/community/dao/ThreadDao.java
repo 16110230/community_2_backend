@@ -74,5 +74,5 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 
 		return response;
 	}
-
+ 
 }

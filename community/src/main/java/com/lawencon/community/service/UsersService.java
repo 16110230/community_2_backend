@@ -74,6 +74,9 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 	@Autowired
 	private RefreshTokenService tokenService;
 	
+	@Autowired
+	private BaseService baseService;
+	
 	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
 		List<PojoUsers> result = new ArrayList<PojoUsers>();
@@ -174,6 +177,7 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 
 	public PojoUpdateRes update(UpdateUserReq data) throws Exception {
 		Users update = new Users();
+		Users users = userDao.getById(baseService.getUserId());
 		Company company = companyDao.getById(data.getCompany());
 		Industry industry = industryDao.getById(data.getIndustry());
 		Position position = positionDao.getById(data.getPosition());
@@ -181,8 +185,11 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		PojoUpdateRes response = new PojoUpdateRes();
 
 		update.setId(data.getId());
+		update.setRole(users.getRole());
 		update.setFullName(data.getFullName());
 		update.setUsername(data.getUsername());
+		update.setEmail(data.getEmail());
+		update.setUserPassword(data.getUserPassword());
 		update.setCompany(company);
 		update.setIndustry(industry);
 		update.setPosition(position);
