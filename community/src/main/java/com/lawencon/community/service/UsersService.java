@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.community.constant.Role;
 import com.lawencon.community.dao.CompanyDao;
@@ -45,7 +44,7 @@ import com.lawencon.security.RefreshTokenService;
 import com.lawencon.util.JwtUtil;
 
 @Service
-public class UsersService extends BaseCoreService<Users> implements UserDetailsService {
+public class UsersService extends BaseService<Users> implements UserDetailsService {
 
 	@Autowired
 	private UsersDao userDao;

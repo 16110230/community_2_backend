@@ -11,6 +11,7 @@ import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dao.ThreadDetailsDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.Thread;
+import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.ThreadDetails;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
@@ -18,9 +19,12 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
+import com.lawencon.community.pojo.thread.PojoThread;
+import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.community.pojo.threadDetails.InsertThreadDetailsReq;
 import com.lawencon.community.pojo.threadDetails.PojoThreadDetails;
 import com.lawencon.community.pojo.threadDetails.ShowThreadDetailById;
+import com.lawencon.community.pojo.threadDetails.ShowThreadDetails;
 import com.lawencon.community.pojo.threadDetails.UpdateThreadDetailsReq;
 import com.lawencon.model.SearchQuery;
 
@@ -86,6 +90,36 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 
 		return response;
 	}
+		
+	public ShowThreadDetails showByThreadId(String id) throws Exception {
+		ShowThreadDetails response = new ShowThreadDetails();
+
+		List<ThreadDetails> threadDetails = threadDetailsDao.findByThreadId(id);
+		List<PojoThreadDetails> result = new ArrayList<PojoThreadDetails>();
+
+
+		threadDetails.forEach(val -> {
+			PojoThreadDetails threadDetail = new PojoThreadDetails();
+			Thread thread = threadDao.getById(val.getThread().getId());
+			Users user = usersDao.getById(val.getUser().getId());
+
+			threadDetail.setId(val.getId());
+			threadDetail.setThread(thread.getId());
+			threadDetail.setThreadDesc(val.getThreadDesc());
+			threadDetail.setUserId(user.getId());
+			threadDetail.setUserName(user.getUsername());
+			threadDetail.setCreatedAt(val.getCreatedAt());
+			threadDetail.setIsActive(val.getIsActive());
+			threadDetail.setVersion(val.getVersion());
+
+			result.add(threadDetail);
+		});
+
+		response.setData(result);
+
+		return response;
+	}
+
 
 	public PojoInsertRes insert(InsertThreadDetailsReq data) throws Exception {
 		ThreadDetails insert = new ThreadDetails();

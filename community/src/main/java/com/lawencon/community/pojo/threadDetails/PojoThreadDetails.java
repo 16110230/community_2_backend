@@ -1,14 +1,30 @@
 package com.lawencon.community.pojo.threadDetails;
 
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class PojoThreadDetails {
 	private String id;
 	private String thread;
 	private String threadDesc;
 	private String userId;
 	private String userName;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	private LocalDateTime createdAt;
+	
 	private Boolean isActive;
 	private Integer version;
 
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 	public String getId() {
 		return id;
 	}
