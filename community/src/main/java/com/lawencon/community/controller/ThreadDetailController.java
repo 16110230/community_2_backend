@@ -20,6 +20,7 @@ import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.threadDetails.InsertThreadDetailsReq;
 import com.lawencon.community.pojo.threadDetails.PojoThreadDetails;
 import com.lawencon.community.pojo.threadDetails.ShowThreadDetailById;
+import com.lawencon.community.pojo.threadDetails.ShowThreadDetails;
 import com.lawencon.community.pojo.threadDetails.UpdateThreadDetailsReq;
 import com.lawencon.community.service.ThreadDetailService;
 import com.lawencon.model.SearchQuery;
@@ -34,6 +35,12 @@ public class ThreadDetailController {
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoThreadDetails> result = threadDetailService.showAll(query, startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping({"thread/{id}"})
+	public ResponseEntity<?> getAllByThread(@PathVariable("id") String id) throws Exception {
+		ShowThreadDetails result = threadDetailService.showByThreadId(id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
