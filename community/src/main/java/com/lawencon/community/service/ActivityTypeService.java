@@ -77,7 +77,7 @@ public class ActivityTypeService extends BaseCoreService<ActivityType> {
 	}
 
 	public PojoUpdateRes update(UpdateActivityTypeReq data) throws Exception {
-		ActivityType update = new ActivityType();
+		ActivityType update = activityTypeDao.getById(data.getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 

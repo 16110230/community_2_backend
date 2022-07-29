@@ -1,5 +1,7 @@
 package com.lawencon.community.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.thread.InsertThreadReq;
 import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.pojo.thread.ShowThreadById;
+import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.community.pojo.thread.UpdateThreadReq;
 import com.lawencon.community.service.ThreadService;
 import com.lawencon.model.SearchQuery;
@@ -32,6 +35,12 @@ public class ThreadController {
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoThread> result = threadService.showAll(query, startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping({"article"})
+	public ResponseEntity<?> getAllArticle() throws Exception {
+		ShowThreads result = threadService.getArticles();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	

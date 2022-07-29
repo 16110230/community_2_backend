@@ -110,7 +110,7 @@ public class ThreadActivityService extends BaseCoreService<ThreadActivity> {
 		insert.setThread(thread);
 		insert.setThreadActivityCategory(threadActivityCategory);
 		insert.setUser(user);
-		insert.setIsActive(data.getIsActive());
+		insert.setIsActive(true);
 
 		try {
 			begin();
