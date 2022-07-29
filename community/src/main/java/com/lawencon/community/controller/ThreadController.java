@@ -44,6 +44,12 @@ public class ThreadController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping({"user"})
+	public ResponseEntity<?> getThreadByUser() throws Exception {
+		ShowThreads result = threadService.showThreadForUser();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
 	@GetMapping("{id}")
 	public ResponseEntity<?> getById(@PathVariable("id") String id) throws Exception {
 		ShowThreadById result = threadService.showById(id);

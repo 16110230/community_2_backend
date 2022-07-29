@@ -16,8 +16,43 @@ public class PojoThread {
 	private String user;
 	private String userName;
 	private Integer countLike;
-	private Integer countBook;
+	private Integer countBookmark;
+	private Integer countComment;
+	private Boolean isLike;
+	private Boolean isBookmark;
 	
+	public Integer getCountBookmark() {
+		return countBookmark;
+	}
+	
+	public void setCountBookmark(Integer countBookmark) {
+		this.countBookmark = countBookmark;
+	}
+	
+	public Integer getCountComment() {
+		return countComment;
+	}
+
+	public void setCountComment(Integer countComment) {
+		this.countComment = countComment;
+	}
+
+	public Boolean getIsLike() {
+		return isLike;
+	}
+
+	public void setIsLike(Boolean isLike) {
+		this.isLike = isLike;
+	}
+
+	public Boolean getIsBookmark() {
+		return isBookmark;
+	}
+
+	public void setIsBookmark(Boolean isBookmark) {
+		this.isBookmark = isBookmark;
+	}
+
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime createdAt;
 
@@ -27,14 +62,6 @@ public class PojoThread {
 
 	public void setCountLike(Integer countLike) {
 		this.countLike = countLike;
-	}
-
-	public Integer getCountBook() {
-		return countBook;
-	}
-
-	public void setCountBook(Integer countBook) {
-		this.countBook = countBook;
 	}
 
 	public LocalDateTime getCreatedAt() {

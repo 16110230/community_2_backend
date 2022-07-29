@@ -10,18 +10,20 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.community.constant.Role;
 import com.lawencon.community.dao.CompanyDao;
+import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.UserRoleDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.exception.InvalidLoginException;
 import com.lawencon.community.model.Company;
+import com.lawencon.community.model.File;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.model.UserRole;
@@ -36,6 +38,7 @@ import com.lawencon.community.pojo.PojoVerificationCode;
 import com.lawencon.community.pojo.users.InsertUserReq;
 import com.lawencon.community.pojo.users.PojoUsers;
 import com.lawencon.community.pojo.users.ShowUserById;
+import com.lawencon.community.pojo.users.UpdatePasswordReq;
 import com.lawencon.community.pojo.users.UpdateUserReq;
 import com.lawencon.community.util.EmailComponent;
 import com.lawencon.community.util.GenerateCode;
@@ -45,7 +48,7 @@ import com.lawencon.security.RefreshTokenService;
 import com.lawencon.util.JwtUtil;
 
 @Service
-public class UsersService extends BaseCoreService<Users> implements UserDetailsService {
+public class UsersService extends BaseService<Users> implements UserDetailsService {
 
 	@Autowired
 	private UsersDao userDao;
@@ -77,6 +80,12 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 	@Autowired
 	private BaseService baseService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private FileDao fileDao;
+	
 	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
 		List<PojoUsers> result = new ArrayList<PojoUsers>();
@@ -86,6 +95,10 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 			Company company = companyDao.getById(val.getCompany().getId());
 			Industry industry = industryDao.getById(val.getIndustry().getId());
 			Position position = positionDao.getById(val.getPosition().getId());
+			
+			if(val.getFile() != null) {
+				user.setFile(val.getFile().getId());
+			}
 
 			user.setId(val.getId());
 			user.setFullName(val.getFullName());
@@ -117,6 +130,10 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		Company company = companyDao.getById(users.getCompany().getId());
 		Industry industry = industryDao.getById(users.getIndustry().getId());
 		Position position = positionDao.getById(users.getPosition().getId());
+		
+		if(users.getFile() != null) {
+			user.setFile(users.getFile().getId());
+		}
 
 		user.setId(users.getId());
 		user.setFullName(users.getFullName());
@@ -183,6 +200,17 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 		Position position = positionDao.getById(data.getPosition());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
+		File file = new File();
+		
+		if(data.getFile() != null || data.getFileName() != null) {
+			if(data.getFileName() != null) {				
+				file.setFileName(data.getFileName());
+				file.setFileExt(data.getFileExt());
+			} else {
+				file = fileDao.getById(data.getFile());
+				update.setFile(file);
+			}
+		}
 
 		update.setId(data.getId());
 		update.setRole(users.getRole());
@@ -198,7 +226,12 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
 
 		try {
 			begin();
-
+			
+			if(data.getFileName() != null) {
+				File fileResult = fileDao.save(file);
+				update.setFile(fileResult);
+			}
+			
 			Users result = save(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
@@ -296,4 +329,34 @@ public class UsersService extends BaseCoreService<Users> implements UserDetailsS
         commit();
         return token;
     }
+	
+	public PojoUpdateRes changePassword(UpdatePasswordReq data) throws Exception {
+		PojoUpdateRes response = new PojoUpdateRes();
+		PojoUpdateResData resData = new PojoUpdateResData();
+		
+		Users user = userDao.getById(baseService.getUserId());
+		
+		try {
+			if(passwordEncoder.matches(data.getOldPassword(), user.getUserPassword())) {
+				user.setUserPassword(passwordEncoder.encode(data.getNewPassword()));
+				
+				begin();
+				Users update = save(user);
+				commit();
+				
+				resData.setMessage("Successfully update the password!");
+				resData.setVersion(update.getVersion());
+			} else {
+				resData.setMessage("Wrong old password!");
+				resData.setVersion(null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
+		
+		response.setData(resData);
+		return response;
+	}
 }

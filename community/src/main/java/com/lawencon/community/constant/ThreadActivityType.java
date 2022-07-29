@@ -2,7 +2,7 @@ package com.lawencon.community.constant;
 
 public enum ThreadActivityType {
 	
-	LIKE("like"), BOOKMARK("bookmark");
+	LIKE("Like"), BOOKMARK("Bookmark");
 	
 	private String code;
 	

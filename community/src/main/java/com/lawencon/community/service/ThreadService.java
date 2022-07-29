@@ -15,6 +15,7 @@ import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadCategory;
+import com.lawencon.community.model.UserSubscription;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -29,7 +30,7 @@ import com.lawencon.community.pojo.thread.UpdateThreadReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ThreadService extends BaseCoreService<Thread> {
+public class ThreadService extends BaseService<Thread>{
 
 	@Autowired
 	private ThreadDao threadDao;
@@ -42,9 +43,6 @@ public class ThreadService extends BaseCoreService<Thread> {
 
 	@Autowired
 	private UsersDao usersDao;
-
-	@Autowired
-	private BaseService baseService;
 
 	@Autowired
 	private UsersDao userDao;
@@ -117,7 +115,7 @@ public class ThreadService extends BaseCoreService<Thread> {
 	public PojoInsertRes insert(InsertThreadReq data) throws Exception {
 		Thread insert = new Thread();
 		ThreadCategory threadCategory = threadCategoryDao.getById(data.getThreadCategory());
-		Users user = userDao.getById(baseService.getUserId());
+		Users user = userDao.getById(getUserId());
 
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
@@ -236,6 +234,16 @@ public class ThreadService extends BaseCoreService<Thread> {
 			rollback();
 			throw new Exception(e);
 		}
+
+		return response;
+	}
+	
+	public ShowThreads showThreadForUser() {
+		ShowThreads response = new ShowThreads();
+
+		List<PojoThread> thread = threadDao.getThreadForUser(getUserId());
+		
+		response.setData(thread);
 
 		return response;
 	}
