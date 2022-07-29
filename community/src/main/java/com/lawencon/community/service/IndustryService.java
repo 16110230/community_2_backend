@@ -74,12 +74,13 @@ public class IndustryService extends BaseCoreService<Industry> {
 
 		try {
 			begin();
+			
 			Industry result = save(insert);
-			commit();
-
 			resData.setId(result.getId());
 			resData.setMessage("Successfully add new data!");
 			response.setData(resData);
+			
+			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();

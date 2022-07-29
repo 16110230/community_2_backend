@@ -72,9 +72,9 @@ public class PollingService extends BaseCoreService<Polling> {
 		return response;
 	}
 	
-	public PojoInsertRes insert(InsertPollingMainReq data) throws Exception {
+	public PojoInsertRes insert(InsertPollingMainReq data, String threadId) throws Exception {
 		Polling insert = new Polling();
-		Thread thread = threadDao.getById(data.getHeader().getThread());
+		Thread thread = threadDao.getById(threadId);
 		PojoInsertRes response = new PojoInsertRes();
 		PojoInsertResData resData = new PojoInsertResData();
 		

@@ -3,6 +3,8 @@ package com.lawencon.community.pojo.thread;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.lawencon.community.pojo.polling.InsertPollingMainReq;
+
 public class InsertThreadReq {
 	
 	@NotBlank(message = "Thread Title can't be empty")
@@ -19,7 +21,17 @@ public class InsertThreadReq {
 	private String fileName;
 	private String fileExt;
 	private Boolean isActive;
+	
+	private InsertPollingMainReq polling;
+	
+	public void setPolling(InsertPollingMainReq polling) {
+		this.polling = polling;
+	}
 
+	public InsertPollingMainReq getPolling() {
+		return polling;
+	}
+	
 	public String getThreadTitle() {
 		return threadTitle;
 	}
