@@ -44,6 +44,12 @@ public class ThreadController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping({"user"})
+	public ResponseEntity<?> getThreadByUser() throws Exception {
+		ShowThreads result = threadService.showThreadForUser();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
 	@GetMapping("{id}")
 	public ResponseEntity<?> getById(@PathVariable("id") String id) throws Exception {
 		ShowThreadById result = threadService.showById(id);
@@ -53,6 +59,12 @@ public class ThreadController {
 	@PostMapping
 	public ResponseEntity<PojoInsertRes> insert(@RequestBody InsertThreadReq data) throws Exception {
 		PojoInsertRes result = threadService.insert(data);
+		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("article")
+	public ResponseEntity<PojoInsertRes> insertArticle(@RequestBody InsertThreadReq data) throws Exception {
+		PojoInsertRes result = threadService.insertArticle(data);
 		return new ResponseEntity<PojoInsertRes>(result, HttpStatus.CREATED);
 	}
 	

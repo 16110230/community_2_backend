@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.base.BaseCoreService;
+import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
 import com.lawencon.community.dao.ThreadDao;
@@ -14,6 +15,7 @@ import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadCategory;
+import com.lawencon.community.model.UserSubscription;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -28,7 +30,7 @@ import com.lawencon.community.pojo.thread.UpdateThreadReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ThreadService extends BaseCoreService<Thread> {
+public class ThreadService extends BaseService<Thread>{
 
 	@Autowired
 	private ThreadDao threadDao;
@@ -41,9 +43,6 @@ public class ThreadService extends BaseCoreService<Thread> {
 
 	@Autowired
 	private UsersDao usersDao;
-
-	@Autowired
-	private BaseService baseService;
 
 	@Autowired
 	private UsersDao userDao;
@@ -60,12 +59,15 @@ public class ThreadService extends BaseCoreService<Thread> {
 			ThreadCategory threadCategory = threadCategoryDao.getById(val.getThreadCategory().getId());
 			Users user = usersDao.getById(val.getUser().getId());
 
-			File file = fileDao.getById(val.getFile().getId());
+			if (val.getFile() != null) {
+				File file = fileDao.getById(val.getFile().getId());
+				thread.setFile(file.getId());				
+			}
 
 			thread.setId(val.getId());
 			thread.setThreadTitle(val.getThreadTitle());
 			thread.setThreadContent(val.getThreadContent());
-			thread.setFile(file.getId());
+			
 			thread.setUser(user.getId());
 			thread.setUserName(user.getUsername());
 			thread.setThreadcategory(threadCategory.getId());
@@ -113,22 +115,25 @@ public class ThreadService extends BaseCoreService<Thread> {
 	public PojoInsertRes insert(InsertThreadReq data) throws Exception {
 		Thread insert = new Thread();
 		ThreadCategory threadCategory = threadCategoryDao.getById(data.getThreadCategory());
-		Users user = userDao.getById(baseService.getUserId());
+		Users user = userDao.getById(getUserId());
 
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 
-		File file = new File();
-		file.setFileName(data.getFileName());
-		file.setFileExt(data.getFileExt());
-		file.setIsActive(data.getIsActive());
-		fileDao.save(file);
+		if (data.getFileName() != null) {
+			File file = new File();
+			file.setFileName(data.getFileName());
+			file.setFileExt(data.getFileExt());
+			file.setIsActive(data.getIsActive());
+			fileDao.save(file);		
+			insert.setFile(file);
+		}
+		
 
 		insert.setThreadTitle(data.getThreadTitle());
 		insert.setThreadContent(data.getThreadContent());
 		insert.setThreadCategory(threadCategory);
 		insert.setIsActive(true);
-		insert.setFile(file);
 		insert.setUser(user);
 
 		try {
@@ -232,5 +237,62 @@ public class ThreadService extends BaseCoreService<Thread> {
 
 		return response;
 	}
+	
+	public ShowThreads showThreadForUser() {
+		ShowThreads response = new ShowThreads();
 
+		List<PojoThread> thread = threadDao.getThreadForUser(getUserId());
+		
+		response.setData(thread);
+
+		return response;
+	}
+
+	public PojoInsertRes insertArticle(InsertThreadReq data) throws Exception {
+		Thread insert = new Thread();
+		
+		ThreadCategory threadCategory = threadCategoryDao.getCategoryCode(ThreadCategoryType.ART.name());
+		Users user = userDao.getById(baseService.getUserId());
+
+		PojoInsertResData resData = new PojoInsertResData();
+		PojoInsertRes response = new PojoInsertRes();
+
+		if (data.getFileName() != null) {
+			File file = new File();
+			file.setFileName(data.getFileName());
+			file.setFileExt(data.getFileExt());
+			file.setIsActive(data.getIsActive());
+			File fileResult = fileDao.save(file);		
+			
+			insert.setFile(fileResult);
+		}
+
+		insert.setThreadTitle(data.getThreadTitle());
+		insert.setThreadContent(data.getThreadContent());
+		insert.setThreadCategory(threadCategory);
+		insert.setIsActive(true);
+		insert.setUser(user);
+
+		try {
+			begin();
+
+			Thread result = save(insert);
+
+			if (data.getPolling() != null) {
+				pollingService.insert(data.getPolling(), result.getId());
+			}
+
+			resData.setId(result.getId());
+			resData.setMessage("Successfully insert new data!");
+			response.setData(resData);
+
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
+
+		return response;
+	}
 }

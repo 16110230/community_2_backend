@@ -4,17 +4,23 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.community.constant.ThreadActivityType;
 import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Thread;
+import com.lawencon.community.model.ThreadActivity;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.Users;
+import com.lawencon.community.pojo.thread.PojoThread;
+import com.lawencon.community.service.BaseService;
 
 @Repository
 public class ThreadDao extends AbstractJpaDao<Thread> {
+	
 
 	public long countAllNewThreadToday() {
 		StringBuilder sqlBuilder = new StringBuilder().append("SELECT COUNT(id) new_thread_today ")
@@ -40,7 +46,7 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 				.append("JOIN users u ON u.id = t.user_id ")
 				.append("WHERE tc.category_name = :category ")
 				.append("ORDER BY t.created_at DESC ")
-				.append("LIMIT 5 ");
+				.append("LIMIT 3 ");
 
 		try {
 			List<?> result = createNativeQuery(sqlBuilder.toString())
@@ -65,6 +71,71 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 					user.setId(objArr[6].toString());
 					data.setUser(user);
 					data.setCreatedAt(((Timestamp) objArr[8]).toLocalDateTime());
+					response.add(data);
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+	
+	public List<PojoThread> getThreadForUser(String userId) {
+		List<PojoThread> response = new ArrayList<PojoThread>();
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT t.id as threadId , t.thread_title, t.thread_content, ")
+				.append("tc.category_name ,t.file_id, u.username, t.created_at, ")
+				.append("( SELECT ta.id from thread_activity ta JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id ")
+				.append("where user_id  = :userid AND thread_id = t.id  AND tac.thread_activity_code = :like) AS isLike, ")
+				.append("( SELECT ta.id from thread_activity ta JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id ")
+				.append("where user_id  = :userid2 AND thread_id = t.id  AND tac.thread_activity_code = :bookmark) AS isBookmark, ")
+				.append("( SELECT COUNT(ta2.id) AS countLike FROM thread_activity ta2 JOIN thread_activity_category tac2 ON tac2.id = ta2.thread_activity_category_id  ")
+				.append("WHERE tac2.thread_activity_code  = :like2 AND ta2.thread_id = t.id ) AS countLike, ")
+				.append("( SELECT COUNT(ta3.id) AS countBook FROM thread_activity ta3 JOIN thread_activity_category tac2 ON tac2.id = ta3.thread_activity_category_id ")
+				.append("WHERE tac2.thread_activity_code  = :bookmark2 AND ta3.thread_id = t.id ) AS countBook, ")
+				.append("( SELECT COUNT(td.id) AS countComment FROM thread_details td WHERE td.thread_id = t.id)AS countComment ")
+				.append("FROM thread t ")
+				.append("JOIN thread_category tc ON tc.id = t.thread_category_id ")
+				.append("JOIN users u ON u.id = t.user_id ")
+				.append("WHERE tc.category_code != :category ");
+
+		try {
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("userid", userId)
+					.setParameter("like", ThreadActivityType.LIKE.name())
+					.setParameter("userid2", userId)
+					.setParameter("bookmark", ThreadActivityType.BOOKMARK.name())
+					.setParameter("like2", ThreadActivityType.LIKE.name())
+					.setParameter("bookmark2", ThreadActivityType.BOOKMARK.name())
+					.setParameter("category", ThreadCategoryType.ART.name())
+					.getResultList();
+
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoThread data = new PojoThread();
+				
+					data.setId(objArr[0].toString());
+					data.setThreadTitle(objArr[1].toString());
+					data.setThreadContent(objArr[2].toString());
+					data.setThreadCategoryName(objArr[3].toString());
+					data.setFile(objArr[4].toString());
+					data.setUserName(objArr[5].toString());
+					data.setCreatedAt(((Timestamp) objArr[6]).toLocalDateTime());
+					if(objArr[7] != null) {
+						data.setIsLike(true);
+					}else {
+						data.setIsLike(false);
+					}
+					if(objArr[8] != null) {
+						data.setIsBookmark(true);
+					}else {
+						data.setIsBookmark(false);
+					}
+					data.setCountLike(Integer.valueOf(objArr[9].toString()));
+					data.setCountBookmark(Integer.valueOf(objArr[10].toString()));
+					data.setCountComment(Integer.valueOf(objArr[11].toString()));
 					response.add(data);
 				});
 			}

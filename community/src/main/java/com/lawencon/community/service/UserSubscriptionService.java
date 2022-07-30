@@ -14,7 +14,7 @@ import com.lawencon.community.pojo.usersubscription.ShowUserSubscriptionById;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class UserSubscriptionService extends BaseCoreService<UserSubscription> {
+public class UserSubscriptionService extends BaseService<UserSubscription> {
 	@Autowired
 	private UserSubscriptionDao userSubsDao;
 	

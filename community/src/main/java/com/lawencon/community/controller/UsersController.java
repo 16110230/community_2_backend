@@ -20,6 +20,7 @@ import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.users.InsertUserReq;
 import com.lawencon.community.pojo.users.PojoUsers;
 import com.lawencon.community.pojo.users.ShowUserById;
+import com.lawencon.community.pojo.users.UpdatePasswordReq;
 import com.lawencon.community.pojo.users.UpdateUserReq;
 import com.lawencon.community.service.UsersService;
 import com.lawencon.model.SearchQuery;
@@ -58,5 +59,11 @@ public class UsersController {
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable String id) throws Exception {
 		PojoDeleteRes response = userService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(response, HttpStatus.OK);
+	}
+	
+	@PutMapping("/change-password")
+	public ResponseEntity<PojoUpdateRes> update(@RequestBody @Valid UpdatePasswordReq update) throws Exception {
+		PojoUpdateRes response = userService.changePassword(update);
+		return new ResponseEntity<PojoUpdateRes>(response, HttpStatus.OK);
 	}
 }
