@@ -78,9 +78,6 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 	private RefreshTokenService tokenService;
 	
 	@Autowired
-	private BaseService baseService;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
@@ -194,7 +191,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 
 	public PojoUpdateRes update(UpdateUserReq data) throws Exception {
 		Users update = new Users();
-		Users users = userDao.getById(baseService.getUserId());
+		Users users = userDao.getById(getUserId());
 		Company company = companyDao.getById(data.getCompany());
 		Industry industry = industryDao.getById(data.getIndustry());
 		Position position = positionDao.getById(data.getPosition());
@@ -334,7 +331,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		PojoUpdateRes response = new PojoUpdateRes();
 		PojoUpdateResData resData = new PojoUpdateResData();
 		
-		Users user = userDao.getById(baseService.getUserId());
+		Users user = userDao.getById(getUserId());
 		
 		try {
 			if(passwordEncoder.matches(data.getOldPassword(), user.getUserPassword())) {

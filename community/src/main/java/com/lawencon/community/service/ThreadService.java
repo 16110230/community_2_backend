@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
@@ -15,7 +14,6 @@ import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadCategory;
-import com.lawencon.community.model.UserSubscription;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -252,7 +250,7 @@ public class ThreadService extends BaseService<Thread>{
 		Thread insert = new Thread();
 		
 		ThreadCategory threadCategory = threadCategoryDao.getCategoryCode(ThreadCategoryType.ART.name());
-		Users user = userDao.getById(baseService.getUserId());
+		Users user = userDao.getById(getUserId());
 
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
