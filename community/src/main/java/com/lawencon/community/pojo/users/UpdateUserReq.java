@@ -20,6 +20,7 @@ public class UpdateUserReq {
 	}
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
+	}
 	public String getFile() {
 		return file;
 	}
