@@ -27,4 +27,26 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice>{
 		return response;
 	}
 	
+	public Long countAllInvoicePendingByActivityType(String code){
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT COUNT(ai.id) pending_count ")
+				.append("FROM activity_invoice as ai ")
+				.append("INNER JOIN activity as a ON ai.activity_id = a.id ")	
+				.append("INNER JOIN activity_type as at ON a.activity_type_id = at.id ")
+				.append("WHERE ai.is_approved = null ")
+				.append("AND at.type_name = :code");
+		
+		Long response = 0l;
+		
+		Object result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("code",code)
+				.getSingleResult();
+		
+		if(result != null) {
+			response = Long.valueOf(result.toString());
+		}
+		
+		return response;
+	}
+	
 }
