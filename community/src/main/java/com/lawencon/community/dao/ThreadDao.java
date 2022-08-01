@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
@@ -12,11 +11,9 @@ import com.lawencon.community.constant.ThreadActivityType;
 import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Thread;
-import com.lawencon.community.model.ThreadActivity;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.thread.PojoThread;
-import com.lawencon.community.service.BaseService;
 
 @Repository
 public class ThreadDao extends AbstractJpaDao<Thread> {
@@ -143,6 +140,109 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 			e.printStackTrace();
 		}
 
+		return response;
+	}
+	
+	public Boolean isLike(String userId, String threadId) {
+		Boolean returnValue = false;
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT ta.id from thread_activity ta ")
+				.append("JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id ")
+				.append("where user_id  = :userId AND thread_id = :threadId  AND tac.thread_activity_code = :like ");
+		
+		try {
+			Object result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("userId", userId)
+					.setParameter("threadId", threadId)
+					.setParameter("like", ThreadActivityType.LIKE.name())
+					.getSingleResult();
+			if (result != null) {
+				returnValue = true;
+			}else {
+				returnValue = false;
+			}			
+		} catch (Exception e) {
+			returnValue = false;
+		}
+		return returnValue;
+	}
+	
+	public Boolean isBookmark(String userId, String threadId) {
+		Boolean returnValue = false;
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT ta.id from thread_activity ta ")
+				.append("JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id ")
+				.append("where user_id  = :userId AND thread_id = :threadId  AND tac.thread_activity_code = :bookmark ");
+		
+		try {
+			Object result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("userId", userId)
+					.setParameter("threadId", threadId)
+					.setParameter("bookmark", ThreadActivityType.BOOKMARK.name())
+					.getSingleResult();
+			
+			if (result != null) {
+				returnValue = true;
+			}else {
+				returnValue = false;
+			}
+		} catch (Exception e) {
+			returnValue = false;
+		}
+		return returnValue;
+	}
+	
+	public Integer countLike(String threadId) {
+		Integer response = 0;
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT COUNT(ta.id) AS countLike FROM thread_activity ta ")
+				.append("JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id ")
+				.append("WHERE tac.thread_activity_code  = :like AND ta.thread_id = :threadId ");
+		
+		Object result = createNativeQuery(sqlBuilder.toString())
+						.setParameter("like", ThreadActivityType.LIKE.name())
+						.setParameter("threadId", threadId)
+						.getSingleResult();
+
+		if (result != null) {
+			response = Integer.valueOf(result.toString());
+		}
+		
+		return response;
+	}
+	
+	public Integer countBookmark(String threadId) {
+		Integer response = 0;
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT COUNT(ta.id) AS countLike FROM thread_activity ta ")
+				.append("JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id ")
+				.append("WHERE tac.thread_activity_code  = :like AND ta.thread_id = :threadId ");
+		
+		Object result = createNativeQuery(sqlBuilder.toString())
+						.setParameter("like", ThreadActivityType.BOOKMARK.name())
+						.setParameter("threadId", threadId)
+						.getSingleResult();
+
+		if (result != null) {
+			response = Integer.valueOf(result.toString());
+		}
+		
+		return response;
+	}
+	
+	public Integer countComment(String threadId) {
+		Integer response = 0;
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT COUNT(td.id) AS countComment FROM thread_details td WHERE td.thread_id = :threadId ");
+		
+		Object result = createNativeQuery(sqlBuilder.toString())
+						.setParameter("threadId", threadId)
+						.getSingleResult();
+
+		if (result != null) {
+			response = Integer.valueOf(result.toString());
+		}
+		
 		return response;
 	}
 
