@@ -118,14 +118,6 @@ public class ThreadService extends BaseService<Thread>{
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 
-		if (data.getFileName() != null) {
-			File file = new File();
-			file.setFileName(data.getFileName());
-			file.setFileExt(data.getFileExt());
-			file.setIsActive(data.getIsActive());
-			fileDao.save(file);		
-			insert.setFile(file);
-		}
 		
 
 		insert.setThreadTitle(data.getThreadTitle());
@@ -137,6 +129,15 @@ public class ThreadService extends BaseService<Thread>{
 		try {
 			begin();
 
+			if (data.getFileName() != null) {
+				File file = new File();
+				file.setFileName(data.getFileName());
+				file.setFileExt(data.getFileExt());
+				file.setIsActive(data.getIsActive());
+				file.setCreatedBy(getUserId());
+				File fileResult = fileDao.save(file);		
+				insert.setFile(fileResult);
+			}
 			Thread result = save(insert);
 
 			if (data.getPolling() != null) {

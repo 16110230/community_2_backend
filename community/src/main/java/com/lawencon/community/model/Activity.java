@@ -25,6 +25,14 @@ public class Activity extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "activity_category_id")
 	private ActivityCategory activityCategory;
+	
+	@OneToOne
+	@JoinColumn(name = "activity_type_id")
+	private ActivityType activityType;
+	
+	@OneToOne
+	@JoinColumn(name = "file_id")
+	private File file;
 
 	@Column(name = "started_at")
 	private LocalDateTime startedAt;
@@ -38,6 +46,23 @@ public class Activity extends BaseEntity {
 	private Integer quantity;
 	private String provider;
 	private String trainer;
+	
+	
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	public File getFile() {
+		return file;
+	}
+	
+	public void setActivityType(ActivityType activityType) {
+		this.activityType = activityType;
+	}
+	
+	public ActivityType getActivityType() {
+		return activityType;
+	}
 
 	public Integer getQuantity() {
 		return quantity;
