@@ -16,7 +16,7 @@ import com.lawencon.base.BaseEntity;
 @Indexed
 public class Thread extends BaseEntity {
 
-	private static final long serialVersionUID = -5196455701225322056L;
+	private static final long serialVersionUID = 6579457434517709188L;
 
 	@Column(name = "thread_title", columnDefinition = "TEXT")
 	@FullTextField

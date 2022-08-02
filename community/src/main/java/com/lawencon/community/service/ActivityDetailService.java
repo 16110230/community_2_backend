@@ -27,7 +27,7 @@ import com.lawencon.community.pojo.activityDetails.UpdateActivityDetailsReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
+public class ActivityDetailService extends BaseService<ActivityDetails> {
 
 	@Autowired
 	private ActivityDetailsDao activityDetailsDao;
@@ -41,8 +41,8 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 	@Autowired
 	private FileDao fileDao;
 	
-	@Autowired
-	private BaseService baseService;
+//	@Autowired
+//	private BaseService baseService;
 
 	public SearchQuery<PojoActivityDetails> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ActivityDetails> users = activityDetailsDao.findAll(query, startPage, maxPage);
@@ -78,7 +78,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 		PojoInsertRes response = new PojoInsertRes();
 		
 		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(baseService.getUserId());
+		Users usr = usersDao.getById(getUserId());
 		File fileIns = new File();
 		
 		fileIns.setFileName(data.getFileName());
@@ -93,7 +93,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 			begin();
 			File res = fileDao.save(fileIns);
 			insert.setFile(res);
-			ActivityDetails result = save(insert);
+			ActivityDetails result = activityDetailsDao.saveNew(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -114,7 +114,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 		PojoUpdateRes response = new PojoUpdateRes();
 		
 		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(baseService.getUserId());
+		Users usr = usersDao.getById(getUserId());
 		File file = fileDao.getById(data.getFile());
 		
 		update.setActivity(act);
@@ -131,7 +131,7 @@ public class ActivityDetailService extends BaseCoreService<ActivityDetails> {
 			File res = fileDao.save(file);
 			
 			update.setFile(res);
-			ActivityDetails result = save(update);
+			ActivityDetails result = activityDetailsDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);

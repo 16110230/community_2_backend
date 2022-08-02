@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class InsertActivityReq {
 	
 	@NotBlank(message = "Title Can't Be Null")
@@ -13,10 +15,16 @@ public class InsertActivityReq {
 	@NotBlank(message = "Content Can't Be Null")
 	private String activityContent;
 	
-	@NotBlank(message = "Category Can't Be Null")
+//	@NotBlank(message = "Category Can't Be Null")
 	private String activityCategory;
 	
+	@NotBlank(message = "Type Can't Be Null")
+	private String activityType;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.000'Z'")
 	private LocalDateTime startedAt;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.000'Z'")
 	private LocalDateTime endedAt;
 	
 	@NotNull(message = "Fee Can't Be Null")
@@ -28,12 +36,40 @@ public class InsertActivityReq {
 	@NotNull(message = "Limit Can't Be Null")
 	private Boolean isLimit;
 	
-	@NotBlank(message = "Provider Can't Be Null")
 	private String provider;
 	
-	@NotBlank(message = "Trainer Can't Be Null")
 	private String trainer;
 	
+	private String file;
+	
+	private String fileName;
+	
+	private String fileExt;
+	
+	public String getFile() {
+		return file;
+	}
+	public void setFile(String file) {
+		this.file = file;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getFileExt() {
+		return fileExt;
+	}
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
+	}
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
+	}
+	public String getActivityType() {
+		return activityType;
+	}
 	public String getActivityTitle() {
 		return activityTitle;
 	}

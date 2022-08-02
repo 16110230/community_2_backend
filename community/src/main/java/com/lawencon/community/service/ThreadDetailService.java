@@ -29,7 +29,7 @@ import com.lawencon.community.pojo.threadDetails.UpdateThreadDetailsReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
+public class ThreadDetailService extends BaseService<ThreadDetails> {
 
 	@Autowired
 	private ThreadDetailsDao threadDetailsDao;
@@ -40,8 +40,8 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 	@Autowired
 	private UsersDao usersDao;
 	
-	@Autowired
-	private BaseService baseService;
+//	@Autowired
+//	private BaseService baseService;
 
 	public SearchQuery<PojoThreadDetails> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ThreadDetails> threadDetails = threadDetailsDao.findAll(query, startPage, maxPage);
@@ -124,7 +124,7 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 	public PojoInsertRes insert(InsertThreadDetailsReq data) throws Exception {
 		ThreadDetails insert = new ThreadDetails();
 		Thread thread = threadDao.getById(data.getThread());
-		Users user = usersDao.getById(baseService.getUserId());
+		Users user = usersDao.getById(getUserId());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 
@@ -135,7 +135,7 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 		try {
 			begin();
 
-			ThreadDetails result = save(insert);
+			ThreadDetails result = threadDetailsDao.saveNew(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -165,7 +165,7 @@ public class ThreadDetailService extends BaseCoreService<ThreadDetails> {
 		try {
 			begin();
 
-			ThreadDetails result = save(update);
+			ThreadDetails result = threadDetailsDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
