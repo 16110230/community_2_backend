@@ -74,16 +74,14 @@ public class PollingService extends BaseCoreService<Polling> {
 		return response;
 	}
 
-	public PojoInsertRes insert(InsertPollingMainReq data, String threadId) throws Exception {
+	public PojoInsertRes insert(InsertPollingMainReq data, Thread thread) throws Exception {
 		Polling insert = new Polling();
-		Thread thread = threadDao.getById(threadId);
 		PojoInsertRes response = new PojoInsertRes();
 		PojoInsertResData resData = new PojoInsertResData();
 
 		insert.setThread(thread);
 		insert.setIsActive(data.getHeader().getIsActive());
 
-		begin();
 		Polling result = pollingDao.saveNew(insert);
 
 		for (InsertPollingDtlReq val : data.getDetails()) {
@@ -93,9 +91,8 @@ public class PollingService extends BaseCoreService<Polling> {
 			detail.setIsActive(val.getIsActive());
 			detail.setCreatedBy(result.getCreatedBy());
 
-			//detailsDao.saveNew(detail);
+			detailsDao.saveNew(detail);
 		}
-		commit();
 		
 		resData.setId(result.getId());
 		resData.setMessage("Successfully add new data!");

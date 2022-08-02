@@ -167,15 +167,15 @@ public class ThreadService extends BaseService<Thread>{
 			}
 
 			Thread result = threadDao.saveNew(insert);
-			commit();
 
 			if (data.getPolling() != null) {
-				pollingService.insert(data.getPolling(), result.getId());
+				pollingService.insert(data.getPolling(), result);
 			}
 
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
+			commit();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -380,7 +380,7 @@ public class ThreadService extends BaseService<Thread>{
 			Thread result = threadDao.saveNew(insert);
 
 			if (data.getPolling() != null) {
-				pollingService.insert(data.getPolling(), result.getId());
+				pollingService.insert(data.getPolling(), result);
 			}
 
 			resData.setId(result.getId());
