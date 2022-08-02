@@ -191,7 +191,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 
 	public PojoUpdateRes update(UpdateUserReq data) throws Exception {
 		Users update = new Users();
-		Users users = userDao.getById(getUserId());
+		Users users = new Users();
 		Company company = companyDao.getById(data.getCompany());
 		Industry industry = industryDao.getById(data.getIndustry());
 		Position position = positionDao.getById(data.getPosition());
@@ -199,6 +199,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		PojoUpdateRes response = new PojoUpdateRes();
 		File file = new File();
 		
+		// File check
 		if(data.getFile() != null || data.getFileName() != null) {
 			if(data.getFileName() != null) {				
 				file.setFileName(data.getFileName());
@@ -208,13 +209,22 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 				update.setFile(file);
 			}
 		}
-
-		update.setId(data.getId());
+		
+		// User ID check (from admin / from member)
+		if(data.getId() != null) {
+			users = userDao.getById(data.getId());
+			update.setId(data.getId());
+			update.setEmail(data.getEmail());
+		} else {
+			users = userDao.getById(getUserId());
+			update.setId(getUserId());
+			update.setEmail(users.getEmail());
+		}
+		
 		update.setRole(users.getRole());
 		update.setFullName(data.getFullName());
 		update.setUsername(data.getUsername());
-		update.setEmail(data.getEmail());
-		update.setUserPassword(data.getUserPassword());
+		update.setUserPassword(users.getUserPassword());
 		update.setCompany(company);
 		update.setIndustry(industry);
 		update.setPosition(position);
@@ -354,6 +364,37 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		}
 		
 		response.setData(resData);
+		return response;
+	}
+	
+	public ShowUserById showById() {
+		Users users = userDao.getById(getUserId());
+		PojoUsers user = new PojoUsers();
+
+		Company company = companyDao.getById(users.getCompany().getId());
+		Industry industry = industryDao.getById(users.getIndustry().getId());
+		Position position = positionDao.getById(users.getPosition().getId());
+		
+		if(users.getFile() != null) {
+			user.setFile(users.getFile().getId());
+		}
+
+		user.setId(users.getId());
+		user.setFullName(users.getFullName());
+		user.setEmail(users.getEmail());
+		user.setUsername(users.getUsername());
+		user.setIsActive(users.getIsActive());
+		user.setVersion(users.getVersion());
+		user.setCompany(company.getId());
+		user.setCompanyName(company.getCompanyName());
+		user.setIndustry(industry.getId());
+		user.setIndustryName(industry.getIndustryName());
+		user.setPosition(position.getId());
+		user.setPositionName(position.getPositionName());
+
+		ShowUserById response = new ShowUserById();
+		response.setData(user);
+
 		return response;
 	}
 }
