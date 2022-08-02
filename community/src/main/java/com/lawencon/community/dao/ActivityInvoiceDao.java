@@ -33,7 +33,7 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice>{
 				.append("FROM activity_invoice as ai ")
 				.append("INNER JOIN activity as a ON ai.activity_id = a.id ")	
 				.append("INNER JOIN activity_type as at ON a.activity_type_id = at.id ")
-				.append("WHERE ai.is_approved = null ")
+				.append("WHERE ai.is_approved IS NULL ")
 				.append("AND at.type_name = :code");
 		
 		Long response = 0l;
