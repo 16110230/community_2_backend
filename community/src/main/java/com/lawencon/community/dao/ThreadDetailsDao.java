@@ -51,4 +51,16 @@ public class ThreadDetailsDao extends AbstractJpaDao<ThreadDetails> {
 
 		return response;
 	}
+	
+	public boolean deleteByThreadId(String id) {
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("DELETE FROM thread_details td ")
+				.append("WHERE td.thread_id = :threadId");
+		
+		int result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("threadId", id)
+				.executeUpdate();
+		
+		return result > 0;
+	}
 }

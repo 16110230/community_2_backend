@@ -10,8 +10,8 @@ import com.lawencon.base.BaseEntity;
 @Table(name="file")
 public class File extends BaseEntity{
 
-	private static final long serialVersionUID = -5196455701225322056L;
-	
+	private static final long serialVersionUID = 5947838841780357057L;
+
 	@Column(name="file_name")
 	private String fileName;
 	
