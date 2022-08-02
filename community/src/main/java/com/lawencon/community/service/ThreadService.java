@@ -86,6 +86,11 @@ public class ThreadService extends BaseService<Thread>{
 			thread.setId(val.getId());
 			thread.setThreadTitle(val.getThreadTitle());
 			thread.setThreadContent(val.getThreadContent());
+			thread.setIsLike(threadDao.isLike(getUserId(), val.getId()));
+			thread.setIsBookmark(threadDao.isBookmark(getUserId(), val.getId()));
+			thread.setCountBookmark(threadDao.countBookmark(val.getId()));
+			thread.setCountLike(threadDao.countLike(val.getId()));
+			thread.setCountComment(threadDao.countComment(val.getId()));
 			
 			thread.setUser(user.getId());
 			thread.setUserName(user.getUsername());
@@ -124,6 +129,11 @@ public class ThreadService extends BaseService<Thread>{
 		thread.setCreatedAt(threads.getCreatedAt());
 		thread.setIsActive(threads.getIsActive());
 		thread.setVersion(threads.getVersion());
+		thread.setIsLike(threadDao.isLike(getUserId(), threads.getId()));
+		thread.setIsBookmark(threadDao.isBookmark(getUserId(), threads.getId()));
+		thread.setCountBookmark(threadDao.countBookmark(threads.getId()));
+		thread.setCountLike(threadDao.countLike(threads.getId()));
+		thread.setCountComment(threadDao.countComment(threads.getId()));
 
 		ShowThreadById response = new ShowThreadById();
 		response.setData(thread);

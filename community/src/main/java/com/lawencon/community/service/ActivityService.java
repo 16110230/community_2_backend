@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.ActivityCategoryDao;
 import com.lawencon.community.dao.ActivityDao;
+import com.lawencon.community.dao.ActivityTypeDao;
+import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityCategory;
+import com.lawencon.community.model.ActivityType;
+import com.lawencon.community.model.File;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
@@ -23,13 +26,19 @@ import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ActivityService extends BaseCoreService<Activity>{
+public class ActivityService extends BaseService<Activity>{
 	
 	@Autowired
 	private ActivityDao activityDao;
 	
 	@Autowired
 	private ActivityCategoryDao activityCategoryDao;
+	
+	@Autowired
+	private ActivityTypeDao activityTypeDao;
+	
+	@Autowired
+	private FileDao fileDao;
 	
 	public SearchQuery<PojoActivity> showAll(String query, Integer startPage, Integer maxPage)
 			throws Exception {
@@ -40,6 +49,10 @@ public class ActivityService extends BaseCoreService<Activity>{
 			PojoActivity act = new PojoActivity();
 			ActivityCategory actCat = activityCategoryDao.getById(val.getActivityCategory().getId());
 			
+			if(val.getFile() != null) {				
+				File file = fileDao.getById(val.getFile().getId());
+				act.setFile(file.getId());
+			}
 
 			act.setId(val.getId());
 			act.setActivityTitle(val.getActivityTitle());
@@ -55,6 +68,8 @@ public class ActivityService extends BaseCoreService<Activity>{
 			act.setTrainer(val.getTrainer());
 			act.setVersion(val.getVersion());
 			act.setIsActive(val.getIsActive());
+			act.setActivityType(val.getActivityType().getId());
+			act.setActivityTypeName(val.getActivityType().getTypeName());
 			
 			result.add(act);
 		});
@@ -70,7 +85,8 @@ public class ActivityService extends BaseCoreService<Activity>{
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 		
-		ActivityCategory  actCat = activityCategoryDao.getById(data.getActivityCategory());
+		ActivityCategory actCat = activityCategoryDao.getById(data.getActivityCategory());
+		ActivityType actType = activityTypeDao.getById(data.getActivityType());
 		
 		insert.setActivityTitle(data.getActivityTitle());
 		insert.setActivityContent(data.getActivityContent());
@@ -83,11 +99,23 @@ public class ActivityService extends BaseCoreService<Activity>{
 		insert.setProvider(data.getProvider());
 		insert.setTrainer(data.getTrainer());
 		insert.setIsActive(true);
+		insert.setActivityType(actType);
+		
 		
 		try {
 			begin();
-
 			Activity result = activityDao.saveNew(insert);
+			
+			if(data.getFileName() != null) {				
+				File insertFile = new File();
+				insertFile.setFileName(data.getFileName());
+				insertFile.setFileExt(data.getFileExt());
+				insertFile.setCreatedBy(getUserId());
+				insertFile.setIsActive(true);
+				File resultFile = fileDao.save(insertFile);
+				insert.setFile(resultFile);
+			}
+      
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
