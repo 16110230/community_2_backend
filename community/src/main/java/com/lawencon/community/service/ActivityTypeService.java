@@ -60,7 +60,7 @@ public class ActivityTypeService extends BaseCoreService<ActivityType> {
 		try {
 			begin();
 
-			ActivityType result = save(insert);
+			ActivityType result = activityTypeDao.saveNew(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -89,7 +89,7 @@ public class ActivityTypeService extends BaseCoreService<ActivityType> {
 		try {
 			begin();
 
-			ActivityType result = save(update);
+			ActivityType result = activityTypeDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);

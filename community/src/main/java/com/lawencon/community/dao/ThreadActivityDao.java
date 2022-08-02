@@ -1,5 +1,7 @@
 package com.lawencon.community.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
@@ -57,4 +59,15 @@ public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
 		return response;
 	}
 	
+	public boolean deleteByThreadId(String id) {
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("DELETE FROM thread_activity ta ")
+				.append("WHERE ta.thread_id = :threadId");
+		
+		int result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("threadId", id)
+				.executeUpdate();
+		
+		return result > 0;
+	}
 }

@@ -22,7 +22,7 @@ import com.lawencon.community.pojo.userpolling.ShowUserPollingById;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class UserPollingService extends BaseCoreService<UserPolling> {
+public class UserPollingService extends BaseService<UserPolling> {
 	@Autowired
 	private UserPollingDao userPollingDao;
 
@@ -90,7 +90,7 @@ public class UserPollingService extends BaseCoreService<UserPolling> {
 
 		try {
 			begin();
-			UserPolling result = save(insert);
+			UserPolling result = userPollingDao.saveNew(insert);
 			commit();
 
 			resData.setId(result.getId());

@@ -21,7 +21,7 @@ import com.lawencon.community.pojo.threadCategory.UpdateThreadCategoryReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ThreadCategoryService extends BaseCoreService<ThreadCategory>{
+public class ThreadCategoryService extends BaseService<ThreadCategory>{
 	
 	@Autowired
 	private ThreadCategoryDao threadCategoryDao;
@@ -76,7 +76,7 @@ public class ThreadCategoryService extends BaseCoreService<ThreadCategory>{
 		try {
 			begin();
 
-			ThreadCategory result = save(insert);
+			ThreadCategory result = threadCategoryDao.saveNew(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -104,7 +104,7 @@ public class ThreadCategoryService extends BaseCoreService<ThreadCategory>{
 		try {
 			begin();
 
-			ThreadCategory result = save(update);
+			ThreadCategory result = threadCategoryDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);

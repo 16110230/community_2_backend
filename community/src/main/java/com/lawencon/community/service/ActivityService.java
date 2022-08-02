@@ -104,6 +104,7 @@ public class ActivityService extends BaseService<Activity>{
 		
 		try {
 			begin();
+			Activity result = activityDao.saveNew(insert);
 			
 			if(data.getFileName() != null) {				
 				File insertFile = new File();
@@ -114,8 +115,7 @@ public class ActivityService extends BaseService<Activity>{
 				File resultFile = fileDao.save(insertFile);
 				insert.setFile(resultFile);
 			}
-			
-			Activity result = save(insert);
+      
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -154,7 +154,7 @@ public class ActivityService extends BaseService<Activity>{
 		try {
 			begin();
 
-			Activity result = save(update);
+			Activity result = activityDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
