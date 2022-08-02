@@ -66,4 +66,10 @@ public class UsersController {
 		PojoUpdateRes response = userService.changePassword(update);
 		return new ResponseEntity<PojoUpdateRes>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("/profile")
+	public ResponseEntity<ShowUserById> getUserProfile() throws Exception {
+		ShowUserById data = userService.showById();
+		return new ResponseEntity<ShowUserById>(data, HttpStatus.OK);
+	}
 }
