@@ -2,7 +2,7 @@ package com.lawencon.community.constant;
 
 public enum ThreadCategoryType {
 
-	FREE("free"), SUBS("subscribe"), ART("article"), POL("polling");
+	REG("Regular"), PREM("Premium"), ART("Article"), POL("Polling");
 	
 	private String code;
 	

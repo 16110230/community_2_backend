@@ -8,6 +8,8 @@ public class PojoActivity {
 	private String activityContent;
 	private String activityCategory;
 	private String activityCategoryName;
+	private String activityType;
+	private String activityTypeName;
 	private LocalDateTime startedAt;
 	private LocalDateTime endedAt;
 	private Integer fee;
@@ -17,7 +19,26 @@ public class PojoActivity {
 	private String trainer;
 	private Boolean isActive;
 	private Integer version;
+	private String file;
 	
+	public void setFile(String file) {
+		this.file = file;
+	}
+	public String getFile() {
+		return file;
+	}
+	public String getActivityType() {
+		return activityType;
+	}
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
+	}
+	public String getActivityTypeName() {
+		return activityTypeName;
+	}
+	public void setActivityTypeName(String activityTypeName) {
+		this.activityTypeName = activityTypeName;
+	}
 	public String getId() {
 		return id;
 	}

@@ -63,6 +63,24 @@ public class UsersDao extends AbstractJpaDao<Users> {
 		return response;
 	}
 	
+	public Long countAll() {
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT COUNT(id) users_count ")
+				.append("FROM users ");				
+		
+		Long response = 0l;
+		
+		Object result = createNativeQuery(sqlBuilder.toString())
+				.getSingleResult();
+		
+		if(result != null) {
+			response = Long.valueOf(result.toString());
+		}
+		
+		
+		return response;
+	}
+	
 	public String findByRoleCode(String roleCode) {
 		StringBuilder sqlBuilder = new StringBuilder()
 				.append("SELECT u.id ")
@@ -81,4 +99,5 @@ public class UsersDao extends AbstractJpaDao<Users> {
 		
 		return response;
 	}
+	
 }
