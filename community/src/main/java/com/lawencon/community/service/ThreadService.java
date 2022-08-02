@@ -396,4 +396,47 @@ public class ThreadService extends BaseService<Thread>{
 
 		return response;
 	}
+	
+	public SearchQuery<PojoThread> showAllArticles(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage, "threadTitle", "threadContent");
+		List<PojoThread> result = new ArrayList<PojoThread>();
+
+		threads.getData().forEach(val -> {
+			if(val.getThreadCategory().getCategoryCode().equalsIgnoreCase(ThreadCategoryType.ART.name())) {
+				PojoThread thread = new PojoThread();
+				ThreadCategory threadCategory = threadCategoryDao.getById(val.getThreadCategory().getId());
+				Users user = usersDao.getById(val.getUser().getId());
+				
+				if (val.getFile() != null) {
+					File file = fileDao.getById(val.getFile().getId());
+					thread.setFile(file.getId());				
+				}
+				
+				thread.setId(val.getId());
+				thread.setThreadTitle(val.getThreadTitle());
+				thread.setThreadContent(val.getThreadContent());
+				thread.setIsLike(threadDao.isLike(getUserId(), val.getId()));
+				thread.setIsBookmark(threadDao.isBookmark(getUserId(), val.getId()));
+				thread.setCountBookmark(threadDao.countBookmark(val.getId()));
+				thread.setCountLike(threadDao.countLike(val.getId()));
+				thread.setCountComment(threadDao.countComment(val.getId()));
+				
+				thread.setUser(user.getId());
+				thread.setUserName(user.getUsername());
+				thread.setThreadcategory(threadCategory.getId());
+				thread.setThreadCategoryName(threadCategory.getCategoryName());
+				thread.setCreatedAt(val.getCreatedAt());
+				thread.setIsActive(val.getIsActive());
+				thread.setVersion(val.getVersion());
+				
+				result.add(thread);
+			}
+		});
+
+		SearchQuery<PojoThread> response = new SearchQuery<PojoThread>();
+		response.setData(result);
+		response.setCount(threads.getCount());
+
+		return response;
+	}
 }
