@@ -91,7 +91,7 @@ public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
 			begin();
 			File res = fileDao.save(fileIns);
 			insert.setFile(res);
-			ActivityInvoice result = save(insert);
+			ActivityInvoice result = activityInvoiceDao.saveNew(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -129,7 +129,7 @@ public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
 			File res = fileDao.save(file);
 
 			update.setFile(res);
-			ActivityInvoice result = save(update);
+			ActivityInvoice result = activityInvoiceDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);

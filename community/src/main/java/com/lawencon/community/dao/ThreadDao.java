@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
@@ -12,11 +11,9 @@ import com.lawencon.community.constant.ThreadActivityType;
 import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Thread;
-import com.lawencon.community.model.ThreadActivity;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.thread.PojoThread;
-import com.lawencon.community.service.BaseService;
 
 @Repository
 public class ThreadDao extends AbstractJpaDao<Thread> {

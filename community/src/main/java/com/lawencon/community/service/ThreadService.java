@@ -6,14 +6,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.base.ConnHandler;
 import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.dao.FileDao;
+import com.lawencon.community.dao.PollingDao;
+import com.lawencon.community.dao.PollingDetailsDao;
+import com.lawencon.community.dao.ThreadActivityDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
 import com.lawencon.community.dao.ThreadDao;
+import com.lawencon.community.dao.ThreadDetailsDao;
+import com.lawencon.community.dao.UserPollingDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.File;
+import com.lawencon.community.model.Polling;
+import com.lawencon.community.model.PollingDetails;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadCategory;
+import com.lawencon.community.model.UserPolling;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -43,10 +52,22 @@ public class ThreadService extends BaseService<Thread>{
 	private UsersDao usersDao;
 
 	@Autowired
-	private UsersDao userDao;
-
-	@Autowired
 	private PollingService pollingService;
+	
+	@Autowired
+	private ThreadActivityDao threadActivityDao;
+	
+	@Autowired
+	private PollingDao pollingDao;
+	
+	@Autowired
+	private PollingDetailsDao pollingDetailsDao;
+	
+	@Autowired
+	private UserPollingDao userPollingDao;
+	
+	@Autowired
+	private ThreadDetailsDao threadDetailsDao;
 
 	public SearchQuery<PojoThread> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage, "threadTitle", "threadContent");
@@ -113,20 +134,10 @@ public class ThreadService extends BaseService<Thread>{
 	public PojoInsertRes insert(InsertThreadReq data) throws Exception {
 		Thread insert = new Thread();
 		ThreadCategory threadCategory = threadCategoryDao.getById(data.getThreadCategory());
-		Users user = userDao.getById(getUserId());
+		Users user = usersDao.getById(getUserId());
 
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
-
-		if (data.getFileName() != null) {
-			File file = new File();
-			file.setFileName(data.getFileName());
-			file.setFileExt(data.getFileExt());
-			file.setIsActive(data.getIsActive());
-			fileDao.save(file);		
-			insert.setFile(file);
-		}
-		
 
 		insert.setThreadTitle(data.getThreadTitle());
 		insert.setThreadContent(data.getThreadContent());
@@ -135,9 +146,18 @@ public class ThreadService extends BaseService<Thread>{
 		insert.setUser(user);
 
 		try {
-			begin();
+			begin();			
+			if (data.getFileName() != null) {
+				File file = new File();
+				file.setFileName(data.getFileName());
+				file.setFileExt(data.getFileExt());
+				file.setIsActive(data.getIsActive());
+				File result = fileDao.saveNew(file);		
+				insert.setFile(result);
+			}
 
-			Thread result = save(insert);
+			Thread result = threadDao.saveNew(insert);
+			commit();
 
 			if (data.getPolling() != null) {
 				pollingService.insert(data.getPolling(), result.getId());
@@ -147,7 +167,6 @@ public class ThreadService extends BaseService<Thread>{
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
 
-			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -218,19 +237,93 @@ public class ThreadService extends BaseService<Thread>{
 	
 	public PojoDeleteRes delete(String id) throws Exception {
 		PojoDeleteRes response = new PojoDeleteRes();
-
-		try {
-			begin();
-			boolean result = threadDao.deleteById(id);
-			commit();
-
-			if (result) {
-				response.setMessage("Successfully delete the data!");
+		Thread thread = threadDao.getById(id);
+		
+		if (ThreadCategoryType.POL.name() == thread.getThreadCategory().getCategoryCode()) {
+			Polling polling = pollingDao.getByThreadId(id);
+			List<PollingDetails> pollingDetail = pollingDetailsDao.findAllByPolling(polling.getId());
+			
+			int sizePolling = pollingDetail.size();
+			
+			try {
+				boolean deletePollDetail = false;
+				
+				for (int i = 0; i < sizePolling; i++) {
+					UserPolling userPolling = userPollingDao.getById(pollingDetail.get(i).getPolling().getId());
+					boolean deleteUserPolling = userPollingDao.deleteById(userPolling.getId());
+					if (deleteUserPolling) {
+						deletePollDetail = pollingDao.deleteById(pollingDetail.get(i).getId());					
+					}
+				}
+				
+				if (deletePollDetail) {
+					boolean result = threadDao.deleteById(id);
+					if (result) {
+						response.setMessage("Successfully delete the data!");
+					}
+				} else {
+					boolean result = threadDao.deleteById(id);
+					if (result) {
+						response.setMessage("Successfully delete the data!");
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				rollback();
+				throw new Exception(e);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			rollback();
-			throw new Exception(e);
+		} else if (ThreadCategoryType.ART.name().equalsIgnoreCase(thread.getThreadCategory().getCategoryCode())) {
+			try {
+				begin();
+				
+				boolean result = threadDao.deleteById(id);
+				if (result) {
+					response.setMessage("Successfully delete the data!");
+				}
+				
+				commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+				rollback();
+				throw new Exception(e);
+			}
+			
+		} else {
+			try {
+				begin();
+				
+				boolean deleteThreadAct = threadActivityDao.deleteByThreadId(id);
+				
+				if (deleteThreadAct) {
+					boolean deleteThreadDetail = threadDetailsDao.deleteByThreadId(id);
+					if (deleteThreadDetail) {
+						boolean result = threadDao.deleteById(id);
+						if (result) {
+							response.setMessage("Successfully delete the data!");
+						}
+					}
+				} else {
+					boolean deleteThreadDetail = threadDetailsDao.deleteByThreadId(id);
+					if (deleteThreadDetail) {
+						boolean result = threadDao.deleteById(id);
+						if (result) {
+							response.setMessage("Successfully delete the data!");
+						}
+					} else {
+						boolean result = threadDao.deleteById(id);
+						if (result) {
+							response.setMessage("Successfully delete the data!");
+						}
+					}
+				}
+				
+				commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+				rollback();
+				throw new Exception(e);
+			}
+			
 		}
 
 		return response;
@@ -250,7 +343,7 @@ public class ThreadService extends BaseService<Thread>{
 		Thread insert = new Thread();
 		
 		ThreadCategory threadCategory = threadCategoryDao.getCategoryCode(ThreadCategoryType.ART.name());
-		Users user = userDao.getById(getUserId());
+		Users user = usersDao.getById(getUserId());
 
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
@@ -274,7 +367,7 @@ public class ThreadService extends BaseService<Thread>{
 		try {
 			begin();
 
-			Thread result = save(insert);
+			Thread result = threadDao.saveNew(insert);
 
 			if (data.getPolling() != null) {
 				pollingService.insert(data.getPolling(), result.getId());

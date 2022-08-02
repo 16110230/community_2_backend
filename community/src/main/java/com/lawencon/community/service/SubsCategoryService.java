@@ -78,7 +78,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 
 		try {
 			begin();
-			SubscriptionCategory result = save(insert);
+			SubscriptionCategory result = subsCategoryDao.saveNew(insert);
 			commit();
 
 			resData.setId(result.getId());
@@ -107,7 +107,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 
 		try {
 			begin();
-			SubscriptionCategory result = save(update);
+			SubscriptionCategory result = subsCategoryDao.saveNew(update);
 			commit();
 
 			resData.setVersion(result.getVersion());
