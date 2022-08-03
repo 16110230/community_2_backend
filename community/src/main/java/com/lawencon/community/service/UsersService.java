@@ -190,8 +190,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 	}
 
 	public PojoUpdateRes update(UpdateUserReq data) throws Exception {
-		Users update = new Users();
-		Users users = new Users();
+		Users update = userDao.getById(data.getId());
 		Company company = companyDao.getById(data.getCompany());
 		Industry industry = industryDao.getById(data.getIndustry());
 		Position position = positionDao.getById(data.getPosition());
@@ -200,44 +199,25 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		File file = new File();
 		
 		// File check
-		if(data.getFile() != null || data.getFileName() != null) {
-			if(data.getFileName() != null) {				
-				file.setFileName(data.getFileName());
-				file.setFileExt(data.getFileExt());
-			} else {
-				file = fileDao.getById(data.getFile());
-				update.setFile(file);
-			}
+		if(data.getFileName() != null) {
+			file.setFileName(data.getFileName());
+			file.setFileExt(data.getFileExt());
 		}
 		
-		// User ID check (from admin / from member)
-		if(data.getId() != null) {
-			users = userDao.getById(data.getId());
-			update.setId(data.getId());
-			update.setEmail(data.getEmail());
-		} else {
-			users = userDao.getById(getUserId());
-			update.setId(getUserId());
-			update.setEmail(users.getEmail());
-		}
-		
-		update.setRole(users.getRole());
 		update.setFullName(data.getFullName());
 		update.setUsername(data.getUsername());
-		update.setUserPassword(users.getUserPassword());
 		update.setCompany(company);
 		update.setIndustry(industry);
 		update.setPosition(position);
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
+		update.setBalance(data.getBalance());
 
 		try {
 			begin();
 			
-			if(data.getFileName() != null) {
-				File fileResult = fileDao.saveNew(file);
-				update.setFile(fileResult);
-			}
+			File fileResult = fileDao.saveNew(file);
+			update.setFile(fileResult);
 			
 			Users result = userDao.saveNew(update);
 			resData.setVersion(result.getVersion());
