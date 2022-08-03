@@ -20,7 +20,28 @@ public class PojoActivity {
 	private Boolean isActive;
 	private Integer version;
 	private String file;
+	private LocalDateTime createdAt;
+	private String fullName;
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	private String createdBy;
 	
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	public String getFullName() {
+		return fullName;
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 	public void setFile(String file) {
 		this.file = file;
 	}
