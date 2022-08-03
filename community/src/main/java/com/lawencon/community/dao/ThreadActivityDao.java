@@ -22,6 +22,7 @@ public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
 		
 		Long response = 0l;
 		
+		
 		Object result = createNativeQuery(sqlBuilder.toString())
 				.setParameter("threadId", id)
 				.setParameter("tacCode", ThreadActivityType.LIKE.name())
