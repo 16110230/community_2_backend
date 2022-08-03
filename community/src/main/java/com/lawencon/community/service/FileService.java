@@ -8,7 +8,7 @@ import com.lawencon.community.model.File;
 
 @Service
 public class FileService extends BaseService<File> {
-
+	
 	@Autowired
 	private FileDao fileDao;
 
