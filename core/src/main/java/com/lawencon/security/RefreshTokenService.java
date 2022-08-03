@@ -2,14 +2,14 @@ package com.lawencon.security;
 
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
+import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
 @Service
-public class RefreshTokenService extends BaseCoreService<RefreshTokenEntity> {
+public class RefreshTokenService extends AbstractJpaDao<RefreshTokenEntity> {
 	public RefreshTokenEntity saveToken(RefreshTokenEntity data) throws Exception {
 		try {
-			data = save(data);
+			data = saveNew(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e);

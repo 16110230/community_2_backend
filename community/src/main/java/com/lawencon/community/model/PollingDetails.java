@@ -12,8 +12,8 @@ import com.lawencon.base.BaseEntity;
 @Table(name="polling_details")
 public class PollingDetails extends BaseEntity {
 	
-	private static final long serialVersionUID = -5196455701225322056L;
-	
+	private static final long serialVersionUID = -2714699836768979277L;
+
 	@ManyToOne
 	@JoinColumn(name="polling_id")
 	private Polling polling;

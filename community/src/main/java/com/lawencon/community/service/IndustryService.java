@@ -75,7 +75,7 @@ public class IndustryService extends BaseCoreService<Industry> {
 		try {
 			begin();
 			
-			Industry result = save(insert);
+			Industry result = industryDao.saveNew(insert);
 			resData.setId(result.getId());
 			resData.setMessage("Successfully add new data!");
 			response.setData(resData);
@@ -103,7 +103,7 @@ public class IndustryService extends BaseCoreService<Industry> {
 
 		try {
 			begin();
-			Industry result = save(update);
+			Industry result = industryDao.saveNew(update);
 			commit();
 
 			resData.setVersion(result.getVersion());

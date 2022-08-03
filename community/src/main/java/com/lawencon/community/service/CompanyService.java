@@ -80,7 +80,7 @@ public class CompanyService extends BaseCoreService<Company> {
 
 		try {
 			begin();
-			Company result = save(insert);
+			Company result = companyDao.saveNew(insert);
 			commit();
 
 			resData.setId(result.getId());
@@ -110,7 +110,7 @@ public class CompanyService extends BaseCoreService<Company> {
 
 		try {
 			begin();
-			Company result = save(update);
+			Company result = companyDao.saveNew(update);
 			commit();
 
 			resData.setVersion(result.getVersion());

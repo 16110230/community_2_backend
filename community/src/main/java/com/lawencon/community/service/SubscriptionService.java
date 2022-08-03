@@ -30,7 +30,7 @@ import com.lawencon.community.pojo.subscriptions.UpdateSubscriptionReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class SubscriptionService extends BaseCoreService<Subscription> {
+public class SubscriptionService extends BaseService<Subscription> {
 	@Autowired
 	private SubscriptionDao subscriptionDao;
 
@@ -46,8 +46,8 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 	@Autowired
 	private UserSubscriptionDao userSubsDao;
 	
-	@Autowired
-	private BaseService baseService;
+//	@Autowired
+//	private BaseService baseService;
 
 	public SearchQuery<PojoSubscription> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
@@ -114,7 +114,7 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 			insert.setSubscriptionCategory(category);
 			insert.setUser(user);
 
-			Subscription result = save(insert);
+			Subscription result = subscriptionDao.saveNew(insert);
 
 			commit();
 
@@ -156,13 +156,13 @@ public class SubscriptionService extends BaseCoreService<Subscription> {
 					userSubs.setVersion(checkSubs.getVersion());
 					userSubs.setCreatedAt(checkSubs.getCreatedAt());
 					userSubs.setCreatedBy(checkSubs.getCreatedBy());
-					userSubs.setUpdatedBy(baseService.getUserId());
+					userSubs.setUpdatedBy(getUserId());
 					userSubs.setIsActive(checkSubs.getIsActive());
 				} else {
 					Users user = userDao.getById(update.getUser().getId());
 					userSubs.setUser(user);
 					userSubs.setIsActive(true);
-					userSubs.setCreatedBy(baseService.getUserId());
+					userSubs.setCreatedBy(getUserId());
 				}
 				userSubsDao.save(userSubs);				
 			}

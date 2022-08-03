@@ -21,7 +21,7 @@ import com.lawencon.community.pojo.userrole.UpdateUserRoleReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class UserRoleService extends BaseCoreService<UserRole> {
+public class UserRoleService extends BaseService<UserRole> {
 	@Autowired
 	private UserRoleDao roleDao;
 
@@ -74,7 +74,7 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 
 		try {
 			begin();
-			UserRole result = save(insert);
+			UserRole result = roleDao.saveNew(insert);
 			commit();
 
 			resData.setId(result.getId());
@@ -102,7 +102,7 @@ public class UserRoleService extends BaseCoreService<UserRole> {
 
 		try {
 			begin();
-			UserRole result = save(update);
+			UserRole result = roleDao.saveNew(update);
 			commit();
 
 			resData.setVersion(result.getVersion());

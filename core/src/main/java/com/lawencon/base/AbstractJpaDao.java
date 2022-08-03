@@ -1,6 +1,7 @@
 package com.lawencon.base;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -8,10 +9,12 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.search.engine.search.query.SearchFetchable;
 import org.hibernate.search.mapper.orm.Search;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.model.SearchQuery;
+import com.lawencon.security.PrincipalService;
 
 /**
  * 
@@ -22,6 +25,9 @@ import com.lawencon.model.SearchQuery;
 public class AbstractJpaDao<T extends BaseEntity> {
 
 	public Class<T> clazz;
+	
+	@Autowired
+	private PrincipalService principalService;
 
 	@SuppressWarnings("unchecked")
 	public AbstractJpaDao() {
@@ -98,6 +104,32 @@ public class AbstractJpaDao<T extends BaseEntity> {
 			entity = em().merge(entity);
 			em().flush();
 		} else {
+			em().persist(entity);
+		}
+
+		return entity;
+	}
+	
+	public T saveNew(T entity) throws Exception {
+		if (entity.getId() != null) {
+			entity.setUpdatedBy(principalService.getPrincipal());
+			entity = em().merge(entity);
+			em().flush();
+		} else {
+			entity.setCreatedBy(principalService.getPrincipal());
+			em().persist(entity);
+		}
+
+		return entity;
+	}
+	
+	public T saveNonLogin(T entity, Supplier<String> getIdFunc) throws Exception {
+		if (entity.getId() != null) {
+			entity.setUpdatedBy(getIdFunc.get());
+			entity = em().merge(entity);
+			em().flush();
+		} else {
+			entity.setCreatedBy(getIdFunc.get());
 			em().persist(entity);
 		}
 

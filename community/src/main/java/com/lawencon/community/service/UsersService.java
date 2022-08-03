@@ -174,7 +174,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		try {
 			begin();
 			
-			Users result = saveNonLogin(insert, () -> userDao.findByRoleCode(Role.ADMIN.name()));
+			Users result = userDao.saveNonLogin(insert, () -> userDao.findByRoleCode(Role.ADMIN.name()));
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
@@ -235,11 +235,11 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 			begin();
 			
 			if(data.getFileName() != null) {
-				File fileResult = fileDao.save(file);
+				File fileResult = fileDao.saveNew(file);
 				update.setFile(fileResult);
 			}
 			
-			Users result = save(update);
+			Users result = userDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
@@ -331,7 +331,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
             user.setToken(tokenNew);
         }
         
-        Users res = save(user);
+        Users res = userDao.save(user);
         String token = res.getToken().getToken();
         commit();
         return token;
@@ -348,7 +348,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 				user.setUserPassword(passwordEncoder.encode(data.getNewPassword()));
 				
 				begin();
-				Users update = save(user);
+				Users update = userDao.save(user);
 				commit();
 				
 				resData.setMessage("Successfully update the password!");

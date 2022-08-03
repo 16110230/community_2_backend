@@ -75,7 +75,7 @@ public class PositionService extends BaseCoreService<Position> {
 
 		try {
 			begin();
-			Position result = save(insert);
+			Position result = positionDao.saveNew(insert);
 			commit();
 
 			resData.setId(result.getId());
@@ -103,7 +103,7 @@ public class PositionService extends BaseCoreService<Position> {
 
 		try {
 			begin();
-			Position result = save(update);
+			Position result = positionDao.saveNew(update);
 			commit();
 
 			resData.setVersion(result.getVersion());
