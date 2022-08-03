@@ -1,9 +1,18 @@
 package com.lawencon.community.dao;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.community.constant.ThreadCategoryType;
+import com.lawencon.community.model.File;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadActivityCategory;
+import com.lawencon.community.model.ThreadCategory;
+import com.lawencon.community.model.Users;
 
 @Repository
 public class ThreadActivityCategoryDao extends AbstractJpaDao<ThreadActivityCategory>{
