@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.pojo.dashboard.ShowDashboard;
+import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.community.service.DashboardService;
 
 
@@ -23,4 +24,10 @@ public class DashboardController {
 		ShowDashboard result = dashboardService.countData();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("/threads")
+	public ResponseEntity<?> getAllThreads() throws Exception {
+		ShowThreads result = dashboardService.showThreadByNewest();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}	
 }
