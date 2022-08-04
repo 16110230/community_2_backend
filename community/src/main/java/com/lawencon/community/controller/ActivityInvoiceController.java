@@ -33,7 +33,7 @@ public class ActivityInvoiceController {
 
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<PojoActivityInvoice> result = activityInvoiceService.showAll(query, startPage, maxPage);
+		SearchQuery<PojoActivityInvoice> result = activityInvoiceService.showAllByType(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -60,4 +60,5 @@ public class ActivityInvoiceController {
 		PojoDeleteRes data = activityInvoiceService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
+	
 }

@@ -30,6 +30,15 @@ public class ActivityInvoice extends BaseEntity{
 	@Column(name="is_approved")
 	private Boolean isApproved;
 	
+	@Column(name="invoice_code")
+	private String invoiceCode;
+	
+	public String getInvoiceCode() {
+		return invoiceCode;
+	}
+	public void setInvoiceCode(String invoiceCode) {
+		this.invoiceCode = invoiceCode;
+	}
 	public Users getUser() {
 		return user;
 	}
