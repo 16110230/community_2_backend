@@ -5,6 +5,7 @@ import java.util.List;
 public class ShowActivities {
 	
 	private List<PojoActivity> data;
+	private Integer countData;
 	
 	public void setData(List<PojoActivity> data) {
 		this.data = data;
@@ -14,4 +15,13 @@ public class ShowActivities {
 		return data;
 	}
 
+	public Integer getCountData() {
+		return countData;
+	}
+
+	public void setCountData(Integer countData) {
+		this.countData = countData;
+	}
+
+	
 }

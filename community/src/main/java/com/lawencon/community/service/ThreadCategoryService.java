@@ -48,6 +48,7 @@ public class ThreadCategoryService extends BaseService<ThreadCategory>{
 
 		SearchQuery<PojoThreadCategory> response = new SearchQuery<PojoThreadCategory>();
 		response.setData(result);
+		response.setCount(users.getCount());
 
 		return response;
 	}

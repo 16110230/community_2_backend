@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.pojo.activity.PojoActivity;
+import com.lawencon.community.pojo.activity.ShowActivities;
 
 @Repository
 public class ActivityDao extends AbstractJpaDao<Activity>{
@@ -30,8 +31,9 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 		return response;
 	}
 	
-	public List<PojoActivity> getAllByType(String type){
-		List<PojoActivity> response = new ArrayList<PojoActivity>();
+	public ShowActivities getAllByType(Integer startPage,Integer maxPage, String type){
+		List<PojoActivity> res = new ArrayList<PojoActivity>();
+		ShowActivities response = new ShowActivities();
 		StringBuilder sqlBuilder = new StringBuilder()
 			.append("SELECT a.id,a.activity_title,a.fee,a.is_limit,a.is_active,acc.category_name ")
 			.append("FROM activity as a ")
@@ -40,8 +42,15 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 			.append("WHERE a.activity_type_id = :type");
 		
 		try {
+			Integer size = createNativeQuery(sqlBuilder.toString())
+					.setParameter("type", type)
+					.getResultList().size();
+			response.setCountData(size);
+			
 			List<?> result = createNativeQuery(sqlBuilder.toString())
 				.setParameter("type", type)
+				.setFirstResult(startPage)
+				.setMaxResults(maxPage)
 				.getResultList();				
 			
 			if (result != null) {
@@ -71,14 +80,14 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 						data.setIsActive(false);
 					}	
 					
-					response.add(data);
+					res.add(data);
 				});
 			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+		response.setData(res);
 		return response;
 	}
 }
