@@ -1,53 +1,18 @@
 package com.lawencon.community.pojo.activityInvoice;
 
 public class UpdateActivityInvoiceReq {
-	private String user;
-	private String activity;
-	private String file;
-	private String fileName;
-	private String fileExt;
+	private String id;
 	private Boolean isApproved;
 	private Boolean isActive;
 	private Integer version;
 
-	public String getFileName() {
-		return fileName;
+
+	public String getId() {
+		return id;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFileExt() {
-		return fileExt;
-	}
-
-	public void setFileExt(String fileExt) {
-		this.fileExt = fileExt;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	public String getActivity() {
-		return activity;
-	}
-
-	public void setActivity(String activity) {
-		this.activity = activity;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Boolean getIsApproved() {
