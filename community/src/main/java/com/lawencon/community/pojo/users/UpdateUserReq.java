@@ -14,7 +14,14 @@ public class UpdateUserReq {
 	private String file;
 	private String fileName;
 	private String fileExt;
+	private Integer balance;
 	
+	public void setBalance(Integer balance) {
+		this.balance = balance;
+	}
+	public Integer getBalance() {
+		return balance;
+	}
 	public String getUserPassword() {
 		return userPassword;
 	}

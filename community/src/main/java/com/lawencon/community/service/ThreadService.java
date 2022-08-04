@@ -29,6 +29,9 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
+import com.lawencon.community.pojo.polling.PojoPolling;
+import com.lawencon.community.pojo.polling.PojoPollingDetails;
+import com.lawencon.community.pojo.polling.ShowPollingMain;
 import com.lawencon.community.pojo.thread.InsertThreadReq;
 import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.pojo.thread.ShowThreadById;
@@ -83,6 +86,35 @@ public class ThreadService extends BaseService<Thread>{
 				thread.setFile(file.getId());				
 			}
 
+			if (threadCategory.getCategoryName().equals(ThreadCategoryType.POL.getCode())) {
+				System.err.println(val.getId());
+				Polling polling = pollingDao.getByThreadId(val.getId());
+				ShowPollingMain data = new ShowPollingMain();
+				PojoPolling pojoPolling = new PojoPolling();
+				List<PojoPollingDetails> pojoPollingDetail = new ArrayList<PojoPollingDetails>();
+				List<PollingDetails> pojoPollingDetails = new ArrayList<PollingDetails>();
+				try {
+					pojoPollingDetails = pollingDetailsDao.findAllByPolling(polling.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				pojoPolling.setId(polling.getId());
+				pojoPollingDetails.forEach(value -> {
+					PojoPollingDetails detail = new PojoPollingDetails();
+					detail.setId(value.getId());
+					detail.setPolling(value.getPolling().getId());
+					detail.setPollingDetailsName(value.getPollingDetailsName());
+					
+					pojoPollingDetail.add(detail);
+				});
+				
+				pojoPolling.setId(polling.getId());
+				data.setHeader(pojoPolling);
+				data.setDetails(pojoPollingDetail);
+				thread.setPolling(data);
+			}
+			
 			thread.setId(val.getId());
 			thread.setThreadTitle(val.getThreadTitle());
 			thread.setThreadContent(val.getThreadContent());
@@ -167,15 +199,15 @@ public class ThreadService extends BaseService<Thread>{
 			}
 
 			Thread result = threadDao.saveNew(insert);
-			commit();
 
 			if (data.getPolling() != null) {
-				pollingService.insert(data.getPolling(), result.getId());
+				pollingService.insert(data.getPolling(), result);
 			}
 
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
 			response.setData(resData);
+			commit();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -380,7 +412,7 @@ public class ThreadService extends BaseService<Thread>{
 			Thread result = threadDao.saveNew(insert);
 
 			if (data.getPolling() != null) {
-				pollingService.insert(data.getPolling(), result.getId());
+				pollingService.insert(data.getPolling(), result);
 			}
 
 			resData.setId(result.getId());
@@ -393,6 +425,49 @@ public class ThreadService extends BaseService<Thread>{
 			rollback();
 			throw new Exception(e);
 		}
+
+		return response;
+	}
+	
+	public SearchQuery<PojoThread> showAllArticles(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage, "threadTitle", "threadContent");
+		List<PojoThread> result = new ArrayList<PojoThread>();
+
+		threads.getData().forEach(val -> {
+			if(val.getThreadCategory().getCategoryCode().equalsIgnoreCase(ThreadCategoryType.ART.name())) {
+				PojoThread thread = new PojoThread();
+				ThreadCategory threadCategory = threadCategoryDao.getById(val.getThreadCategory().getId());
+				Users user = usersDao.getById(val.getUser().getId());
+				
+				if (val.getFile() != null) {
+					File file = fileDao.getById(val.getFile().getId());
+					thread.setFile(file.getId());				
+				}
+				
+				thread.setId(val.getId());
+				thread.setThreadTitle(val.getThreadTitle());
+				thread.setThreadContent(val.getThreadContent());
+				thread.setIsLike(threadDao.isLike(getUserId(), val.getId()));
+				thread.setIsBookmark(threadDao.isBookmark(getUserId(), val.getId()));
+				thread.setCountBookmark(threadDao.countBookmark(val.getId()));
+				thread.setCountLike(threadDao.countLike(val.getId()));
+				thread.setCountComment(threadDao.countComment(val.getId()));
+				
+				thread.setUser(user.getId());
+				thread.setUserName(user.getUsername());
+				thread.setThreadcategory(threadCategory.getId());
+				thread.setThreadCategoryName(threadCategory.getCategoryName());
+				thread.setCreatedAt(val.getCreatedAt());
+				thread.setIsActive(val.getIsActive());
+				thread.setVersion(val.getVersion());
+				
+				result.add(thread);
+			}
+		});
+
+		SearchQuery<PojoThread> response = new SearchQuery<PojoThread>();
+		response.setData(result);
+		response.setCount(threads.getCount());
 
 		return response;
 	}

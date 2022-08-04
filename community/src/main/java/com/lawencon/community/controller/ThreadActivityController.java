@@ -60,4 +60,10 @@ public class ThreadActivityController {
 		PojoDeleteRes result = threadActivityService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
 	}
+	
+	@PostMapping("thread")
+	public ResponseEntity<PojoDeleteRes> deleteByIdThread(@RequestBody @Valid InsertThreadActivityReq data) throws Exception {
+		PojoDeleteRes result = threadActivityService.deleteByThreadId(data);
+		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
+	}
 }

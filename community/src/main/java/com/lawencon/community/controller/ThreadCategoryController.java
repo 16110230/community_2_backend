@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
+import com.lawencon.community.pojo.threadActivityCategory.ShowThreadActivityCategories;
 import com.lawencon.community.pojo.threadCategory.InsertThreadCategoryReq;
 import com.lawencon.community.pojo.threadCategory.PojoThreadCategory;
+import com.lawencon.community.pojo.threadCategory.ShowThreadCategories;
 import com.lawencon.community.pojo.threadCategory.ShowThreadCategoryById;
 import com.lawencon.community.pojo.threadCategory.UpdateThreadCategoryReq;
 import com.lawencon.community.service.ThreadCategoryService;
@@ -42,6 +44,13 @@ public class ThreadCategoryController {
 		ShowThreadCategoryById data = threadCategoryService.showById(id);
 		return new ResponseEntity<ShowThreadCategoryById>(data, HttpStatus.OK);
 	}
+	
+	@GetMapping({"user"})
+	public ResponseEntity<?> getCategoryForUser() throws Exception {
+		ShowThreadCategories result = threadCategoryService.getCategoryForUser();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 
 	@PostMapping
 	public ResponseEntity<PojoInsertRes> insert(@RequestBody @Valid InsertThreadCategoryReq create) throws Exception {

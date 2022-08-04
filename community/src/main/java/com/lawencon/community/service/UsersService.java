@@ -169,7 +169,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		insert.setIndustry(industry);
 		insert.setPosition(position);
 		insert.setRole(role);
-		insert.setUserPassword(data.getUserPassword());
+		insert.setUserPassword(passwordEncoder.encode(data.getUserPassword()));
 
 		try {
 			begin();
@@ -190,8 +190,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 	}
 
 	public PojoUpdateRes update(UpdateUserReq data) throws Exception {
-		Users update = new Users();
-		Users users = userDao.getById(getUserId());
+		Users update = userDao.getById(data.getId());
 		Company company = companyDao.getById(data.getCompany());
 		Industry industry = industryDao.getById(data.getIndustry());
 		Position position = positionDao.getById(data.getPosition());
@@ -199,35 +198,26 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		PojoUpdateRes response = new PojoUpdateRes();
 		File file = new File();
 		
-		if(data.getFile() != null || data.getFileName() != null) {
-			if(data.getFileName() != null) {				
-				file.setFileName(data.getFileName());
-				file.setFileExt(data.getFileExt());
-			} else {
-				file = fileDao.getById(data.getFile());
-				update.setFile(file);
-			}
+		// File check
+		if(data.getFileName() != null) {
+			file.setFileName(data.getFileName());
+			file.setFileExt(data.getFileExt());
 		}
-
-		update.setId(data.getId());
-		update.setRole(users.getRole());
+		
 		update.setFullName(data.getFullName());
 		update.setUsername(data.getUsername());
-		update.setEmail(data.getEmail());
-		update.setUserPassword(data.getUserPassword());
 		update.setCompany(company);
 		update.setIndustry(industry);
 		update.setPosition(position);
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
+		update.setBalance(data.getBalance());
 
 		try {
 			begin();
 			
-			if(data.getFileName() != null) {
-				File fileResult = fileDao.saveNew(file);
-				update.setFile(fileResult);
-			}
+			File fileResult = fileDao.saveNew(file);
+			update.setFile(fileResult);
 			
 			Users result = userDao.saveNew(update);
 			resData.setVersion(result.getVersion());
@@ -354,6 +344,37 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		}
 		
 		response.setData(resData);
+		return response;
+	}
+	
+	public ShowUserById showById() {
+		Users users = userDao.getById(getUserId());
+		PojoUsers user = new PojoUsers();
+
+		Company company = companyDao.getById(users.getCompany().getId());
+		Industry industry = industryDao.getById(users.getIndustry().getId());
+		Position position = positionDao.getById(users.getPosition().getId());
+		
+		if(users.getFile() != null) {
+			user.setFile(users.getFile().getId());
+		}
+
+		user.setId(users.getId());
+		user.setFullName(users.getFullName());
+		user.setEmail(users.getEmail());
+		user.setUsername(users.getUsername());
+		user.setIsActive(users.getIsActive());
+		user.setVersion(users.getVersion());
+		user.setCompany(company.getId());
+		user.setCompanyName(company.getCompanyName());
+		user.setIndustry(industry.getId());
+		user.setIndustryName(industry.getIndustryName());
+		user.setPosition(position.getId());
+		user.setPositionName(position.getPositionName());
+
+		ShowUserById response = new ShowUserById();
+		response.setData(user);
+
 		return response;
 	}
 }

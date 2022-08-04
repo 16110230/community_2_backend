@@ -10,10 +10,12 @@ import com.lawencon.community.dao.ActivityCategoryDao;
 import com.lawencon.community.dao.ActivityDao;
 import com.lawencon.community.dao.ActivityTypeDao;
 import com.lawencon.community.dao.FileDao;
+import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityCategory;
 import com.lawencon.community.model.ActivityType;
 import com.lawencon.community.model.File;
+import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
@@ -21,6 +23,7 @@ import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
 import com.lawencon.community.pojo.activity.InsertActivityReq;
 import com.lawencon.community.pojo.activity.PojoActivity;
+import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.model.SearchQuery;
@@ -39,6 +42,9 @@ public class ActivityService extends BaseService<Activity>{
 	
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private UsersDao usersDao;
 	
 	public SearchQuery<PojoActivity> showAll(String query, Integer startPage, Integer maxPage)
 			throws Exception {
@@ -104,7 +110,6 @@ public class ActivityService extends BaseService<Activity>{
 		
 		try {
 			begin();
-			Activity result = activityDao.saveNew(insert);
 			
 			if(data.getFileName() != null) {				
 				File insertFile = new File();
@@ -112,9 +117,11 @@ public class ActivityService extends BaseService<Activity>{
 				insertFile.setFileExt(data.getFileExt());
 				insertFile.setCreatedBy(getUserId());
 				insertFile.setIsActive(true);
-				File resultFile = fileDao.save(insertFile);
+				File resultFile = fileDao.saveNew(insertFile);
 				insert.setFile(resultFile);
 			}
+			
+			Activity result = activityDao.saveNew(insert);
       
 			resData.setId(result.getId());
 			resData.setMessage("Successfully insert new data!");
@@ -173,6 +180,7 @@ public class ActivityService extends BaseService<Activity>{
 		Activity acts = activityDao.getById(id);
 		PojoActivity act = new PojoActivity();
 		ActivityCategory actCat = activityCategoryDao.getById(acts.getActivityCategory().getId());
+		Users users = usersDao.getById(acts.getCreatedBy());
 		
 		act.setId(acts.getId());
 		act.setActivityTitle(acts.getActivityTitle());
@@ -188,6 +196,8 @@ public class ActivityService extends BaseService<Activity>{
 		act.setTrainer(acts.getTrainer());
 		act.setIsActive(acts.getIsActive());
 		act.setVersion(acts.getVersion());
+		act.setCreatedAt(acts.getCreatedAt());
+		act.setFullName(users.getFullName());
 
 		ShowActivityById response = new ShowActivityById();
 		response.setData(act);
@@ -215,5 +225,18 @@ public class ActivityService extends BaseService<Activity>{
 		}
 
 		return response;
+	}
+	
+	public ShowActivities showAllByCode(String query, Integer startPage, Integer maxPage, String code)
+			throws Exception {
+		code = code.toLowerCase();		
+		
+		String activityTypeId = activityTypeDao.getByCode(code);		
+		List<PojoActivity> activities = activityDao.getAllByType(activityTypeId);
+		ShowActivities response = new ShowActivities();
+		response.setData(activities);
+		
+		return response;
+		
 	}
 }

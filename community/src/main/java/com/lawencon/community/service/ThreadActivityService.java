@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.ThreadActivityCategoryDao;
 import com.lawencon.community.dao.ThreadActivityDao;
 import com.lawencon.community.dao.ThreadDao;
@@ -22,16 +21,13 @@ import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
 import com.lawencon.community.pojo.threadActivity.InsertThreadActivityReq;
 import com.lawencon.community.pojo.threadActivity.PojoThreadActivity;
-import com.lawencon.community.pojo.threadActivity.ShowThreadActivityById;
+import com.lawencon.community.pojo.threadActivity.ShowThreadActivityById;	
 import com.lawencon.community.pojo.threadActivity.UpdateThreadActivityReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
 public class ThreadActivityService extends BaseService<ThreadActivity> {
 	
-//	@Autowired
-//	private BaseService baseService;
-
 	@Autowired
 	private ThreadActivityDao threadActivityDao;
 
@@ -102,7 +98,8 @@ public class ThreadActivityService extends BaseService<ThreadActivity> {
 		ThreadActivity insert = new ThreadActivity();
 		Thread thread = threadDao.getById(data.getThread());
 		ThreadActivityCategory threadActivityCategory = threadActivityCategoryDao
-				.getById(data.getThreadActivityCategory());
+				.findByCode(data.getThreadActivityCategory());
+		System.err.println(threadActivityCategory.getId());
 		Users user = usersDao.getById(getUserId());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
@@ -163,6 +160,30 @@ public class ThreadActivityService extends BaseService<ThreadActivity> {
 
 	public PojoDeleteRes delete(String id) throws Exception {
 		PojoDeleteRes response = new PojoDeleteRes();
+
+		try {
+			begin();
+			boolean result = threadActivityDao.deleteById(id);
+			commit();
+
+			if (result) {
+				response.setMessage("Successfully delete the data!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
+
+		return response;
+	}
+	
+	public PojoDeleteRes deleteByThreadId(InsertThreadActivityReq data) throws Exception {
+		PojoDeleteRes response = new PojoDeleteRes();
+		
+		String id = threadActivityDao.getIdByThreadId(getUserId(),
+				data.getThread(), data.getThreadActivityCategory());
+		
 
 		try {
 			begin();

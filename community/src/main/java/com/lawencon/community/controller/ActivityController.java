@@ -19,6 +19,7 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.activity.InsertActivityReq;
 import com.lawencon.community.pojo.activity.PojoActivity;
+import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.community.service.ActivityService;
@@ -59,5 +60,11 @@ public class ActivityController {
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
 		PojoDeleteRes data = activityService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("/type/{code}")
+	public ResponseEntity<ShowActivities> getAllByCode( Integer startPage, Integer maxPage,String query,@PathVariable("code") String code) throws Exception {
+		ShowActivities result = activityService.showAllByCode(query, startPage, maxPage, code);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

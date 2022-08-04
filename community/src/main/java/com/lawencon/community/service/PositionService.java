@@ -26,7 +26,7 @@ public class PositionService extends BaseCoreService<Position> {
 	private PositionDao positionDao;
 
 	public SearchQuery<PojoPosition> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<Position> positions = positionDao.findAll(query, startPage, maxPage);
+		SearchQuery<Position> positions = positionDao.findAll(query, startPage, maxPage, "positionName", "positionCode");
 		List<PojoPosition> result = new ArrayList<PojoPosition>();
 
 		positions.getData().forEach(val -> {

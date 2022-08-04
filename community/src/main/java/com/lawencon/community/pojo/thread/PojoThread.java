@@ -3,6 +3,7 @@ package com.lawencon.community.pojo.thread;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lawencon.community.pojo.polling.ShowPollingMain;
 
 public class PojoThread {
 	private String id;
@@ -20,6 +21,15 @@ public class PojoThread {
 	private Integer countComment;
 	private Boolean isLike;
 	private Boolean isBookmark;
+	private ShowPollingMain polling;
+	
+	public ShowPollingMain getPolling() {
+		return polling;
+	}
+	
+	public void setPolling(ShowPollingMain polling) {
+		this.polling = polling;
+	}
 	
 	public Integer getCountBookmark() {
 		return countBookmark;

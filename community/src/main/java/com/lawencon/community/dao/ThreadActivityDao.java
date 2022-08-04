@@ -1,6 +1,6 @@
 package com.lawencon.community.dao;
 
-import java.util.List;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +21,7 @@ public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
 				;
 		
 		Long response = 0l;
+		
 		
 		Object result = createNativeQuery(sqlBuilder.toString())
 				.setParameter("threadId", id)
@@ -69,5 +70,25 @@ public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
 				.executeUpdate();
 		
 		return result > 0;
+	}
+
+	public String getIdByThreadId(String userId, String thread, String threadActivityCategory) {
+		String response = null;
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT ta.id FROM thread_activity ta ")
+				.append("JOIN thread_activity_category tac ON tac.id = ta.thread_activity_category_id ")
+				.append("WHERE ta.thread_id = :threadId ")
+				.append("AND ta.user_id = :userId ")
+				.append("AND tac.thread_activity_code = :code");
+		Object result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("threadId", thread)
+				.setParameter("userId", userId)
+				.setParameter("code", threadActivityCategory)
+				.getSingleResult();
+		if(result != null) {
+			response = result.toString();
+		}
+		
+		return response;
 	}
 }

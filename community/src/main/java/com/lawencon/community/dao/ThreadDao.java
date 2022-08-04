@@ -17,7 +17,6 @@ import com.lawencon.community.pojo.thread.PojoThread;
 
 @Repository
 public class ThreadDao extends AbstractJpaDao<Thread> {
-	
 
 	public long countAllNewThreadToday() {
 		StringBuilder sqlBuilder = new StringBuilder().append("SELECT COUNT(id) new_thread_today ")
@@ -40,15 +39,12 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 				.append("SELECT t.id, t.thread_title, t.thread_content, t.thread_category_id, ")
 				.append("tc.category_name , t.file_id, t.user_id, u.username, t.created_at  ").append("FROM thread t ")
 				.append("JOIN thread_category tc ON tc.id = t.thread_category_id ")
-				.append("JOIN users u ON u.id = t.user_id ")
-				.append("WHERE tc.category_name = :category ")
-				.append("ORDER BY t.created_at DESC ")
-				.append("LIMIT 3 ");
+				.append("JOIN users u ON u.id = t.user_id ").append("WHERE tc.category_name = :category ")
+				.append("ORDER BY t.created_at DESC ").append("LIMIT 3 ");
 
 		try {
 			List<?> result = createNativeQuery(sqlBuilder.toString())
-					.setParameter("category", ThreadCategoryType.ART.getCode())
-					.getResultList();
+					.setParameter("category", ThreadCategoryType.ART.getCode()).getResultList();
 
 			if (result != null) {
 				result.forEach(obj -> {
@@ -77,7 +73,7 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 
 		return response;
 	}
-	
+
 	public List<PojoThread> getThreadForUser(String userId) {
 		List<PojoThread> response = new ArrayList<PojoThread>();
 		StringBuilder sqlBuilder = new StringBuilder()
@@ -92,27 +88,22 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 				.append("( SELECT COUNT(ta3.id) AS countBook FROM thread_activity ta3 JOIN thread_activity_category tac2 ON tac2.id = ta3.thread_activity_category_id ")
 				.append("WHERE tac2.thread_activity_code  = :bookmark2 AND ta3.thread_id = t.id ) AS countBook, ")
 				.append("( SELECT COUNT(td.id) AS countComment FROM thread_details td WHERE td.thread_id = t.id)AS countComment ")
-				.append("FROM thread t ")
-				.append("JOIN thread_category tc ON tc.id = t.thread_category_id ")
-				.append("JOIN users u ON u.id = t.user_id ")
-				.append("WHERE tc.category_code != :category ");
+				.append("FROM thread t ").append("JOIN thread_category tc ON tc.id = t.thread_category_id ")
+				.append("JOIN users u ON u.id = t.user_id ").append("WHERE tc.category_code != :category ");
 
 		try {
-			List<?> result = createNativeQuery(sqlBuilder.toString())
-					.setParameter("userid", userId)
-					.setParameter("like", ThreadActivityType.LIKE.name())
-					.setParameter("userid2", userId)
+			List<?> result = createNativeQuery(sqlBuilder.toString()).setParameter("userid", userId)
+					.setParameter("like", ThreadActivityType.LIKE.name()).setParameter("userid2", userId)
 					.setParameter("bookmark", ThreadActivityType.BOOKMARK.name())
 					.setParameter("like2", ThreadActivityType.LIKE.name())
 					.setParameter("bookmark2", ThreadActivityType.BOOKMARK.name())
-					.setParameter("category", ThreadCategoryType.ART.name())
-					.getResultList();
+					.setParameter("category", ThreadCategoryType.ART.name()).getResultList();
 
 			if (result != null) {
 				result.forEach(obj -> {
 					Object[] objArr = (Object[]) obj;
 					PojoThread data = new PojoThread();
-				
+
 					data.setId(objArr[0].toString());
 					data.setThreadTitle(objArr[1].toString());
 					data.setThreadContent(objArr[2].toString());
@@ -120,14 +111,14 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 					data.setFile(objArr[4].toString());
 					data.setUserName(objArr[5].toString());
 					data.setCreatedAt(((Timestamp) objArr[6]).toLocalDateTime());
-					if(objArr[7] != null) {
+					if (objArr[7] != null) {
 						data.setIsLike(true);
-					}else {
+					} else {
 						data.setIsLike(false);
 					}
-					if(objArr[8] != null) {
+					if (objArr[8] != null) {
 						data.setIsBookmark(true);
-					}else {
+					} else {
 						data.setIsBookmark(false);
 					}
 					data.setCountLike(Integer.valueOf(objArr[9].toString()));
@@ -142,7 +133,7 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 
 		return response;
 	}
-	
+
 	public Boolean isLike(String userId, String threadId) {
 		Boolean returnValue = false;
 		StringBuilder sqlBuilder = new StringBuilder()
@@ -241,6 +232,38 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 
 		if (result != null) {
 			response = Integer.valueOf(result.toString());
+		}
+		
+		return response;
+	}
+	
+	public List<PojoThread> getNewestThread() {
+		List<PojoThread> response = new ArrayList<PojoThread>();
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT t.id,t.thread_title,tc.category_name ")
+				.append("FROM thread as t ")
+				.append("INNER JOIN thread_category as tc ON t.thread_category_id = tc.id ")
+				.append("ORDER BY t.created_at DESC ")
+				.append("LIMIT 5");
+
+		try {
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+					.getResultList();
+
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoThread data = new PojoThread();
+
+					data.setId(objArr[0].toString());
+					data.setThreadTitle(objArr[1].toString());
+					data.setThreadCategoryName(objArr[2].toString());				
+
+					response.add(data);
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return response;
