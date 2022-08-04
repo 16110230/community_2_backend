@@ -8,14 +8,18 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.ThreadCategoryDao;
+import com.lawencon.community.model.ThreadActivityCategory;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
+import com.lawencon.community.pojo.threadActivityCategory.PojoThreadActivityCategory;
+import com.lawencon.community.pojo.threadActivityCategory.ShowThreadActivityCategories;
 import com.lawencon.community.pojo.threadCategory.InsertThreadCategoryReq;
 import com.lawencon.community.pojo.threadCategory.PojoThreadCategory;
+import com.lawencon.community.pojo.threadCategory.ShowThreadCategories;
 import com.lawencon.community.pojo.threadCategory.ShowThreadCategoryById;
 import com.lawencon.community.pojo.threadCategory.UpdateThreadCategoryReq;
 import com.lawencon.model.SearchQuery;
@@ -139,5 +143,24 @@ public class ThreadCategoryService extends BaseService<ThreadCategory>{
 		return response;
 	}
 	
+	public ShowThreadCategories getCategoryForUser() throws Exception {
+		ShowThreadCategories response = new ShowThreadCategories();
+
+		List<ThreadCategory> thread = threadCategoryDao.getCategoryUser();
+		List<PojoThreadCategory> pojoThread = new ArrayList<PojoThreadCategory>();
+
+		thread.forEach(val -> {
+			PojoThreadCategory detail = new PojoThreadCategory();
+
+			detail.setId(val.getId());
+			detail.setCategoryName(val.getCategoryName());
+			detail.setCategoryCode(val.getCategoryCode());
+			pojoThread.add(detail);
+		});
+
+		response.setData(pojoThread);
+
+		return response;
+	}
 
 }

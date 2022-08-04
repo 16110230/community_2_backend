@@ -29,6 +29,9 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
+import com.lawencon.community.pojo.polling.PojoPolling;
+import com.lawencon.community.pojo.polling.PojoPollingDetails;
+import com.lawencon.community.pojo.polling.ShowPollingMain;
 import com.lawencon.community.pojo.thread.InsertThreadReq;
 import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.pojo.thread.ShowThreadById;
@@ -83,6 +86,35 @@ public class ThreadService extends BaseService<Thread>{
 				thread.setFile(file.getId());				
 			}
 
+			if (threadCategory.getCategoryName().equals(ThreadCategoryType.POL.getCode())) {
+				System.err.println(val.getId());
+				Polling polling = pollingDao.getByThreadId(val.getId());
+				ShowPollingMain data = new ShowPollingMain();
+				PojoPolling pojoPolling = new PojoPolling();
+				List<PojoPollingDetails> pojoPollingDetail = new ArrayList<PojoPollingDetails>();
+				List<PollingDetails> pojoPollingDetails = new ArrayList<PollingDetails>();
+				try {
+					pojoPollingDetails = pollingDetailsDao.findAllByPolling(polling.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				pojoPolling.setId(polling.getId());
+				pojoPollingDetails.forEach(value -> {
+					PojoPollingDetails detail = new PojoPollingDetails();
+					detail.setId(value.getId());
+					detail.setPolling(value.getPolling().getId());
+					detail.setPollingDetailsName(value.getPollingDetailsName());
+					
+					pojoPollingDetail.add(detail);
+				});
+				
+				pojoPolling.setId(polling.getId());
+				data.setHeader(pojoPolling);
+				data.setDetails(pojoPollingDetail);
+				thread.setPolling(data);
+			}
+			
 			thread.setId(val.getId());
 			thread.setThreadTitle(val.getThreadTitle());
 			thread.setThreadContent(val.getThreadContent());

@@ -1,9 +1,13 @@
 package com.lawencon.community.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.model.Activity;
+import com.lawencon.community.pojo.activity.PojoActivity;
 
 @Repository
 public class ActivityDao extends AbstractJpaDao<Activity>{
@@ -23,6 +27,58 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 			response = Long.valueOf(result.toString());
 		}
 
+		return response;
+	}
+	
+	public List<PojoActivity> getAllByType(String type){
+		List<PojoActivity> response = new ArrayList<PojoActivity>();
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("SELECT a.id,a.activity_title,a.fee,a.is_limit,a.is_active,acc.category_name ")
+			.append("FROM activity as a ")
+			.append("INNER JOIN activity_type as act ON a.activity_type_id = act.id ")
+			.append("INNER JOIN activity_category as acc ON a.activity_category_id = acc.id ")
+			.append("WHERE a.activity_type_id = :type");
+		
+		try {
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("type", type)
+				.getResultList();				
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoActivity data = new PojoActivity();
+					
+					
+					data.setId(objArr[0].toString());
+					data.setActivityTitle(objArr[1].toString());
+					data.setActivityCategoryName(objArr[5].toString());
+					
+					if(objArr[2] != null) {
+						data.setFee(Integer.valueOf(objArr[2].toString()));
+					}else {
+						data.setFee(0);
+					}
+					if(objArr[3] != null) {
+						data.setIsLimit(true);
+					}else {
+						data.setIsLimit(false);
+					}
+					
+					if(objArr[4] != null) {
+						data.setIsActive(true);
+					}else {
+						data.setIsActive(false);
+					}	
+					
+					response.add(data);
+				});
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		return response;
 	}
 }

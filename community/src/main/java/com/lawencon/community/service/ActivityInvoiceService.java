@@ -27,7 +27,7 @@ import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
+public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 
 	@Autowired
 	private ActivityInvoiceDao activityInvoiceDao;
@@ -76,7 +76,7 @@ public class ActivityInvoiceService extends BaseCoreService<ActivityInvoice> {
 		PojoInsertRes response = new PojoInsertRes();
 
 		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(data.getUser());
+		Users usr = usersDao.getById(getUserId());
 		File fileIns = new File();
 		
 		fileIns.setFileName(data.getFileName());

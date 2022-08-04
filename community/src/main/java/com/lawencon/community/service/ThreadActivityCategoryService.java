@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.ThreadActivityCategoryDao;
 import com.lawencon.community.model.ThreadActivityCategory;
 import com.lawencon.community.pojo.PojoDeleteRes;
@@ -138,4 +137,6 @@ public class ThreadActivityCategoryService extends BaseService<ThreadActivityCat
 
 		return response;
 	}
+	
+	
 }
