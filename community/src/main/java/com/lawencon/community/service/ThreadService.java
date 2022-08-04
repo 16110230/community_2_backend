@@ -86,8 +86,8 @@ public class ThreadService extends BaseService<Thread>{
 			}
 
 			if (threadCategory.getCategoryName().equals(ThreadCategoryType.POL.getCode())) {
-				System.err.println(val.getId());
 				Polling polling = pollingDao.getByThreadId(val.getId());
+				Boolean userPolling = userPollingDao.getByIdUser(getUserId(), polling.getId());
 				ShowPollingMain data = new ShowPollingMain();
 				PojoPolling pojoPolling = new PojoPolling();
 				List<PojoPollingDetails> pojoPollingDetail = new ArrayList<PojoPollingDetails>();
@@ -99,6 +99,7 @@ public class ThreadService extends BaseService<Thread>{
 				}
 				
 				pojoPolling.setId(polling.getId());
+				pojoPolling.setIsPolling(userPolling);
 				pojoPollingDetails.forEach(value -> {
 					PojoPollingDetails detail = new PojoPollingDetails();
 					detail.setId(value.getId());
@@ -152,12 +153,47 @@ public class ThreadService extends BaseService<Thread>{
 
 		ThreadCategory threadCategory = threadCategoryDao.getById(threads.getThreadCategory().getId());
 		Users user = usersDao.getById(threads.getUser().getId());
-		File file = fileDao.getById(threads.getFile().getId());
+		
+
+		if (threads.getFile().getId() != null) {
+			File file = fileDao.getById(threads.getFile().getId());
+			thread.setFile(file.getId());				
+		}
+		
+		if (threadCategory.getCategoryName().equals(ThreadCategoryType.POL.getCode())) {
+			Polling polling = pollingDao.getByThreadId(threads.getId());
+			Boolean userPolling = userPollingDao.getByIdUser(getUserId(), polling.getId());
+			ShowPollingMain data = new ShowPollingMain();
+			PojoPolling pojoPolling = new PojoPolling();
+			List<PojoPollingDetails> pojoPollingDetail = new ArrayList<PojoPollingDetails>();
+			List<PollingDetails> pojoPollingDetails = new ArrayList<PollingDetails>();
+			try {
+				pojoPollingDetails = pollingDetailsDao.findAllByPolling(polling.getId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			pojoPolling.setId(polling.getId());
+			pojoPolling.setIsPolling(userPolling);
+			pojoPollingDetails.forEach(value -> {
+				PojoPollingDetails detail = new PojoPollingDetails();
+				detail.setId(value.getId());
+				detail.setPolling(value.getPolling().getId());
+				detail.setPollingDetailsName(value.getPollingDetailsName());
+				
+				pojoPollingDetail.add(detail);
+			});
+			
+			pojoPolling.setId(polling.getId());
+			data.setHeader(pojoPolling);
+			data.setDetails(pojoPollingDetail);
+			thread.setPolling(data);
+		}
+		
 
 		thread.setId(threads.getId());
 		thread.setThreadTitle(threads.getThreadTitle());
 		thread.setThreadContent(threads.getThreadContent());
-		thread.setFile(file.getId());
 		thread.setUser(user.getId());
 		thread.setUserName(user.getUsername());
 		thread.setThreadcategory(threadCategory.getId());

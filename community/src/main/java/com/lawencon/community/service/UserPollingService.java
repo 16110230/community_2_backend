@@ -81,12 +81,12 @@ public class UserPollingService extends BaseService<UserPolling> {
 		PojoInsertRes response = new PojoInsertRes();
 		PojoInsertResData resData = new PojoInsertResData();
 		UserPolling insert = new UserPolling();
-		Users user = userDao.getById(data.getUser());
+		Users user = userDao.getById(getUserId());
 		PollingDetails detail = pollingDetailsDao.getById(data.getPollingDetails());
 
 		insert.setUser(user);
 		insert.setPollingDetails(detail);
-		insert.setIsActive(data.getIsActive());
+		insert.setIsActive(true);
 
 		try {
 			begin();

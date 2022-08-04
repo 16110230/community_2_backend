@@ -34,7 +34,9 @@ public class PollingDetailsDao extends AbstractJpaDao<PollingDetails>{
 					data.setId(objArr[0].toString());
 					polling.setId(objArr[1].toString());
 					data.setPolling(polling);
-					data.setPollingDetailsName(objArr[2].toString());
+					if(objArr[2].toString() != null) {
+						data.setPollingDetailsName(objArr[2].toString());						
+					}
 					data.setIsActive(Boolean.valueOf(objArr[3].toString()));
 					data.setVersion(Integer.valueOf(objArr[4].toString()));
 					
