@@ -471,4 +471,12 @@ public class ThreadService extends BaseService<Thread>{
 
 		return response;
 	}
+	
+	public ShowThreads showAllArticlesPagination(Integer startPage, Integer maxPage) throws Exception {
+		
+		ShowThreads response = threadDao.getThreadArticle(startPage, maxPage);
+
+		return response;
+	}
+	
 }

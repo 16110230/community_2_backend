@@ -44,6 +44,7 @@ public class ActivityTypeService extends BaseCoreService<ActivityType> {
 
 		SearchQuery<PojoActivityType> response = new SearchQuery<PojoActivityType>();
 		response.setData(result);
+		response.setCount(users.getCount());
 
 		return response;
 	}

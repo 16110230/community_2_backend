@@ -62,9 +62,9 @@ public class ActivityController {
 		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
 	
-	@GetMapping("/type/{code}")
-	public ResponseEntity<ShowActivities> getAllByCode( Integer startPage, Integer maxPage,String query,@PathVariable("code") String code) throws Exception {
-		ShowActivities result = activityService.showAllByCode(query, startPage, maxPage, code);
+	@GetMapping("/type")
+	public ResponseEntity<?> getAllByCode( Integer startPage, Integer maxPage,String query,String code) throws Exception {
+		ShowActivities result = activityService.showAllByCode(startPage, maxPage, code);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

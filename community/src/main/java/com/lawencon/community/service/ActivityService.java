@@ -26,6 +26,7 @@ import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
+import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -82,6 +83,7 @@ public class ActivityService extends BaseService<Activity>{
 
 		SearchQuery<PojoActivity> response = new SearchQuery<PojoActivity>();
 		response.setData(result);
+		response.setCount(users.getCount());
 
 		return response;
 	}
@@ -227,16 +229,55 @@ public class ActivityService extends BaseService<Activity>{
 		return response;
 	}
 	
-	public ShowActivities showAllByCode(String query, Integer startPage, Integer maxPage, String code)
-			throws Exception {
-		code = code.toLowerCase();		
-		
-		String activityTypeId = activityTypeDao.getByCode(code);		
-		List<PojoActivity> activities = activityDao.getAllByType(activityTypeId);
-		ShowActivities response = new ShowActivities();
-		response.setData(activities);
-		
+	public ShowActivities showAllByCode(Integer startPage, Integer maxPage, String code) throws Exception {
+		String ActivityId = activityTypeDao.getByCode(code.toLowerCase());
+		System.out.println(ActivityId+" - "+code);
+		ShowActivities response = activityDao.getAllByType(startPage, maxPage,ActivityId);
+
 		return response;
-		
 	}
+	
+//	public SearchQuery<PojoActivity> showAllByCode(Integer startPage, Integer maxPage, String code)
+//			throws Exception {
+//		code = code.toLowerCase();		
+//		
+//		SearchQuery<Activity> activities = activityDao.getAllByType(startPage, maxPage, code);
+//		List<PojoActivity> result = new ArrayList<PojoActivity>();
+//
+//		activities.getData().forEach(val -> {
+//			PojoActivity act = new PojoActivity();
+//			ActivityCategory actCat = activityCategoryDao.getById(val.getActivityCategory().getId());
+//			
+//			if(val.getFile() != null) {				
+//				File file = fileDao.getById(val.getFile().getId());
+//				act.setFile(file.getId());
+//			}
+//
+//			act.setId(val.getId());
+//			act.setActivityTitle(val.getActivityTitle());
+//			act.setActivityContent(val.getActivityContent());
+//			act.setActivityCategory(actCat.getId());
+//			act.setActivityCategoryName(actCat.getCategoryName());
+//			act.setStartedAt(val.getStartedAt());
+//			act.setEndedAt(val.getEndedAt());
+//			act.setFee(val.getFee());
+//			act.setQuantity(val.getQuantity());
+//			act.setIsLimit(val.getIsLimit());
+//			act.setProvider(val.getProvider());
+//			act.setTrainer(val.getTrainer());
+//			act.setVersion(val.getVersion());
+//			act.setIsActive(val.getIsActive());
+//			act.setActivityType(val.getActivityType().getId());
+//			act.setActivityTypeName(val.getActivityType().getTypeName());
+//			
+//			result.add(act);
+//		});
+//
+//		SearchQuery<PojoActivity> response = new SearchQuery<PojoActivity>();
+//		response.setData(result);
+//		response.setCount(activities.getCount());
+//
+//		return response;
+//		
+//	}
 }
