@@ -278,6 +278,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 
 	public PojoVerificationCode sendVerificationCode(PojoEmailReq email) throws Exception {
 		String code = generateCode.generate();
+		super.addVerificationCode(email.getEmail(), code);
 		PojoVerificationCode response = new PojoVerificationCode();
 		Map<String, Object> template = new HashMap<String, Object>();
 		template.put("code", code);

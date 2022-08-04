@@ -1,5 +1,12 @@
 package com.lawencon.base;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -8,8 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class BaseCoreService<T extends BaseEntity> {
 
-//	@Autowired
-//	private AbstractJpaDao<T> abstractJpaDao;
+	
+	@Autowired
+	@Qualifier("verificationCodes")
+	private List<Map<String, String>> verificationCodes;
+
 
 	protected void begin() {
 		ConnHandler.begin();
@@ -36,33 +46,24 @@ public class BaseCoreService<T extends BaseEntity> {
 
 		return (A) auth.getPrincipal().toString();
 	}
-
-//	protected T save(T entity) throws Exception {
-//		saveData(entity, getAuthPrincipal());
-//		return abstractJpaDao.save(entity);
-//	}
-
-//	protected T saveNonLogin(T entity, Supplier<String> getIdFunc) throws Exception {
-//		saveData(entity, getIdFunc.get());
-//		return abstractJpaDao.save(entity);
-//	}
-
-//	private void saveData(T entity, String id) {
-//		if (entity.getId() != null) {
-//			entity.setUpdatedBy(id);
-//		} else {
-//			entity.setCreatedBy(id);
-//		}
-//	}
 	
-//	protected SearchQuery<T> findAll(Supplier<List<T>> getAllFunc) throws Exception {
-//		SearchQuery<T> sq = new SearchQuery<>();
-//		List<T> data = getAllFunc.get();
-//		int count = abstractJpaDao.countAll().intValue();
-//
-//		sq.setData(data);
-//		sq.setCount(count);
-//
-//		return sq;
-//	}
+	protected void addVerificationCode(String email, String verificationCode) {
+		Map<String, String> map = new HashMap<>();
+		map.put(email, verificationCode);
+		verificationCodes.add(map);
+	}
+
+	protected void validateVerificationCode(String email, String verificationCode) throws Exception {
+		Long countResult = verificationCodes.stream().filter(data -> {
+			return data.get(email).equals(verificationCode);
+		}).count();
+
+		if (countResult <= 0) {
+			throw new Exception("Invalid Verification Code");
+		} else {
+			verificationCodes = verificationCodes.stream().filter(data -> {
+				return !data.get(email).equals(verificationCode);
+			}).collect(Collectors.toList());
+		}
+	}
 }
