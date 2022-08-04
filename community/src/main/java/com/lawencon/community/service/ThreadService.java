@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.ConnHandler;
 import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.PollingDao;
@@ -118,8 +117,13 @@ public class ThreadService extends BaseService<Thread>{
 			thread.setId(val.getId());
 			thread.setThreadTitle(val.getThreadTitle());
 			thread.setThreadContent(val.getThreadContent());
-			thread.setIsLike(threadDao.isLike(getUserId(), val.getId()));
-			thread.setIsBookmark(threadDao.isBookmark(getUserId(), val.getId()));
+			try {
+				thread.setIsLike(threadDao.isLike(getUserId(), val.getId()));
+				thread.setIsBookmark(threadDao.isBookmark(getUserId(), val.getId()));				
+			} catch (Exception e2) {
+				thread.setIsLike(null);
+				thread.setIsBookmark(null);
+			}
 			thread.setCountBookmark(threadDao.countBookmark(val.getId()));
 			thread.setCountLike(threadDao.countLike(val.getId()));
 			thread.setCountComment(threadDao.countComment(val.getId()));
