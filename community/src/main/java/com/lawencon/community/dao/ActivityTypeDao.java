@@ -12,7 +12,7 @@ public class ActivityTypeDao extends AbstractJpaDao<ActivityType> {
 		String response = "";
 		
 		StringBuilder sqlBuilder = new StringBuilder().append("SELECT id FROM activity_type ")				
-				.append("WHERE type_name = :code");
+				.append("WHERE type_code = :code");
 		
 		try {	
 			Object result = createNativeQuery(sqlBuilder.toString())	

@@ -230,7 +230,7 @@ public class ActivityService extends BaseService<Activity>{
 	}
 	
 	public ShowActivities showAllByCode(Integer startPage, Integer maxPage, String code) throws Exception {
-		String ActivityId = activityTypeDao.getByCode(code.toLowerCase());
+		String ActivityId = activityTypeDao.getByCode(code);
 		System.out.println(ActivityId+" - "+code);
 		ShowActivities response = activityDao.getAllByType(startPage, maxPage,ActivityId);
 
