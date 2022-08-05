@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
-import com.lawencon.community.constant.ActivityTypeCategory;
 import com.lawencon.community.dao.ActivityDao;
 import com.lawencon.community.dao.ActivityInvoiceDao;
 import com.lawencon.community.dao.ActivityTypeDao;
@@ -17,7 +15,6 @@ import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityInvoice;
 import com.lawencon.community.model.ActivityType;
 import com.lawencon.community.model.File;
-import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -28,7 +25,6 @@ import com.lawencon.community.pojo.activityInvoice.InsertActivityInvoiceReq;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoiceById;
 import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
-import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.util.GenerateCode;
 import com.lawencon.model.SearchQuery;
 

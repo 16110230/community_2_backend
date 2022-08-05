@@ -26,7 +26,6 @@ import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
-import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.model.SearchQuery;
 
 @Service
