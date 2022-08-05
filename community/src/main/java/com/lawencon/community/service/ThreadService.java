@@ -519,4 +519,9 @@ public class ThreadService extends BaseService<Thread>{
 		return response;
 	}
 	
+	public SearchQuery<PojoThread> showAllByUserId(Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<PojoThread> response = threadDao.findAllById(getUserId(), ThreadCategoryType.ART.name(), startPage, maxPage);
+		
+		return response;
+	}
 }

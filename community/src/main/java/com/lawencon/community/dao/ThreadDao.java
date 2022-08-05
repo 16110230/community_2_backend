@@ -4,21 +4,38 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.constant.ThreadActivityType;
 import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.model.File;
+import com.lawencon.community.model.Polling;
+import com.lawencon.community.model.PollingDetails;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.Users;
+import com.lawencon.community.pojo.polling.PojoPolling;
+import com.lawencon.community.pojo.polling.PojoPollingDetails;
+import com.lawencon.community.pojo.polling.ShowPollingDetails;
+import com.lawencon.community.pojo.polling.ShowPollingHeader;
+import com.lawencon.community.pojo.polling.ShowPollingMain;
 import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.model.SearchQuery;
 
 @Repository
 public class ThreadDao extends AbstractJpaDao<Thread> {
+	
+	@Autowired
+	private ThreadCategoryDao threadCatDao;
+	
+	@Autowired
+	private PollingDao pollingDao;
+	
+	@Autowired
+	private PollingDetailsDao detailsDao;
 
 	public long countAllNewThreadToday() {
 		StringBuilder sqlBuilder = new StringBuilder().append("SELECT COUNT(id) new_thread_today ")
@@ -327,6 +344,96 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 		
 		response.setData(res);
 
+		return response;
+	}
+	
+	public SearchQuery<PojoThread> findAllById(String user, String threadCatCode, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<PojoThread> response = new SearchQuery<PojoThread>();
+		List<PojoThread> listPojo = new ArrayList<PojoThread>();
+		
+		StringBuilder sql = new StringBuilder()
+			.append("SELECT t.id, t.thread_title, t.thread_content, t.file_id, t.thread_category_id, ")
+			.append("t.created_at, t.is_active, t.version, t.user_id ")
+			.append("FROM thread t ")
+			.append("INNER JOIN users u ON u.id = t.user_id ")
+			.append("INNER JOIN file f ON f.id = t.file_id ")
+			.append("INNER JOIN thread_category tg ON tg.id = t.thread_category_id ")
+			.append("WHERE u.id = :id ")
+			.append("AND tg.category_code != :code ")
+			.append("ORDER BY t.created_at DESC");
+		
+		try {			
+			List<?> result = createNativeQuery(sql.toString())
+					.setParameter("id", user)
+					.setParameter("code", threadCatCode)
+					.setFirstResult(startPage)
+					.setMaxResults(maxPage)
+					.getResultList();
+			
+			if(result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoThread data = new PojoThread();
+					ThreadCategory threadCategory = threadCatDao.getById(objArr[4].toString());
+					
+					if(threadCategory.getCategoryCode().equals(ThreadCategoryType.POL.name())) {
+						
+						Polling checkPoll = pollingDao.getByThreadId(objArr[0].toString());
+						if(checkPoll != null) {							
+							try {
+								ShowPollingMain polling = new ShowPollingMain();
+								List<PojoPollingDetails> pojoDetails = new ArrayList<PojoPollingDetails>();
+								PojoPolling pojoPoll = new PojoPolling();
+								
+								pojoPoll.setId(checkPoll.getId());
+								pojoPoll.setIsPolling(true);
+								polling.setHeader(pojoPoll);
+								
+								List<PollingDetails> pollDetails = detailsDao.findAllByPolling(checkPoll.getId());
+								pollDetails.forEach(value -> {
+									PojoPollingDetails detail = new PojoPollingDetails();
+									detail.setId(value.getId());
+									detail.setPolling(value.getPolling().getId());
+									detail.setPollingDetailsName(value.getPollingDetailsName());
+									
+									pojoDetails.add(detail);
+								});
+								
+								polling.setDetails(pojoDetails);
+								data.setPolling(polling);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					data.setId(objArr[0].toString());
+					data.setThreadTitle(objArr[1].toString());
+					data.setThreadContent(objArr[2].toString());
+					if(objArr[3] != null) {
+						data.setFile(objArr[3].toString());
+					}
+					data.setThreadcategory(objArr[4].toString());
+					data.setCreatedAt(((Timestamp) objArr[5]).toLocalDateTime());
+					data.setIsActive(Boolean.valueOf(objArr[6].toString()));
+					data.setVersion(Integer.valueOf(objArr[7].toString()));
+					data.setUser(objArr[8].toString());
+					
+					data.setCountComment(countComment(objArr[0].toString()));
+					data.setIsBookmark(isBookmark(objArr[8].toString(), objArr[0].toString()));
+					data.setIsLike(isLike(objArr[8].toString(), objArr[0].toString()));
+					data.setCountLike(countLike(objArr[0].toString()));
+					data.setThreadCategoryName(threadCatCode);
+					
+					listPojo.add(data);
+				});
+				
+				response.setData(listPojo);
+			}
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
+		
 		return response;
 	}
 

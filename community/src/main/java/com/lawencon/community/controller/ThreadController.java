@@ -97,4 +97,11 @@ public class ThreadController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+	@GetMapping("profile")
+	public ResponseEntity<?> getAllById(@RequestParam(required = false) Integer startPage,
+			@RequestParam(required = false) Integer maxPage
+			) throws Exception {
+		SearchQuery<PojoThread> result = threadService.showAllByUserId(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }
