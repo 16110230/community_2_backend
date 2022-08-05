@@ -61,8 +61,11 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 					data.setThreadContent(objArr[2].toString());
 					threadCat.setId(objArr[3].toString());
 					data.setThreadCategory(threadCat);
-					file.setId(objArr[5].toString());
-					data.setFile(file);
+					
+					if (objArr[5].toString() != null) {
+						file.setId(objArr[5].toString());						
+						data.setFile(file);
+					}
 					user.setId(objArr[6].toString());
 					data.setUser(user);
 					data.setCreatedAt(((Timestamp) objArr[8]).toLocalDateTime());
