@@ -49,4 +49,18 @@ public class PollingDetailsDao extends AbstractJpaDao<PollingDetails>{
 		
 		return response;
 	}
+	
+	public Boolean deleteByPollingId(String id) throws Exception {
+		StringBuilder sqlBuilder = new StringBuilder().append("DELETE FROM polling_details ")
+				.append("WHERE polling_id = :pollingId ");
+
+		Integer result = createNativeQuery(sqlBuilder.toString()).setParameter("pollingId", id)
+				.executeUpdate();
+
+		if (result > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

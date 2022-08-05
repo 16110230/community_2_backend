@@ -19,6 +19,7 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.activityInvoice.InsertActivityInvoiceReq;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
+import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoiceById;
 import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
 import com.lawencon.community.service.ActivityInvoiceService;
@@ -33,7 +34,7 @@ public class ActivityInvoiceController {
 
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<PojoActivityInvoice> result = activityInvoiceService.showAllByType(query, startPage, maxPage);
+		SearchQuery<PojoActivityInvoice> result = activityInvoiceService.showAllByTypePending(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -59,6 +60,12 @@ public class ActivityInvoiceController {
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
 		PojoDeleteRes data = activityInvoiceService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("type")
+	public ResponseEntity<?> getAllByType(Integer startPage, Integer maxPage, String code) throws Exception {
+		ShowActivityInvoice result = activityInvoiceService.showAllByType(startPage, maxPage, code);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 }
