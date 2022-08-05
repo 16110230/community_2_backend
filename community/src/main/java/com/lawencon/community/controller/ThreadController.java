@@ -40,6 +40,15 @@ public class ThreadController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping("non-login")
+	public ResponseEntity<?> getAllNoLogin(@RequestParam(required = false) String query,
+			@RequestParam(required = false) Integer startPage,
+			@RequestParam(required = false) Integer maxPage
+			) throws Exception {
+		SearchQuery<PojoThread> result = threadService.showAll(query, startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
 	@GetMapping({"article"})
 	public ResponseEntity<?> getAllArticle() throws Exception {
 		ShowThreads result = threadService.getArticles();

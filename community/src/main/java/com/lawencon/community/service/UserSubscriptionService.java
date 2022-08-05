@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.UserSubscriptionDao;
 import com.lawencon.community.model.UserSubscription;
 import com.lawencon.community.pojo.usersubscription.PojoUserSubscription;
