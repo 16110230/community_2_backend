@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.community.dao.ActivityCategoryDao;
 import com.lawencon.community.dao.ActivityDao;
+import com.lawencon.community.dao.ActivityInvoiceDao;
 import com.lawencon.community.dao.ActivityTypeDao;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityCategory;
+import com.lawencon.community.model.ActivityInvoice;
 import com.lawencon.community.model.ActivityType;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Users;
@@ -45,6 +47,9 @@ public class ActivityService extends BaseService<Activity>{
 	
 	@Autowired
 	private UsersDao usersDao;
+	
+	@Autowired
+	private ActivityInvoiceDao activityInvoiceDao;
 	
 	public SearchQuery<PojoActivity> showAll(String query, Integer startPage, Integer maxPage)
 			throws Exception {
@@ -232,6 +237,38 @@ public class ActivityService extends BaseService<Activity>{
 		String ActivityId = activityTypeDao.getByCode(code);
 		System.out.println(ActivityId+" - "+code);
 		ShowActivities response = activityDao.getAllByType(startPage, maxPage,ActivityId);
+
+		return response;
+	}
+	
+	public PojoDeleteRes deleteWithActivityInvoice(String id) throws Exception{
+		PojoDeleteRes response = new PojoDeleteRes();
+		List<ActivityInvoice> activityInvoices = activityInvoiceDao.getByActivity(id);
+		
+		int sizeActivityInvoices = activityInvoices.size();		
+		System.out.println(sizeActivityInvoices);
+		try {
+			begin();			 
+			
+			if(sizeActivityInvoices > 0) {		
+				for (int i = 0; i < sizeActivityInvoices; i++) {	
+					
+					boolean deleteActivityInvoice = activityInvoiceDao.deleteById(activityInvoices.get(i).getId());
+				}
+													
+			}	
+			
+			boolean result = activityDao.deleteById(id);
+
+			if (result) {
+				response.setMessage("Successfully delete the data!");
+			}
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
 
 		return response;
 	}

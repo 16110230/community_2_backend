@@ -1,8 +1,12 @@
 package com.lawencon.community.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.model.ActivityInvoice;
 
 @Repository
@@ -47,6 +51,37 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice>{
 		}
 		
 		return response;
+	}
+	
+	public List<ActivityInvoice> getByActivity(String id){
+		List<ActivityInvoice> response = new ArrayList<ActivityInvoice>();
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("SELECT id ")
+			.append("FROM activity_invoice ")
+			.append("WHERE activity_id = :id");
+		
+		try {
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("id",id)
+				.getResultList();
+			
+			if(result != null) {
+				result.forEach(obj -> {
+					String activityInvoiceId = (String) obj;
+					ActivityInvoice data = new ActivityInvoice();
+					
+					data.setId(activityInvoiceId);
+					response.add(data);
+				});
+			}
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return response;
+		
 	}
 	
 }
