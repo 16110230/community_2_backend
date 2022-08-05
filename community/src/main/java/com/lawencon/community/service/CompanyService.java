@@ -98,9 +98,8 @@ public class CompanyService extends BaseCoreService<Company> {
 	public PojoUpdateRes update(UpdateCompanyReq data) throws Exception {
 		PojoUpdateRes response = new PojoUpdateRes();
 		PojoUpdateResData resData = new PojoUpdateResData();
-		Company update = new Company();
+		Company update = companyDao.getById(data.getId());
 
-		update.setId(data.getId());
 		update.setCompanyName(data.getCompanyName());
 		update.setCompanyCode(data.getCompanyCode());
 		update.setEmail(data.getEmail());

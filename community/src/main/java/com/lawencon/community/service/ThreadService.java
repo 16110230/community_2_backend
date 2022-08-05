@@ -39,7 +39,7 @@ import com.lawencon.community.pojo.thread.UpdateThreadReq;
 import com.lawencon.model.SearchQuery;
 
 @Service
-public class ThreadService extends BaseService<Thread>{
+public class ThreadService extends BaseService<Thread> {
 
 	@Autowired
 	private ThreadDao threadDao;
@@ -55,19 +55,19 @@ public class ThreadService extends BaseService<Thread>{
 
 	@Autowired
 	private PollingService pollingService;
-	
+
 	@Autowired
 	private ThreadActivityDao threadActivityDao;
-	
+
 	@Autowired
 	private PollingDao pollingDao;
-	
+
 	@Autowired
 	private PollingDetailsDao pollingDetailsDao;
-	
+
 	@Autowired
 	private UserPollingDao userPollingDao;
-	
+
 	@Autowired
 	private ThreadDetailsDao threadDetailsDao;
 
@@ -82,7 +82,7 @@ public class ThreadService extends BaseService<Thread>{
 
 			if (val.getFile() != null) {
 				File file = fileDao.getById(val.getFile().getId());
-				thread.setFile(file.getId());				
+				thread.setFile(file.getId());
 			}
 
 			if (threadCategory.getCategoryName().equals(ThreadCategoryType.POL.getCode())) {
@@ -97,7 +97,7 @@ public class ThreadService extends BaseService<Thread>{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				pojoPolling.setId(polling.getId());
 				pojoPolling.setIsPolling(userPolling);
 				pojoPollingDetails.forEach(value -> {
@@ -105,22 +105,22 @@ public class ThreadService extends BaseService<Thread>{
 					detail.setId(value.getId());
 					detail.setPolling(value.getPolling().getId());
 					detail.setPollingDetailsName(value.getPollingDetailsName());
-					
+
 					pojoPollingDetail.add(detail);
 				});
-				
+
 				pojoPolling.setId(polling.getId());
 				data.setHeader(pojoPolling);
 				data.setDetails(pojoPollingDetail);
 				thread.setPolling(data);
 			}
-			
+
 			thread.setId(val.getId());
 			thread.setThreadTitle(val.getThreadTitle());
 			thread.setThreadContent(val.getThreadContent());
 			try {
 				thread.setIsLike(threadDao.isLike(getUserId(), val.getId()));
-				thread.setIsBookmark(threadDao.isBookmark(getUserId(), val.getId()));				
+				thread.setIsBookmark(threadDao.isBookmark(getUserId(), val.getId()));
 			} catch (Exception e2) {
 				thread.setIsLike(null);
 				thread.setIsBookmark(null);
@@ -128,7 +128,7 @@ public class ThreadService extends BaseService<Thread>{
 			thread.setCountBookmark(threadDao.countBookmark(val.getId()));
 			thread.setCountLike(threadDao.countLike(val.getId()));
 			thread.setCountComment(threadDao.countComment(val.getId()));
-			
+
 			thread.setUser(user.getId());
 			thread.setUserName(user.getUsername());
 			thread.setThreadcategory(threadCategory.getId());
@@ -153,13 +153,12 @@ public class ThreadService extends BaseService<Thread>{
 
 		ThreadCategory threadCategory = threadCategoryDao.getById(threads.getThreadCategory().getId());
 		Users user = usersDao.getById(threads.getUser().getId());
-		
 
 		if (threads.getFile().getId() != null) {
 			File file = fileDao.getById(threads.getFile().getId());
-			thread.setFile(file.getId());				
+			thread.setFile(file.getId());
 		}
-		
+
 		if (threadCategory.getCategoryName().equals(ThreadCategoryType.POL.getCode())) {
 			Polling polling = pollingDao.getByThreadId(threads.getId());
 			Boolean userPolling = userPollingDao.getByIdUser(getUserId(), polling.getId());
@@ -172,7 +171,7 @@ public class ThreadService extends BaseService<Thread>{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			pojoPolling.setId(polling.getId());
 			pojoPolling.setIsPolling(userPolling);
 			pojoPollingDetails.forEach(value -> {
@@ -180,16 +179,15 @@ public class ThreadService extends BaseService<Thread>{
 				detail.setId(value.getId());
 				detail.setPolling(value.getPolling().getId());
 				detail.setPollingDetailsName(value.getPollingDetailsName());
-				
+
 				pojoPollingDetail.add(detail);
 			});
-			
+
 			pojoPolling.setId(polling.getId());
 			data.setHeader(pojoPolling);
 			data.setDetails(pojoPollingDetail);
 			thread.setPolling(data);
 		}
-		
 
 		thread.setId(threads.getId());
 		thread.setThreadTitle(threads.getThreadTitle());
@@ -228,13 +226,13 @@ public class ThreadService extends BaseService<Thread>{
 		insert.setUser(user);
 
 		try {
-			begin();			
+			begin();
 			if (data.getFileName() != null) {
 				File file = new File();
 				file.setFileName(data.getFileName());
 				file.setFileExt(data.getFileExt());
 				file.setIsActive(data.getIsActive());
-				File result = fileDao.saveNew(file);		
+				File result = fileDao.saveNew(file);
 				insert.setFile(result);
 			}
 
@@ -316,28 +314,29 @@ public class ThreadService extends BaseService<Thread>{
 
 		return response;
 	}
-	
+
 	public PojoDeleteRes delete(String id) throws Exception {
 		PojoDeleteRes response = new PojoDeleteRes();
 		Thread thread = threadDao.getById(id);
-		
-		if (ThreadCategoryType.POL.name() == thread.getThreadCategory().getCategoryCode()) {
+
+		if (ThreadCategoryType.POL.name().equals(thread.getThreadCategory().getCategoryCode())) {
 			Polling polling = pollingDao.getByThreadId(id);
 			List<PollingDetails> pollingDetail = pollingDetailsDao.findAllByPolling(polling.getId());
-			
+
 			int sizePolling = pollingDetail.size();
-			
+
 			try {
+				begin();
 				boolean deletePollDetail = false;
-				
+
 				for (int i = 0; i < sizePolling; i++) {
 					UserPolling userPolling = userPollingDao.getById(pollingDetail.get(i).getPolling().getId());
 					boolean deleteUserPolling = userPollingDao.deleteById(userPolling.getId());
 					if (deleteUserPolling) {
-						deletePollDetail = pollingDao.deleteById(pollingDetail.get(i).getId());					
+						deletePollDetail = pollingDao.deleteById(pollingDetail.get(i).getId());
 					}
 				}
-				
+
 				if (deletePollDetail) {
 					boolean result = threadDao.deleteById(id);
 					if (result) {
@@ -349,6 +348,7 @@ public class ThreadService extends BaseService<Thread>{
 						response.setMessage("Successfully delete the data!");
 					}
 				}
+				commit();
 			} catch (Exception e) {
 				e.printStackTrace();
 				rollback();
@@ -357,25 +357,25 @@ public class ThreadService extends BaseService<Thread>{
 		} else if (ThreadCategoryType.ART.name().equalsIgnoreCase(thread.getThreadCategory().getCategoryCode())) {
 			try {
 				begin();
-				
+
 				boolean result = threadDao.deleteById(id);
 				if (result) {
 					response.setMessage("Successfully delete the data!");
 				}
-				
+
 				commit();
 			} catch (Exception e) {
 				e.printStackTrace();
 				rollback();
 				throw new Exception(e);
 			}
-			
+
 		} else {
 			try {
 				begin();
-				
+
 				boolean deleteThreadAct = threadActivityDao.deleteByThreadId(id);
-				
+
 				if (deleteThreadAct) {
 					boolean deleteThreadDetail = threadDetailsDao.deleteByThreadId(id);
 					if (deleteThreadDetail) {
@@ -398,24 +398,24 @@ public class ThreadService extends BaseService<Thread>{
 						}
 					}
 				}
-				
+
 				commit();
 			} catch (Exception e) {
 				e.printStackTrace();
 				rollback();
 				throw new Exception(e);
 			}
-			
+
 		}
 
 		return response;
 	}
-	
+
 	public ShowThreads showThreadForUser() {
 		ShowThreads response = new ShowThreads();
 
 		List<PojoThread> thread = threadDao.getThreadForUser(getUserId());
-		
+
 		response.setData(thread);
 
 		return response;
@@ -423,7 +423,7 @@ public class ThreadService extends BaseService<Thread>{
 
 	public PojoInsertRes insertArticle(InsertThreadReq data) throws Exception {
 		Thread insert = new Thread();
-		
+
 		ThreadCategory threadCategory = threadCategoryDao.getCategoryCode(ThreadCategoryType.ART.name());
 		Users user = usersDao.getById(getUserId());
 
@@ -435,8 +435,8 @@ public class ThreadService extends BaseService<Thread>{
 			file.setFileName(data.getFileName());
 			file.setFileExt(data.getFileExt());
 			file.setIsActive(data.getIsActive());
-			File fileResult = fileDao.save(file);		
-			
+			File fileResult = fileDao.save(file);
+
 			insert.setFile(fileResult);
 		}
 
@@ -468,22 +468,22 @@ public class ThreadService extends BaseService<Thread>{
 
 		return response;
 	}
-	
+
 	public SearchQuery<PojoThread> showAllArticles(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage, "threadTitle", "threadContent");
 		List<PojoThread> result = new ArrayList<PojoThread>();
 
 		threads.getData().forEach(val -> {
-			if(val.getThreadCategory().getCategoryCode().equalsIgnoreCase(ThreadCategoryType.ART.name())) {
+			if (val.getThreadCategory().getCategoryCode().equalsIgnoreCase(ThreadCategoryType.ART.name())) {
 				PojoThread thread = new PojoThread();
 				ThreadCategory threadCategory = threadCategoryDao.getById(val.getThreadCategory().getId());
 				Users user = usersDao.getById(val.getUser().getId());
-				
+
 				if (val.getFile() != null) {
 					File file = fileDao.getById(val.getFile().getId());
-					thread.setFile(file.getId());				
+					thread.setFile(file.getId());
 				}
-				
+
 				thread.setId(val.getId());
 				thread.setThreadTitle(val.getThreadTitle());
 				thread.setThreadContent(val.getThreadContent());
@@ -492,7 +492,7 @@ public class ThreadService extends BaseService<Thread>{
 				thread.setCountBookmark(threadDao.countBookmark(val.getId()));
 				thread.setCountLike(threadDao.countLike(val.getId()));
 				thread.setCountComment(threadDao.countComment(val.getId()));
-				
+
 				thread.setUser(user.getId());
 				thread.setUserName(user.getUsername());
 				thread.setThreadcategory(threadCategory.getId());
@@ -500,7 +500,7 @@ public class ThreadService extends BaseService<Thread>{
 				thread.setCreatedAt(val.getCreatedAt());
 				thread.setIsActive(val.getIsActive());
 				thread.setVersion(val.getVersion());
-				
+
 				result.add(thread);
 			}
 		});
@@ -511,12 +511,12 @@ public class ThreadService extends BaseService<Thread>{
 
 		return response;
 	}
-	
+
 	public ShowThreads showAllArticlesPagination(Integer startPage, Integer maxPage) throws Exception {
-		
+
 		ShowThreads response = threadDao.getThreadArticle(startPage, maxPage);
 
 		return response;
 	}
-	
+
 }
