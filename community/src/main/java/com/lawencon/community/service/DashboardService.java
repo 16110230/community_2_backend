@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.community.constant.ActivityType;
+import com.lawencon.community.constant.ActivityTypeCategory;
 import com.lawencon.community.dao.ActivityDao;
 import com.lawencon.community.dao.ActivityInvoiceDao;
 import com.lawencon.community.dao.ActivityTypeDao;
@@ -45,14 +45,14 @@ public class DashboardService {
 		Long usersDaily = userDao.countAllByToday();
 		Long users = userDao.countAll();
 		
-		String activityTypeEventId = activityTypeDao.getByCode(ActivityType.EVENT.getCode());
-		String activityTypeCourseId = activityTypeDao.getByCode(ActivityType.COURSE.getCode());
+		String activityTypeEventId = activityTypeDao.getByCode(ActivityTypeCategory.EVENT.getCode());
+		String activityTypeCourseId = activityTypeDao.getByCode(ActivityTypeCategory.COURSE.getCode());
 		
 		Long activityEvent = activityDao.countAllByToday(activityTypeEventId);
 		Long activityCourse = activityDao.countAllByToday(activityTypeCourseId);
 		
-		Long invoicePendingEvent = activityInvoiceDao.countAllInvoicePendingByActivityType(ActivityType.EVENT.getCode());
-		Long invoicePendingCourse = activityInvoiceDao.countAllInvoicePendingByActivityType(ActivityType.COURSE.getCode());
+		Long invoicePendingEvent = activityInvoiceDao.countAllInvoicePendingByActivityType(ActivityTypeCategory.EVENT.getCode());
+		Long invoicePendingCourse = activityInvoiceDao.countAllInvoicePendingByActivityType(ActivityTypeCategory.COURSE.getCode());
 				
 		Long invoicePendingSubscription = subscriptionDao.countAllInvoicePending();
 		

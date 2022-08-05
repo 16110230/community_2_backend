@@ -26,6 +26,7 @@ import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
+import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -82,6 +83,7 @@ public class ActivityService extends BaseService<Activity>{
 
 		SearchQuery<PojoActivity> response = new SearchQuery<PojoActivity>();
 		response.setData(result);
+		response.setCount(users.getCount());
 
 		return response;
 	}
@@ -227,16 +229,12 @@ public class ActivityService extends BaseService<Activity>{
 		return response;
 	}
 	
-	public ShowActivities showAllByCode(String query, Integer startPage, Integer maxPage, String code)
-			throws Exception {
-		code = code.toLowerCase();		
-		
-		String activityTypeId = activityTypeDao.getByCode(code);		
-		List<PojoActivity> activities = activityDao.getAllByType(activityTypeId);
-		ShowActivities response = new ShowActivities();
-		response.setData(activities);
-		
+	public ShowActivities showAllByCode(Integer startPage, Integer maxPage, String code) throws Exception {
+		String ActivityId = activityTypeDao.getByCode(code.toLowerCase());
+		System.out.println(ActivityId+" - "+code);
+		ShowActivities response = activityDao.getAllByType(startPage, maxPage,ActivityId);
+
 		return response;
-		
 	}
+	
 }

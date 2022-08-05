@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
+import com.lawencon.community.pojo.PojoVerificationReq;
+import com.lawencon.community.pojo.PojoVerificationRes;
 import com.lawencon.community.pojo.users.InsertUserReq;
 import com.lawencon.community.pojo.users.PojoUsers;
 import com.lawencon.community.pojo.users.ShowUserById;
 import com.lawencon.community.pojo.users.UpdatePasswordReq;
 import com.lawencon.community.pojo.users.UpdateUserReq;
 import com.lawencon.community.service.UsersService;
+import com.lawencon.community.service.VerificationService;
 import com.lawencon.model.SearchQuery;
 
 @RestController
@@ -30,6 +33,9 @@ import com.lawencon.model.SearchQuery;
 public class UsersController {
 	@Autowired
 	private UsersService userService;
+	
+	@Autowired
+	private VerificationService verificationService;
 	
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
@@ -71,5 +77,11 @@ public class UsersController {
 	public ResponseEntity<ShowUserById> getUserProfile() throws Exception {
 		ShowUserById data = userService.showById();
 		return new ResponseEntity<ShowUserById>(data, HttpStatus.OK);
+	}
+	
+	@PostMapping("verification")
+	public ResponseEntity<PojoVerificationRes> verification(@RequestBody @Valid PojoVerificationReq request) throws Exception {
+		PojoVerificationRes response = verificationService.register(request);
+		return new ResponseEntity<PojoVerificationRes>(response, HttpStatus.CREATED);
 	}
 }

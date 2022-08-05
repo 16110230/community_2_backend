@@ -44,6 +44,7 @@ public class ActivityCategoryService extends BaseCoreService<ActivityCategory> {
 
 		SearchQuery<PojoActivityCategory> response = new SearchQuery<PojoActivityCategory>();
 		response.setData(result);
+		response.setCount(users.getCount());
 
 		return response;
 	}

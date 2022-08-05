@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.base.BaseCoreService;
+import com.lawencon.community.constant.ActivityTypeCategory;
 import com.lawencon.community.dao.ActivityDao;
 import com.lawencon.community.dao.ActivityInvoiceDao;
+import com.lawencon.community.dao.ActivityTypeDao;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityInvoice;
+import com.lawencon.community.model.ActivityType;
 import com.lawencon.community.model.File;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -24,6 +28,8 @@ import com.lawencon.community.pojo.activityInvoice.InsertActivityInvoiceReq;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoiceById;
 import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
+import com.lawencon.community.pojo.thread.PojoThread;
+import com.lawencon.community.util.GenerateCode;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -40,6 +46,12 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private ActivityTypeDao activityTypeDao;
+	
+	@Autowired
+	private GenerateCode generateCode;
 
 	public SearchQuery<PojoActivityInvoice> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ActivityInvoice> users = activityInvoiceDao.findAll(query, startPage, maxPage);
@@ -61,6 +73,9 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 			actInv.setIsApproved(val.getIsApproved());
 			actInv.setIsActive(val.getIsActive());
 			actInv.setVersion(val.getVersion());
+			actInv.setOrderDate(val.getActivity().getCreatedAt());
+			actInv.setAmount(val.getActivity().getFee());
+			
 			result.add(actInv);
 		});
 
@@ -83,6 +98,7 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		fileIns.setFileExt(data.getFileExt());
 
 		insert.setActivity(act);
+		insert.setInvoiceCode(generateCode.generate());
 		insert.setUser(usr);
 		insert.setIsApproved(data.getIsApproved());
 		insert.setIsActive(true);
@@ -107,28 +123,19 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 	}
 
 	public PojoUpdateRes update(UpdateActivityInvoiceReq data) throws Exception {
-		ActivityInvoice update = new ActivityInvoice();
+		ActivityInvoice update = activityInvoiceDao.getById(data.getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
-		Activity act = activityDao.getById(data.getActivity());
-		Users usr = usersDao.getById(data.getUser());
-		File file = fileDao.getById(data.getFile());
-
-		update.setActivity(act);
-		update.setUser(usr);
+		update.setId(data.getId());
+		update.setIsApproved(data.getIsApproved());
 		update.setIsActive(data.getIsActive());
 		update.setVersion(data.getVersion());
+		
 
 		try {
 			begin();
 			
-			file.setFileName(data.getFileName());
-			file.setFileExt(data.getFileExt());
-			file.setVersion(data.getVersion());
-			File res = fileDao.save(file);
-
-			update.setFile(res);
 			ActivityInvoice result = activityInvoiceDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
@@ -182,6 +189,46 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 			rollback();
 			throw new Exception(e);
 		}
+
+		return response;
+	}
+	
+	public SearchQuery<PojoActivityInvoice> showAllByType(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<ActivityInvoice> activities = activityInvoiceDao.findAll(query, startPage, maxPage);
+		List<PojoActivityInvoice> result = new ArrayList<>();
+		
+		activities.getData().forEach(val -> {
+			if (val.getIsApproved() == null) {
+				PojoActivityInvoice activity = new PojoActivityInvoice();
+				Activity act = activityDao.getById(val.getActivity().getId());
+				ActivityType activityType = activityTypeDao.getById(val.getActivity().getActivityType().getId());
+				Users users = usersDao.getById(val.getCreatedBy());
+				
+				if (val.getFile() != null) {
+					File file = fileDao.getById(val.getFile().getId());
+					activity.setFile(file.getId());				
+				}
+				
+				activity.setId(val.getId());
+				activity.setUser(users.getId());
+				activity.setInvoiceCode(val.getInvoiceCode());
+				activity.setUserName(users.getFullName());
+				activity.setActivity(act.getId());
+				activity.setActivityName(activityType.getTypeName());
+				activity.setIsApproved(val.getIsApproved());
+				activity.setIsActive(val.getIsActive());
+				activity.setVersion(val.getVersion());
+				activity.setOrderDate(val.getActivity().getCreatedAt());
+				activity.setAmount(val.getActivity().getFee());
+				activity.setActivityType(activityType.getTypeCode());
+				
+				result.add(activity);
+			}
+		});
+		
+		SearchQuery<PojoActivityInvoice> response = new SearchQuery<PojoActivityInvoice>();
+		response.setData(result);
+		response.setCount(activities.getCount());
 
 		return response;
 	}

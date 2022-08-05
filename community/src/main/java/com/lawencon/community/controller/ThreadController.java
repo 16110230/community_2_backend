@@ -81,5 +81,11 @@ public class ThreadController {
 		PojoDeleteRes result = threadService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping({"articles"})
+	public ResponseEntity<?> getAllArticles(String query, Integer startPage, Integer maxPage) throws Exception {
+		ShowThreads result = threadService.showAllArticlesPagination(startPage,maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 
 }

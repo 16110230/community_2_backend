@@ -46,6 +46,7 @@ import com.lawencon.model.SearchQuery;
 import com.lawencon.security.RefreshTokenEntity;
 import com.lawencon.security.RefreshTokenService;
 import com.lawencon.util.JwtUtil;
+import com.lawencon.util.VerificationCodeUtil;
 
 @Service
 public class UsersService extends BaseService<Users> implements UserDetailsService {
@@ -82,6 +83,9 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 	
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private VerificationCodeUtil verificationUtil;
 	
 	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
@@ -290,8 +294,10 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 				e.printStackTrace();
 			}
 		}).start();
+		
+		verificationUtil.addVerificationCode(email.getEmail(), code);
 
-		response.setMessage(code);
+		response.setMessage("Sent to email!");
 		return response;
 	}
 	

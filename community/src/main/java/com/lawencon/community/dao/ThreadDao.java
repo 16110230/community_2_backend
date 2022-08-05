@@ -14,6 +14,8 @@ import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.thread.PojoThread;
+import com.lawencon.community.pojo.thread.ShowThreads;
+import com.lawencon.model.SearchQuery;
 
 @Repository
 public class ThreadDao extends AbstractJpaDao<Thread> {
@@ -266,6 +268,62 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 			e.printStackTrace();
 		}
 		
+		return response;
+	}
+	
+	public ShowThreads getThreadArticle(Integer startPage,Integer maxPage) {
+		List<PojoThread> res = new ArrayList<PojoThread>();
+		ShowThreads response = new ShowThreads();
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT t.id, t.thread_title, t.thread_content, t.thread_category_id, ")
+				.append("tc.category_name , t.file_id, t.user_id, u.username, t.created_at  ")
+				.append("FROM thread t ")
+				.append("JOIN thread_category tc ON tc.id = t.thread_category_id ")
+				.append("JOIN users u ON u.id = t.user_id ")
+				.append("WHERE tc.category_name = :category ")
+				.append("ORDER BY t.created_at DESC ");
+
+		try {
+			Integer size = createNativeQuery(sqlBuilder.toString())
+					.setParameter("category", ThreadCategoryType.ART.getCode())
+					.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("category", ThreadCategoryType.ART.getCode())
+					.setFirstResult(startPage)
+					.setMaxResults(maxPage)
+					.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoThread data = new PojoThread();
+					ThreadCategory threadCat = new ThreadCategory();
+					Users user = new Users();
+					File file = new File();
+
+					data.setId(objArr[0].toString());
+					data.setThreadTitle(objArr[1].toString());
+					data.setThreadContent(objArr[2].toString());
+					data.setThreadcategory(objArr[3].toString());
+					data.setThreadCategoryName(objArr[4].toString());
+					if(objArr[5] != null) {
+						data.setFile(objArr[5].toString());						
+					}
+					data.setUser(objArr[6].toString());
+					data.setUserName(objArr[7].toString());
+					data.setCreatedAt(((Timestamp) objArr[8]).toLocalDateTime());
+					
+					res.add(data);
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		response.setData(res);
+
 		return response;
 	}
 
