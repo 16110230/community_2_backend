@@ -20,7 +20,9 @@ import com.lawencon.community.model.File;
 import com.lawencon.community.model.Polling;
 import com.lawencon.community.model.PollingDetails;
 import com.lawencon.community.model.Thread;
+import com.lawencon.community.model.ThreadActivity;
 import com.lawencon.community.model.ThreadCategory;
+import com.lawencon.community.model.ThreadDetails;
 import com.lawencon.community.model.UserPolling;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
@@ -325,93 +327,79 @@ public class ThreadService extends BaseService<Thread> {
 	public PojoDeleteRes delete(String id) throws Exception {
 		PojoDeleteRes response = new PojoDeleteRes();
 		Thread thread = threadDao.getById(id);
-
-		if (ThreadCategoryType.POL.name().equals(thread.getThreadCategory().getCategoryCode())) {
-			Polling polling = pollingDao.getByThreadId(id);
-			List<PollingDetails> pollingDetail = pollingDetailsDao.findAllByPolling(polling.getId());
-
-			int sizePolling = pollingDetail.size();
-
-			try {
-				begin();
-				boolean deletePollDetail = false;
-
-				for (int i = 0; i < sizePolling; i++) {
-					UserPolling userPolling = userPollingDao.getById(pollingDetail.get(i).getPolling().getId());
-					boolean deleteUserPolling = userPollingDao.deleteById(userPolling.getId());
-					if (deleteUserPolling) {
-						deletePollDetail = pollingDao.deleteById(pollingDetail.get(i).getId());
+		
+		try {
+			begin();
+			
+			if (thread.getId() != null) {
+				if (ThreadCategoryType.ART.name().equalsIgnoreCase(thread.getThreadCategory().getCategoryCode())) {
+					try {
+						boolean result = threadDao.deleteById(id);
+						if (result) {
+							response.setMessage("Successfully delete the data!");
+						}
+						
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						rollback();
+						throw new Exception(e);
 					}
-				}
+				} else if (ThreadCategoryType.POL.name().equals(thread.getThreadCategory().getCategoryCode())) {
 
-				if (deletePollDetail) {
-					boolean result = threadDao.deleteById(id);
-					if (result) {
-						response.setMessage("Successfully delete the data!");
+					Polling polling = pollingDao.getByThreadId(id);
+					List<ThreadDetails> threadDetails = threadDetailsDao.findByThreadId(id);
+					Boolean checkLike = threadDao.countLike(id) > 0;
+					Boolean checkBookmark = threadDao.countBookmark(id) > 0;
+					
+					if (polling.getId() != null) {
+						List<PollingDetails> pollingDetail = pollingDetailsDao.findAllByPolling(polling.getId());
+						if (pollingDetail != null) {
+							List<PollingDetails> deleteUserPolling = new ArrayList<>();
+							
+							pollingDetail.forEach(val -> {
+								UserPolling userPolling = userPollingDao.getByPollingDetailId(val.getId());
+								if (userPolling != null) {
+									PollingDetails polDetail = new PollingDetails();
+									
+									polDetail.setId(val.getId());
+									
+									deleteUserPolling.add(polDetail);
+								}
+							});
+							
+							userPollingDao.deleteByPollingDetail(deleteUserPolling);
+							pollingDetailsDao.deleteByPollingId(polling.getId());
+							pollingDao.deleteById(polling.getId());
+						} else {
+							pollingDao.deleteById(polling.getId());
+						}
 					}
+					
+					if (threadDetails != null) {
+						threadDetailsDao.deleteByThreadId(id);
+					}
+					
+					if (checkLike || checkBookmark) {
+						threadActivityDao.deleteByThreadId(id);
+					}
+					
+					
 				} else {
-					boolean result = threadDao.deleteById(id);
-					if (result) {
-						response.setMessage("Successfully delete the data!");
-					}
+					
 				}
-				commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-				rollback();
-				throw new Exception(e);
-			}
-		} else if (ThreadCategoryType.ART.name().equalsIgnoreCase(thread.getThreadCategory().getCategoryCode())) {
-			try {
-				begin();
-
-				boolean result = threadDao.deleteById(id);
-				if (result) {
-					response.setMessage("Successfully delete the data!");
+				
+				boolean deleteRes = threadDao.deleteById(id);
+				
+				if (deleteRes) {
+					response.setMessage("Successfully delete data!");
 				}
-
-				commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-				rollback();
-				throw new Exception(e);
 			}
-
-		} else {
-			try {
-				begin();
-
-				boolean deleteThreadAct = threadActivityDao.deleteByThreadId(id);
-
-				if (deleteThreadAct) {
-					boolean deleteThreadDetail = threadDetailsDao.deleteByThreadId(id);
-					if (deleteThreadDetail) {
-						boolean result = threadDao.deleteById(id);
-						if (result) {
-							response.setMessage("Successfully delete the data!");
-						}
-					}
-				} else {
-					boolean deleteThreadDetail = threadDetailsDao.deleteByThreadId(id);
-					if (deleteThreadDetail) {
-						boolean result = threadDao.deleteById(id);
-						if (result) {
-							response.setMessage("Successfully delete the data!");
-						}
-					} else {
-						boolean result = threadDao.deleteById(id);
-						if (result) {
-							response.setMessage("Successfully delete the data!");
-						}
-					}
-				}
-
-				commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-				rollback();
-				throw new Exception(e);
-			}
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
 
 		}
 
