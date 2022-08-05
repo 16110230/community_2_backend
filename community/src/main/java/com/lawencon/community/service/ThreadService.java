@@ -87,7 +87,14 @@ public class ThreadService extends BaseService<Thread> {
 
 			if (threadCategory.getCategoryName().equals(ThreadCategoryType.POL.getCode())) {
 				Polling polling = pollingDao.getByThreadId(val.getId());
-				Boolean userPolling = userPollingDao.getByIdUser(getUserId(), polling.getId());
+				Boolean userPolling ;
+				try {
+					userPolling = userPollingDao.getByIdUser(getUserId(), polling.getId());					
+				} catch (Exception e) {
+					userPolling = false;
+				}
+				
+				
 				ShowPollingMain data = new ShowPollingMain();
 				PojoPolling pojoPolling = new PojoPolling();
 				List<PojoPollingDetails> pojoPollingDetail = new ArrayList<PojoPollingDetails>();
@@ -516,6 +523,12 @@ public class ThreadService extends BaseService<Thread> {
 
 		ShowThreads response = threadDao.getThreadArticle(startPage, maxPage);
 
+		return response;
+	}
+
+	public SearchQuery<PojoThread> showAllByUserId(Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<PojoThread> response = threadDao.findAllById(getUserId(), ThreadCategoryType.ART.name(), startPage, maxPage);
+		
 		return response;
 	}
 
