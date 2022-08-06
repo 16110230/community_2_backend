@@ -34,7 +34,7 @@ public class PollingDetailsDao extends AbstractJpaDao<PollingDetails>{
 					data.setId(objArr[0].toString());
 					polling.setId(objArr[1].toString());
 					data.setPolling(polling);
-					if(objArr[2].toString() != null) {
+					if(objArr[2] != null) {
 						data.setPollingDetailsName(objArr[2].toString());						
 					}
 					data.setIsActive(Boolean.valueOf(objArr[3].toString()));
@@ -48,5 +48,19 @@ public class PollingDetailsDao extends AbstractJpaDao<PollingDetails>{
 		}
 		
 		return response;
+	}
+	
+	public Boolean deleteByPollingId(String id) throws Exception {
+		StringBuilder sqlBuilder = new StringBuilder().append("DELETE FROM polling_details ")
+				.append("WHERE polling_id = :pollingId ");
+
+		Integer result = createNativeQuery(sqlBuilder.toString()).setParameter("pollingId", id)
+				.executeUpdate();
+
+		if (result > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

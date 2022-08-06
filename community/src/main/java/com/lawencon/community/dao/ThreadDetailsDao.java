@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.community.model.Polling;
+import com.lawencon.community.model.PollingDetails;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadDetails;
 import com.lawencon.community.model.Users;
@@ -63,4 +65,5 @@ public class ThreadDetailsDao extends AbstractJpaDao<ThreadDetails> {
 		
 		return result > 0;
 	}
+	
 }

@@ -1,9 +1,17 @@
 package com.lawencon.community.dao;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.model.ActivityInvoice;
+import com.lawencon.community.model.File;
+import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
+import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoice;
 
 @Repository
 public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice>{
@@ -47,6 +55,85 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice>{
 		}
 		
 		return response;
+	}
+
+	public ShowActivityInvoice getAllByType(Integer startPage,Integer maxPage, String type) {
+		List<PojoActivityInvoice> res = new ArrayList<>();
+		ShowActivityInvoice response = new ShowActivityInvoice();
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT ai.id, ai.invoice_code, ai.created_at, ai.file_id, ai.is_approved, u.full_name, a.fee ")
+				.append("FROM activity_invoice as ai ")
+				.append("INNER JOIN users as u ON u.id = ai.user_id ")
+				.append("INNER JOIN activity as a ON a.id = ai.activity_id " )
+				.append("INNER JOIN activity_type as at ON at.id = a.activity_type_id ")
+				.append("WHERE a.activity_type_id = :type AND ai.is_approved IS NOT NULL ");
+		
+		try {
+			Integer size = createNativeQuery(sqlBuilder.toString())
+					.setParameter("type", type)
+					.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("type", type)
+					.setFirstResult(startPage)
+					.setMaxResults(maxPage)
+					.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoActivityInvoice data = new PojoActivityInvoice();
+					
+					data.setId(objArr[0].toString());
+					data.setInvoiceCode(objArr[1].toString());
+					data.setOrderDate(((Timestamp) objArr[2]).toLocalDateTime());
+					if (objArr[3].toString() != null) {
+						data.setFile(objArr[3].toString());						
+					}
+					data.setIsApproved(Boolean.valueOf(objArr[4].toString()));
+					data.setUserName(objArr[5].toString());
+					data.setAmount(Integer.valueOf(objArr[6].toString()));
+					
+					res.add(data);
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		response.setData(res);
+		return response;
+  }
+
+	public List<ActivityInvoice> getByActivity(String id){
+		List<ActivityInvoice> response = new ArrayList<ActivityInvoice>();
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("SELECT id ")
+			.append("FROM activity_invoice ")
+			.append("WHERE activity_id = :id");
+		
+		try {
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("id",id)
+				.getResultList();
+			
+			if(result != null) {
+				result.forEach(obj -> {
+					String activityInvoiceId = (String) obj;
+					ActivityInvoice data = new ActivityInvoice();
+					
+					data.setId(activityInvoiceId);
+					response.add(data);
+				});
+			}
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return response;
+
 	}
 	
 }

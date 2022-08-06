@@ -58,7 +58,7 @@ public class ActivityController {
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity<PojoDeleteRes> delete(@PathVariable("id") String id) throws Exception {
-		PojoDeleteRes data = activityService.delete(id);
+		PojoDeleteRes data = activityService.deleteWithActivityInvoice(id);
 		return new ResponseEntity<PojoDeleteRes>(data, HttpStatus.OK);
 	}
 	

@@ -93,9 +93,8 @@ public class IndustryService extends BaseCoreService<Industry> {
 	public PojoUpdateRes update(UpdateIndustryReq data) throws Exception {
 		PojoUpdateRes response = new PojoUpdateRes();
 		PojoUpdateResData resData = new PojoUpdateResData();
-		Industry update = new Industry();
-
-		update.setId(data.getId());
+		Industry update = industryDao.getById(data.getId());
+		
 		update.setIndustryName(data.getIndustryName());
 		update.setIndustryCode(data.getIndustryCode());
 		update.setIsActive(data.getIsActive());

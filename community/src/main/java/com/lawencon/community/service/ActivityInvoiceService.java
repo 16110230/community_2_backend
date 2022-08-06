@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
-import com.lawencon.community.constant.ActivityTypeCategory;
 import com.lawencon.community.dao.ActivityDao;
 import com.lawencon.community.dao.ActivityInvoiceDao;
 import com.lawencon.community.dao.ActivityTypeDao;
@@ -17,7 +15,6 @@ import com.lawencon.community.model.Activity;
 import com.lawencon.community.model.ActivityInvoice;
 import com.lawencon.community.model.ActivityType;
 import com.lawencon.community.model.File;
-import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -26,9 +23,9 @@ import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
 import com.lawencon.community.pojo.activityInvoice.InsertActivityInvoiceReq;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
+import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoiceById;
 import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
-import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.util.GenerateCode;
 import com.lawencon.model.SearchQuery;
 
@@ -193,7 +190,7 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		return response;
 	}
 	
-	public SearchQuery<PojoActivityInvoice> showAllByType(String query, Integer startPage, Integer maxPage) throws Exception {
+	public SearchQuery<PojoActivityInvoice> showAllByTypePending(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ActivityInvoice> activities = activityInvoiceDao.findAll(query, startPage, maxPage);
 		List<PojoActivityInvoice> result = new ArrayList<>();
 		
@@ -230,6 +227,16 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		response.setData(result);
 		response.setCount(activities.getCount());
 
+		return response;
+	}
+	
+	public ShowActivityInvoice showAllByType(Integer startPage, Integer maxPage, String code) throws Exception {
+		String activityId = activityTypeDao.getByCode(code);
+		System.out.println(activityId + " - " + code);
+		System.out.println(startPage);
+		System.out.println(maxPage);
+		ShowActivityInvoice response = activityInvoiceDao.getAllByType(startPage, maxPage, activityId);
+		
 		return response;
 	}
 

@@ -6,12 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseCoreService;
 import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dao.ThreadDetailsDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.Thread;
-import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.ThreadDetails;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
@@ -19,8 +17,6 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
-import com.lawencon.community.pojo.thread.PojoThread;
-import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.community.pojo.threadDetails.InsertThreadDetailsReq;
 import com.lawencon.community.pojo.threadDetails.PojoThreadDetails;
 import com.lawencon.community.pojo.threadDetails.ShowThreadDetailById;
@@ -39,9 +35,6 @@ public class ThreadDetailService extends BaseService<ThreadDetails> {
 
 	@Autowired
 	private UsersDao usersDao;
-	
-//	@Autowired
-//	private BaseService baseService;
 
 	public SearchQuery<PojoThreadDetails> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<ThreadDetails> threadDetails = threadDetailsDao.findAll(query, startPage, maxPage);
