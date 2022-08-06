@@ -386,7 +386,17 @@ public class ThreadService extends BaseService<Thread> {
 					
 					
 				} else {
+					List<ThreadDetails> threadDetails = threadDetailsDao.findByThreadId(id);
+					Boolean checkLike = threadDao.countLike(id) > 0;
+					Boolean checkBookmark = threadDao.countBookmark(id) > 0;
 					
+					if (threadDetails != null) {
+						threadDetailsDao.deleteByThreadId(id);
+					}
+					
+					if (checkLike || checkBookmark) {
+						threadActivityDao.deleteByThreadId(id);
+					}
 				}
 				
 				boolean deleteRes = threadDao.deleteById(id);
