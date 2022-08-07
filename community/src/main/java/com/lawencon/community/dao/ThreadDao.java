@@ -79,7 +79,7 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 					threadCat.setId(objArr[3].toString());
 					data.setThreadCategory(threadCat);
 					
-					if (objArr[5].toString() != null) {
+					if (objArr[5] != null) {
 						file.setId(objArr[5].toString());						
 						data.setFile(file);
 					}
