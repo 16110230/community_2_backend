@@ -136,4 +136,15 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice>{
 
 	}
 	
+	public boolean deleteByActivityId(String id) {
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("DELETE FROM activity_invoice ")
+			.append("WHERE activity_id = :activityId");
+		
+		int result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("activityId", id)
+				.executeUpdate();
+		
+		return result > 0;
+	}
 }

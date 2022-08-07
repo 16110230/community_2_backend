@@ -1,11 +1,16 @@
 package com.lawencon.community.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.constant.ThreadActivityType;
+import com.lawencon.community.constant.ThreadCategoryType;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadActivity;
 
 @Repository
@@ -90,5 +95,79 @@ public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
 		}
 		
 		return response;
+	}
+	
+	public List<ThreadActivity> getBookmarksByUserAndThreadActivityTypeId(String userId){
+		List<ThreadActivity> response = new ArrayList<ThreadActivity>();
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("SELECT ta.id, ta.thread_id, ta.is_Active ")
+			.append("FROM thread_activity as ta")
+			.append("INNER JOIN thread_activity_category as tac ON ta.thread_activity_category_id = tac.id ")
+			.append("WHERE tac.thread_activity_code = :threadActivityTypeCode ")
+			.append("AND ta.user_id = :userId ");
+		
+		try {
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("userId", userId)
+				.setParameter("threadActivityTypeCode", ThreadActivityType.BOOKMARK.getCode())
+				.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					ThreadActivity data = new ThreadActivity();
+					Thread thread = new Thread();
+					
+					data.setId(objArr[0].toString());
+					thread.setId(objArr[1].toString());
+					data.setThread(thread);
+					data.setIsActive(Boolean.valueOf(objArr[2].toString()));
+				
+				});
+				
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return response;
+			
+	}
+	
+	public List<ThreadActivity> getLikesByUserAndThreadActivityTypeId(String userId){
+		List<ThreadActivity> response = new ArrayList<ThreadActivity>();
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("SELECT ta.id, ta.thread_id, ta.is_Active ")
+			.append("FROM thread_activity as ta")
+			.append("INNER JOIN thread_activity_category as tac ON ta.thread_activity_category_id = tac.id ")
+			.append("WHERE tac.thread_activity_code = :threadActivityTypeCode ")
+			.append("AND ta.user_id = :userId ");
+		
+		try {
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("userId", userId)
+				.setParameter("threadActivityTypeCode", ThreadActivityType.LIKE.getCode())
+				.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					ThreadActivity data = new ThreadActivity();
+					Thread thread = new Thread();
+					
+					data.setId(objArr[0].toString());
+					thread.setId(objArr[1].toString());
+					data.setThread(thread);
+					data.setIsActive(Boolean.valueOf(objArr[2].toString()));
+				
+				});
+				
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return response;
+			
 	}
 }
