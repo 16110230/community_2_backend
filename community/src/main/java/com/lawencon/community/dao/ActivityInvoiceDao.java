@@ -136,4 +136,53 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice>{
 
 	}
 	
+	public ShowActivityInvoice getAllByUserId(Integer startPage,Integer maxPage, String userId) {
+		List<PojoActivityInvoice> res = new ArrayList<>();
+		ShowActivityInvoice response = new ShowActivityInvoice();
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT ai.id, ai.created_at, ai.invoice_code , ai.is_approved, aty.type_name, a.fee, a.file_id ")
+				.append("FROM activity_invoice ai ")
+				.append("INNER JOIN users u ON u.id = ai.user_id ")
+				.append("INNER JOIN activity a ON a.id = ai.activity_id ")
+				.append("INNER JOIN activity_type aty ON aty.id = a.activity_type_id ")
+				.append("WHERE u.id = :userId ");
+		
+		try {
+			Integer size = createNativeQuery(sqlBuilder.toString())
+					.setParameter("userId", userId)
+					.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("userId", userId)
+					.setFirstResult(startPage)
+					.setMaxResults(maxPage)
+					.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoActivityInvoice data = new PojoActivityInvoice();
+					
+					data.setId(objArr[0].toString());
+					data.setOrderDate(((Timestamp) objArr[1]).toLocalDateTime());
+					data.setInvoiceCode(objArr[2].toString());
+					data.setIsApproved(Boolean.valueOf(objArr[3].toString()));
+					data.setActivityType(objArr[4].toString());
+					data.setAmount(Integer.valueOf(objArr[5].toString()));
+					if (objArr[6].toString() != null) {
+						data.setFile(objArr[6].toString());						
+					}
+					
+					res.add(data);
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		response.setData(res);
+		return response;
+	}
+	
 }

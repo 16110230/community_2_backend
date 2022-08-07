@@ -232,12 +232,15 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 	
 	public ShowActivityInvoice showAllByType(Integer startPage, Integer maxPage, String code) throws Exception {
 		String activityId = activityTypeDao.getByCode(code);
-		System.out.println(activityId + " - " + code);
-		System.out.println(startPage);
-		System.out.println(maxPage);
 		ShowActivityInvoice response = activityInvoiceDao.getAllByType(startPage, maxPage, activityId);
 		
 		return response;
 	}
 
+	public ShowActivityInvoice showAllByUserId(Integer startPage, Integer maxPage) throws Exception {
+		Users user = usersDao.getById(getUserId());
+		ShowActivityInvoice response = activityInvoiceDao.getAllByUserId(startPage, maxPage, user.getId());
+		
+		return response;
+	}
 }
