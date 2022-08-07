@@ -68,4 +68,9 @@ public class ActivityInvoiceController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping("user")
+	public ResponseEntity<?> getAllByUserId(Integer startPage, Integer maxPage) throws Exception {
+		ShowActivityInvoice result = activityInvoiceService.showAllByUserId(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }
