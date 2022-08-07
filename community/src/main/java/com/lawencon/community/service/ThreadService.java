@@ -311,8 +311,9 @@ public class ThreadService extends BaseService<Thread> {
 			detail.setThreadTitle(val.getThreadTitle());
 			detail.setThreadContent(val.getThreadContent());
 			detail.setThreadcategory(val.getThreadCategory().getId());
-			detail.setThreadCategoryName(cat.getCategoryName());
-			detail.setFile(val.getFile().getId());
+			detail.setThreadCategoryName(cat.getCategoryName());			if(val.getFile() != null) {				
+				detail.setFile(val.getFile().getId());
+			}
 			detail.setUserName(user.getUsername());
 			detail.setCreatedAt(val.getCreatedAt());
 
