@@ -71,6 +71,14 @@ public class ActivityController {
 	@GetMapping("/filter")
 	public ResponseEntity<?> getAllByFilter(String type, String category, Integer startPage, Integer maxPage) throws Exception {
 		ShowActivities result = activityService.showAllByFilter(type, category, startPage, maxPage);
+    
+    return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@GetMapping("user")
+	public ResponseEntity<?> getAllByUserId( Integer startPage, Integer maxPage) throws Exception {
+		ShowActivities result = activityService.showAllByUserId(startPage, maxPage);
+
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }
