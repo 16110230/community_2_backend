@@ -17,7 +17,9 @@
 			</image>
 			<textField>
 				<reportElement x="230" y="10" width="100" height="30" uuid="a8ff0dc6-9995-4490-b8cf-07a6bc426000"/>
-				<textElement textAlignment="Justified"/>
+				<textElement textAlignment="Justified">
+					<font size="20"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{activity}]]></textFieldExpression>
 			</textField>
 		</band>

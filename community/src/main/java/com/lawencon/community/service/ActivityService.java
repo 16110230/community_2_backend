@@ -246,16 +246,15 @@ public class ActivityService extends BaseService<Activity>{
 		List<ActivityInvoice> activityInvoices = activityInvoiceDao.getByActivity(id);
 		
 		int sizeActivityInvoices = activityInvoices.size();		
-		System.out.println(sizeActivityInvoices);
+		
 		try {
 			begin();			 
 			
 			if(sizeActivityInvoices > 0) {		
-				for (int i = 0; i < sizeActivityInvoices; i++) {	
-					
-					boolean deleteActivityInvoice = activityInvoiceDao.deleteById(activityInvoices.get(i).getId());
-				}
-													
+				boolean deleteActivityInvoice = activityInvoiceDao.deleteByActivityId(id);
+				if(!deleteActivityInvoice){
+					System.out.println("fail delete activity invoice");
+				}								
 			}	
 			
 			boolean result = activityDao.deleteById(id);

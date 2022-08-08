@@ -104,4 +104,10 @@ public class ThreadController {
 		SearchQuery<PojoThread> result = threadService.showAllByUserId(startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("bookmark")
+	public ResponseEntity<?> getByBookmark(Integer startPage, Integer maxPage) throws Exception {
+		ShowThreads result = threadService.showByBookmarkAndUser(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

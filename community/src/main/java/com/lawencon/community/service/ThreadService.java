@@ -38,6 +38,8 @@ import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.pojo.thread.ShowThreadById;
 import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.community.pojo.thread.UpdateThreadReq;
+import com.lawencon.community.pojo.threadActivity.PojoThreadActivity;
+import com.lawencon.community.pojo.threadActivity.ShowThreadActivities;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -312,7 +314,9 @@ public class ThreadService extends BaseService<Thread> {
 			detail.setThreadContent(val.getThreadContent());
 			detail.setThreadcategory(val.getThreadCategory().getId());
 			detail.setThreadCategoryName(cat.getCategoryName());
-			detail.setFile(val.getFile().getId());
+			if(val.getFile() != null) {				
+				detail.setFile(val.getFile().getId());
+			}
 			detail.setUserName(user.getUsername());
 			detail.setCreatedAt(val.getCreatedAt());
 
@@ -386,7 +390,17 @@ public class ThreadService extends BaseService<Thread> {
 					
 					
 				} else {
+					List<ThreadDetails> threadDetails = threadDetailsDao.findByThreadId(id);
+					Boolean checkLike = threadDao.countLike(id) > 0;
+					Boolean checkBookmark = threadDao.countBookmark(id) > 0;
 					
+					if (threadDetails != null) {
+						threadDetailsDao.deleteByThreadId(id);
+					}
+					
+					if (checkLike || checkBookmark) {
+						threadActivityDao.deleteByThreadId(id);
+					}
 				}
 				
 				boolean deleteRes = threadDao.deleteById(id);
@@ -516,6 +530,38 @@ public class ThreadService extends BaseService<Thread> {
 
 	public SearchQuery<PojoThread> showAllByUserId(Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoThread> response = threadDao.findAllById(getUserId(), ThreadCategoryType.ART.name(), startPage, maxPage);
+		
+		return response;
+	}
+	
+	public ShowThreads showByBookmarkAndUser(Integer startPage, Integer maxPage) {
+		ShowThreads threads= threadDao.getByUserAndBookmark(getUserId(), startPage, maxPage);
+		List<PojoThread> result = new ArrayList<>();
+		
+		threads.getData().forEach(val -> {
+			ShowThreadById thread = this.showById(val.getId());
+			result.add(thread.getData());
+		});
+		
+		ShowThreads response = new ShowThreads();
+		response.setData(result);
+		response.setCountData(threads.getCountData());
+		
+		return response;
+	}
+	
+	public ShowThreads showByLikeAndUser(Integer startPage, Integer maxPage) {
+		ShowThreads threads= threadDao.getByUserAndLike(getUserId(), startPage, maxPage);
+		List<PojoThread> result = new ArrayList<>();
+		
+		threads.getData().forEach(val -> {
+			ShowThreadById thread = this.showById(val.getId());
+			result.add(thread.getData());
+		});
+		
+		ShowThreads response = new ShowThreads();
+		response.setData(result);
+		response.setCountData(threads.getCountData());
 		
 		return response;
 	}

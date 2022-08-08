@@ -21,8 +21,10 @@ import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
 import com.lawencon.community.pojo.threadActivity.InsertThreadActivityReq;
 import com.lawencon.community.pojo.threadActivity.PojoThreadActivity;
+import com.lawencon.community.pojo.threadActivity.ShowThreadActivities;
 import com.lawencon.community.pojo.threadActivity.ShowThreadActivityById;	
 import com.lawencon.community.pojo.threadActivity.UpdateThreadActivityReq;
+import com.lawencon.community.pojo.threadCategory.ShowThreadCategories;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -201,4 +203,6 @@ public class ThreadActivityService extends BaseService<ThreadActivity> {
 
 		return response;
 	}
+	
+	
 }
