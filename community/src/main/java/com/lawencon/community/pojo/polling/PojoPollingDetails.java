@@ -6,7 +6,14 @@ public class PojoPollingDetails {
 	private String pollingDetailsName;
 	private Integer version;
 	private Boolean isActive;
+	private Integer countVote;
 	
+	public void setCountVote(Integer countVote) {
+		this.countVote = countVote;
+	}
+	public Integer getCountVote() {
+		return countVote;
+	}
 	public String getId() {
 		return id;
 	}
