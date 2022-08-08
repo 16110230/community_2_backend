@@ -97,7 +97,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 		Subscription insert = new Subscription();
 		File fileInsert = new File();
 
-		Users user = userDao.getById(data.getUser());
+		Users user = userDao.getById(getUserId());
 		SubscriptionCategory category = subsCategoryDao.getById(data.getSubscriptionCategory());
 		fileInsert.setFileName(data.getFileName());
 		fileInsert.setFileExt(data.getFileExt());
