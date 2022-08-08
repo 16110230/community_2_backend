@@ -444,19 +444,19 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 			.append("SELECT ta.id, ta.thread_id, ta.is_Active ")
 			.append("FROM thread_activity as ta ")
 			.append("INNER JOIN thread_activity_category as tac ON ta.thread_activity_category_id = tac.id ")
-			.append("WHERE tac.thread_activity_code = :threadActivityTypeCode ")
+			.append("WHERE tac.thread_activity_code = :threadActivityTypeName ")
 			.append("AND ta.user_id = :userId ");
 		
 		try {
 			Integer size = createNativeQuery(sqlBuilder.toString())
 				.setParameter("userId", userId)
-				.setParameter("threadActivityTypeCode", ThreadActivityType.BOOKMARK.getCode())
+				.setParameter("threadActivityTypeName", ThreadActivityType.BOOKMARK.name())
 				.getResultList().size();
 			response.setCountData(size);
 			
 			List<?> result = createNativeQuery(sqlBuilder.toString())
 				.setParameter("userId", userId)
-				.setParameter("threadActivityTypeCode", ThreadActivityType.BOOKMARK.getCode())
+				.setParameter("threadActivityTypeName", ThreadActivityType.BOOKMARK.name())
 				.setFirstResult(startPage)
 				.setMaxResults(maxPage)
 				.getResultList();
@@ -478,7 +478,6 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 
 		response.setData(res);
 		return response;
-			
 	}
 	
 	public ShowThreads getByUserAndLike(String userId, Integer startPage, Integer maxPage){
@@ -488,19 +487,19 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 			.append("SELECT ta.id, ta.thread_id, ta.is_Active ")
 			.append("FROM thread_activity as ta ")
 			.append("INNER JOIN thread_activity_category as tac ON ta.thread_activity_category_id = tac.id ")
-			.append("WHERE tac.thread_activity_code = :threadActivityTypeCode ")
+			.append("WHERE tac.thread_activity_code = :threadActivityTypeName ")
 			.append("AND ta.user_id = :userId ");
 		
 		try {
 			Integer size = createNativeQuery(sqlBuilder.toString())
 				.setParameter("userId", userId)
-				.setParameter("threadActivityTypeCode", ThreadActivityType.LIKE.getCode())
+				.setParameter("threadActivityTypeName", ThreadActivityType.LIKE.name())
 				.getResultList().size();
 			response.setCountData(size);
 			
 			List<?> result = createNativeQuery(sqlBuilder.toString())
 				.setParameter("userId", userId)
-				.setParameter("threadActivityTypeCode", ThreadActivityType.LIKE.getCode())
+				.setParameter("threadActivityTypeName", ThreadActivityType.LIKE.name())
 				.setFirstResult(startPage)
 				.setMaxResults(maxPage)
 				.getResultList();

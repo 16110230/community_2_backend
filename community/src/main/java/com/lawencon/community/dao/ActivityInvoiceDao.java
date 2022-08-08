@@ -177,7 +177,9 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice> {
 					data.setId(objArr[0].toString());
 					data.setOrderDate(((Timestamp) objArr[1]).toLocalDateTime());
 					data.setInvoiceCode(objArr[2].toString());
-					data.setIsApproved(Boolean.valueOf(objArr[3].toString()));
+					if(objArr[3] != null) {
+						data.setIsApproved(Boolean.valueOf(objArr[3].toString()));
+					}
 					data.setActivityType(objArr[4].toString());
 					data.setAmount(Integer.valueOf(objArr[5].toString()));
 					if (objArr[6] != null) {

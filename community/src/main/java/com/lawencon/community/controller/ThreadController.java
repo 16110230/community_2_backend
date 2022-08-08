@@ -110,4 +110,10 @@ public class ThreadController {
 		ShowThreads result = threadService.showByBookmarkAndUser(startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("like")
+	public ResponseEntity<?> getByLike(Integer startPage, Integer maxPage) throws Exception {
+		ShowThreads result = threadService.showByLikeAndUser(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }
