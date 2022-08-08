@@ -22,6 +22,15 @@ public class PojoThread {
 	private Boolean isLike;
 	private Boolean isBookmark;
 	private ShowPollingMain polling;
+	private String userFile;
+	
+	public void setUserFile(String userFile) {
+		this.userFile = userFile;
+	}
+	
+	public String getUserFile() {
+		return userFile;
+	}
 	
 	public ShowPollingMain getPolling() {
 		return polling;

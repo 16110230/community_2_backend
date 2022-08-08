@@ -116,6 +116,7 @@ public class ThreadService extends BaseService<Thread> {
 					detail.setId(value.getId());
 					detail.setPolling(value.getPolling().getId());
 					detail.setPollingDetailsName(value.getPollingDetailsName());
+					detail.setCountVote(userPollingDao.getAllByPollingDetail(value.getId()));
 
 					pojoPollingDetail.add(detail);
 				});
@@ -147,6 +148,10 @@ public class ThreadService extends BaseService<Thread> {
 			thread.setCreatedAt(val.getCreatedAt());
 			thread.setIsActive(val.getIsActive());
 			thread.setVersion(val.getVersion());
+			
+			if(user.getFile() != null) {				
+				thread.setUserFile(user.getFile().getId());
+			}
 
 			result.add(thread);
 		});
@@ -165,7 +170,7 @@ public class ThreadService extends BaseService<Thread> {
 		ThreadCategory threadCategory = threadCategoryDao.getById(threads.getThreadCategory().getId());
 		Users user = usersDao.getById(threads.getUser().getId());
 
-		if (threads.getFile().getId() != null) {
+		if (threads.getFile() != null) {
 			File file = fileDao.getById(threads.getFile().getId());
 			thread.setFile(file.getId());
 		}

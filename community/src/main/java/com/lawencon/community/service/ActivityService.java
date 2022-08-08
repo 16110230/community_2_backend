@@ -277,4 +277,11 @@ public class ActivityService extends BaseService<Activity>{
 		
 		return response;
 	}
+  
+  	public ShowActivities showAllByFilter(String type, String category, Integer startPage, Integer maxPage)
+			throws Exception {
+		
+        ShowActivities response = activityDao.getAllByFilter(type, category, startPage, maxPage);
+        return response;
+    }
 }
