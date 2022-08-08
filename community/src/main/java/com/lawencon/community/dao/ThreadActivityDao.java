@@ -1,12 +1,19 @@
 package com.lawencon.community.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.constant.ThreadActivityType;
+import com.lawencon.community.constant.ThreadCategoryType;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadActivity;
+import com.lawencon.community.pojo.thread.PojoThread;
+import com.lawencon.community.pojo.thread.ShowThreads;
 
 @Repository
 public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
@@ -91,4 +98,5 @@ public class ThreadActivityDao extends AbstractJpaDao<ThreadActivity>{
 		
 		return response;
 	}
+	
 }

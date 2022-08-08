@@ -436,5 +436,93 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 		
 		return response;
 	}
+	
+	public ShowThreads getByUserAndBookmark(String userId, Integer startPage, Integer maxPage){
+		List<PojoThread> res = new ArrayList<PojoThread>();
+		ShowThreads response = new ShowThreads();
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("SELECT ta.id, ta.thread_id, ta.is_Active ")
+			.append("FROM thread_activity as ta ")
+			.append("INNER JOIN thread_activity_category as tac ON ta.thread_activity_category_id = tac.id ")
+			.append("WHERE tac.thread_activity_code = :threadActivityTypeCode ")
+			.append("AND ta.user_id = :userId ");
+		
+		try {
+			Integer size = createNativeQuery(sqlBuilder.toString())
+				.setParameter("userId", userId)
+				.setParameter("threadActivityTypeCode", ThreadActivityType.BOOKMARK.getCode())
+				.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("userId", userId)
+				.setParameter("threadActivityTypeCode", ThreadActivityType.BOOKMARK.getCode())
+				.setFirstResult(startPage)
+				.setMaxResults(maxPage)
+				.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoThread data = new PojoThread();
+					
+					data.setId(objArr[1].toString());
+					
+					res.add(data);
+				});
+				
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		response.setData(res);
+		return response;
+			
+	}
+	
+	public ShowThreads getByUserAndLike(String userId, Integer startPage, Integer maxPage){
+		List<PojoThread> res = new ArrayList<PojoThread>();
+		ShowThreads response = new ShowThreads();
+		StringBuilder sqlBuilder = new StringBuilder()
+			.append("SELECT ta.id, ta.thread_id, ta.is_Active ")
+			.append("FROM thread_activity as ta ")
+			.append("INNER JOIN thread_activity_category as tac ON ta.thread_activity_category_id = tac.id ")
+			.append("WHERE tac.thread_activity_code = :threadActivityTypeCode ")
+			.append("AND ta.user_id = :userId ");
+		
+		try {
+			Integer size = createNativeQuery(sqlBuilder.toString())
+				.setParameter("userId", userId)
+				.setParameter("threadActivityTypeCode", ThreadActivityType.LIKE.getCode())
+				.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+				.setParameter("userId", userId)
+				.setParameter("threadActivityTypeCode", ThreadActivityType.LIKE.getCode())
+				.setFirstResult(startPage)
+				.setMaxResults(maxPage)
+				.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoThread data = new PojoThread();
+					
+					data.setId(objArr[1].toString());
+					
+					res.add(data);
+				});
+				
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		response.setData(res);
+		return response;
+			
+	}
 
 }
