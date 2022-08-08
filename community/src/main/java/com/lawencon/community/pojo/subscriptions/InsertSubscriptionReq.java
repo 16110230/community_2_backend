@@ -3,10 +3,6 @@ package com.lawencon.community.pojo.subscriptions;
 import javax.validation.constraints.NotNull;
 
 public class InsertSubscriptionReq {
-
-	@NotNull(message = "User can't be null")
-	private String user;
-
 	private String file;
 
 	@NotNull(message = "Subscription category can't be null")
@@ -16,10 +12,6 @@ public class InsertSubscriptionReq {
 	private Boolean isActive;
 	private String fileName;
 	private String fileExt;
-
-	public String getUser() {
-		return user;
-	}
 
 	public String getFileName() {
 		return fileName;
@@ -35,10 +27,6 @@ public class InsertSubscriptionReq {
 
 	public void setFileExt(String fileExt) {
 		this.fileExt = fileExt;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
 	}
 
 	public String getFile() {
