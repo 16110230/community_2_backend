@@ -67,4 +67,10 @@ public class ActivityController {
 		ShowActivities result = activityService.showAllByCode(startPage, maxPage, code);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("user")
+	public ResponseEntity<?> getAllByUserId( Integer startPage, Integer maxPage) throws Exception {
+		ShowActivities result = activityService.showAllByUserId(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

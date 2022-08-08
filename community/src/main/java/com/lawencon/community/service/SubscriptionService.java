@@ -45,9 +45,6 @@ public class SubscriptionService extends BaseService<Subscription> {
 	@Autowired
 	private UserSubscriptionDao userSubsDao;
 	
-//	@Autowired
-//	private BaseService baseService;
-
 	public SearchQuery<PojoSubscription> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
 		List<PojoSubscription> result = new ArrayList<PojoSubscription>();

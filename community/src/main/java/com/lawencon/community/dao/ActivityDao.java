@@ -1,5 +1,6 @@
 package com.lawencon.community.dao;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,6 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					Object[] objArr = (Object[]) obj;
 					PojoActivity data = new PojoActivity();
 					
-					
 					data.setId(objArr[0].toString());
 					data.setActivityTitle(objArr[1].toString());
 					data.setActivityCategoryName(objArr[5].toString());
@@ -87,6 +87,60 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		response.setData(res);
+		return response;
+	}
+	
+	public ShowActivities getAllByUserId(Integer startPage,Integer maxPage, String userId) {
+		List<PojoActivity> res = new ArrayList<PojoActivity>();
+		ShowActivities response = new ShowActivities();
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT a.id, a.activity_title, a.activity_content, a.activity_category_id, a.started_at, a.ended_at, a.fee, a.quantity, a.provider, a.trainer, a.created_by, a.activity_type_id, a.file_id ")
+				.append("FROM activity as a ")
+				.append("INNER JOIN activity_category as ac ON ac.id = a.activity_category_id ")
+				.append("INNER JOIN activity_type as aty ON aty.id = a.activity_type_id ")
+				.append("WHERE a.created_by = :userId");
+		
+		try {
+			Integer size = createNativeQuery(sqlBuilder.toString())
+					.setParameter("userId", userId)
+					.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result =createNativeQuery(sqlBuilder.toString())
+					.setParameter("userId", userId)
+					.setFirstResult(startPage)
+					.setMaxResults(maxPage)
+					.getResultList();
+			
+			if (result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoActivity data = new PojoActivity();
+					
+					data.setId(objArr[0].toString());
+					data.setActivityTitle(objArr[1].toString());
+					data.setActivityContent(objArr[2].toString());
+					data.setActivityCategory(objArr[3].toString());
+					data.setStartedAt(((Timestamp) objArr[4]).toLocalDateTime());
+					data.setEndedAt(((Timestamp) objArr[5]).toLocalDateTime());
+					data.setFee(Integer.valueOf(objArr[6].toString()));
+					data.setQuantity(Integer.valueOf(objArr[7].toString()));
+					data.setProvider(objArr[8].toString());
+					data.setTrainer(objArr[9].toString());
+					data.setCreatedBy(objArr[10].toString());
+					data.setActivityType(objArr[11].toString());
+					if (objArr[12] != null) {
+						data.setFile(objArr[12].toString());
+					}
+					
+					res.add(data);
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		response.setData(res);
 		return response;
 	}
