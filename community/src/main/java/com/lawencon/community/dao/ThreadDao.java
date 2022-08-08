@@ -478,7 +478,6 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 
 		response.setData(res);
 		return response;
-			
 	}
 	
 	public ShowThreads getByUserAndLike(String userId, Integer startPage, Integer maxPage){
