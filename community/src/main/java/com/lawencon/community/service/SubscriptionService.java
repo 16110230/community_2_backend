@@ -196,4 +196,34 @@ public class SubscriptionService extends BaseService<Subscription> {
 
 		return response;
 	}
+	
+	public SearchQuery<PojoSubscription> showAllTypePending(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
+		List<PojoSubscription> result = new ArrayList<PojoSubscription>();
+
+		subscriptions.getData().forEach(val -> {
+			if (val.getIsApproved() == null) {
+				PojoSubscription data = new PojoSubscription();
+				Users users = userDao.getById(val.getCreatedBy());
+				SubscriptionCategory subsCategory = subsCategoryDao.getById(val.getSubscriptionCategory().getId());
+				
+				data.setId(val.getId());
+				data.setUser(users.getId());
+				data.setFullName(users.getFullName());
+				data.setSubscriptionCategory(subsCategory.getId());
+				data.setIsApproved(val.getIsApproved());
+				data.setIsActive(val.getIsActive());
+				data.setVersion(val.getVersion());
+				
+				result.add(data);	
+			}
+			
+		});
+
+		SearchQuery<PojoSubscription> response = new SearchQuery<PojoSubscription>();
+		response.setData(result);
+		response.setCount(subscriptions.getCount());
+
+		return response;
+	}
 }
