@@ -33,7 +33,7 @@ public class SubscriptionController {
 	
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<PojoSubscription> result = subscriptionService.showAll(query, startPage, maxPage);
+		SearchQuery<PojoSubscription> result = subscriptionService.showAllTypePending(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
