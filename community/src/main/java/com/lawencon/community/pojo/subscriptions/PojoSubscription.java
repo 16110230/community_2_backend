@@ -1,5 +1,7 @@
 package com.lawencon.community.pojo.subscriptions;
 
+import java.time.LocalDateTime;
+
 public class PojoSubscription {
 	private String id;
 	private String user;
@@ -9,6 +11,33 @@ public class PojoSubscription {
 	private String subscriptionCategory;
 	private Integer version;
 	private Boolean isActive;
+	private LocalDateTime orderDate;
+	private Long amount;
+	private String subscriptionCode;
+
+	public String getSubscriptionCode() {
+		return subscriptionCode;
+	}
+
+	public void setSubscriptionCode(String subscriptionCode) {
+		this.subscriptionCode = subscriptionCode;
+	}
+
+	public LocalDateTime getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(LocalDateTime orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
 
 	public String getFullName() {
 		return fullName;

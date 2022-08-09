@@ -26,6 +26,7 @@ import com.lawencon.community.pojo.subscriptions.InsertSubscriptionReq;
 import com.lawencon.community.pojo.subscriptions.PojoSubscription;
 import com.lawencon.community.pojo.subscriptions.ShowSubscriptionById;
 import com.lawencon.community.pojo.subscriptions.UpdateSubscriptionReq;
+import com.lawencon.community.util.GenerateCode;
 import com.lawencon.model.SearchQuery;
 
 @Service
@@ -44,6 +45,9 @@ public class SubscriptionService extends BaseService<Subscription> {
 
 	@Autowired
 	private UserSubscriptionDao userSubsDao;
+	
+	@Autowired
+	private GenerateCode generateCode;
 	
 	public SearchQuery<PojoSubscription> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
@@ -109,6 +113,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 			insert.setIsApproved(null);
 			insert.setSubscriptionCategory(category);
 			insert.setUser(user);
+			insert.setSubscriptionCode(generateCode.generate());
 
 			Subscription result = subscriptionDao.saveNew(insert);
 
@@ -131,37 +136,17 @@ public class SubscriptionService extends BaseService<Subscription> {
 		PojoUpdateResData resData = new PojoUpdateResData();
 		Subscription update = subscriptionDao.getById(data.getId());
 		SubscriptionCategory category = subsCategoryDao.getById(data.getSubscriptionCategory());
-		UserSubscription userSubs = new UserSubscription();
+		Users users = userDao.getById(getUserId());
+		Integer balanceAdmin = users.getBalance();
 
 		try {
 			begin();
-			UserSubscription checkSubs = userSubsDao.findByUserId(update.getUser().getId());
 			
-			update.setId(data.getId());
-			update.setIsActive(true);
-			update.setVersion(data.getVersion());
 			update.setIsApproved(data.getIsApproved());
-			Subscription result = subscriptionDao.save(update);
-
-	
-			userSubs.setExpiredDate(LocalDateTime.now().plusDays(category.getDuration()));
-			if(result.getIsApproved()) {
-				if (checkSubs != null) {
-					userSubs.setId(checkSubs.getId());
-					userSubs.setUser(checkSubs.getUser());
-					userSubs.setVersion(checkSubs.getVersion());
-					userSubs.setCreatedAt(checkSubs.getCreatedAt());
-					userSubs.setCreatedBy(checkSubs.getCreatedBy());
-					userSubs.setUpdatedBy(getUserId());
-					userSubs.setIsActive(checkSubs.getIsActive());
-				} else {
-					Users user = userDao.getById(update.getUser().getId());
-					userSubs.setUser(user);
-					userSubs.setIsActive(true);
-					userSubs.setCreatedBy(getUserId());
-				}
-				userSubsDao.save(userSubs);				
-			}
+			update.setExpiredDate(LocalDateTime.now().plusDays(category.getDuration()));
+			users.setBalance(balanceAdmin + category.getPrice().intValue());
+			Subscription result = subscriptionDao.saveNew(update);
+			userDao.saveNew(users);
 
 			commit();
 
@@ -206,6 +191,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 				PojoSubscription data = new PojoSubscription();
 				Users users = userDao.getById(val.getCreatedBy());
 				SubscriptionCategory subsCategory = subsCategoryDao.getById(val.getSubscriptionCategory().getId());
+				File file = fileDao.getById(val.getFile().getId());
 				
 				data.setId(val.getId());
 				data.setUser(users.getId());
@@ -214,6 +200,44 @@ public class SubscriptionService extends BaseService<Subscription> {
 				data.setIsApproved(val.getIsApproved());
 				data.setIsActive(val.getIsActive());
 				data.setVersion(val.getVersion());
+				data.setOrderDate(val.getCreatedAt());
+				data.setAmount(subsCategory.getPrice());
+				data.setFile(file.getId());
+				
+				result.add(data);	
+			}
+			
+		});
+
+		SearchQuery<PojoSubscription> response = new SearchQuery<PojoSubscription>();
+		response.setData(result);
+		response.setCount(subscriptions.getCount());
+
+		return response;
+	}
+	
+	public SearchQuery<PojoSubscription> showAllByValidate(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
+		List<PojoSubscription> result = new ArrayList<PojoSubscription>();
+
+		subscriptions.getData().forEach(val -> {
+			if (val.getIsApproved() != null) {
+				PojoSubscription data = new PojoSubscription();
+				Users users = userDao.getById(val.getCreatedBy());
+				SubscriptionCategory subsCategory = subsCategoryDao.getById(val.getSubscriptionCategory().getId());
+				File file = fileDao.getById(val.getFile().getId());
+				
+				data.setId(val.getId());
+				data.setUser(users.getId());
+				data.setFullName(users.getFullName());
+				data.setSubscriptionCategory(subsCategory.getId());
+				data.setSubscriptionCode(val.getSubscriptionCode());
+				data.setIsApproved(val.getIsApproved());
+				data.setIsActive(val.getIsActive());
+				data.setVersion(val.getVersion());
+				data.setOrderDate(val.getCreatedAt());
+				data.setAmount(subsCategory.getPrice());
+				data.setFile(file.getId());
 				
 				result.add(data);	
 			}

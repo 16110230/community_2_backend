@@ -173,6 +173,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		insert.setIndustry(industry);
 		insert.setPosition(position);
 		insert.setRole(role);
+		insert.setBalance(0);
 		insert.setUserPassword(passwordEncoder.encode(data.getUserPassword()));
 
 		try {

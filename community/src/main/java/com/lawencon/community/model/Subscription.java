@@ -34,6 +34,15 @@ public class Subscription extends BaseEntity {
 	@JoinColumn(name="subs_category_id")
 	private SubscriptionCategory subscriptionCategory;
 	
+	@Column(name = "subscription_code")
+	private String subscriptionCode;
+	
+	public String getSubscriptionCode() {
+		return subscriptionCode;
+	}
+	public void setSubscriptionCode(String subscriptionCode) {
+		this.subscriptionCode = subscriptionCode;
+	}
 	public Users getUser() {
 		return user;
 	}
@@ -64,7 +73,5 @@ public class Subscription extends BaseEntity {
 	public void setSubscriptionCategory(SubscriptionCategory subscriptionCategory) {
 		this.subscriptionCategory = subscriptionCategory;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	
 }
