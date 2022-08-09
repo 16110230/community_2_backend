@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.constant.ThreadCategoryType;
-import com.lawencon.community.model.ThreadActivityCategory;
 import com.lawencon.community.model.ThreadCategory;
 
 @Repository

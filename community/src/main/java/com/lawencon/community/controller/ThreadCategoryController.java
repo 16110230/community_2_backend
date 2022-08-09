@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
-import com.lawencon.community.pojo.threadActivityCategory.ShowThreadActivityCategories;
 import com.lawencon.community.pojo.threadCategory.InsertThreadCategoryReq;
 import com.lawencon.community.pojo.threadCategory.PojoThreadCategory;
 import com.lawencon.community.pojo.threadCategory.ShowThreadCategories;
