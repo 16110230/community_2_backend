@@ -46,4 +46,30 @@ public class UserSubscriptionDao extends AbstractJpaDao<UserSubscription>{
 		}
 		return response;
 	}
+	
+	public boolean isPremium(String id) throws Exception {
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT u.id ")
+				.append("FROM user_subscription s ")
+				.append("INNER JOIN users u ON s.user_id = u.id ")
+				.append("WHERE u.id = :id ")
+				.append("AND s.expired_date > NOW()");
+		boolean response = false;
+		
+		try {
+			Object result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+			
+			
+			if(result != null) {
+				response = true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
 }

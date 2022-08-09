@@ -45,9 +45,6 @@ public class SubscriptionService extends BaseService<Subscription> {
 	@Autowired
 	private UserSubscriptionDao userSubsDao;
 	
-//	@Autowired
-//	private BaseService baseService;
-
 	public SearchQuery<PojoSubscription> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
 		List<PojoSubscription> result = new ArrayList<PojoSubscription>();
@@ -97,7 +94,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 		Subscription insert = new Subscription();
 		File fileInsert = new File();
 
-		Users user = userDao.getById(data.getUser());
+		Users user = userDao.getById(getUserId());
 		SubscriptionCategory category = subsCategoryDao.getById(data.getSubscriptionCategory());
 		fileInsert.setFileName(data.getFileName());
 		fileInsert.setFileExt(data.getFileExt());

@@ -96,9 +96,8 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 	public PojoUpdateRes update(UpdateSubsCategoryReq data) throws Exception {
 		PojoUpdateRes response = new PojoUpdateRes();
 		PojoUpdateResData resData = new PojoUpdateResData();
-		SubscriptionCategory update = new SubscriptionCategory();
+		SubscriptionCategory update = subsCategoryDao.getById(data.getId());
 
-		update.setId(data.getId());
 		update.setDescription(data.getDescription());
 		update.setPrice(data.getPrice());
 		update.setDuration(data.getDuration());

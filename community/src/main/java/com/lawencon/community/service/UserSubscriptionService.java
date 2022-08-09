@@ -56,4 +56,10 @@ public class UserSubscriptionService extends BaseService<UserSubscription> {
 		
 		return response;
 	}
+	
+	public boolean isPrem(String id) throws Exception {
+		boolean response = userSubsDao.isPremium(id);
+		
+		return response;
+	}
 }

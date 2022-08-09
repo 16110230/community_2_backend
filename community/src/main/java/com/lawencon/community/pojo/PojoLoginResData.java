@@ -5,7 +5,14 @@ public class PojoLoginResData {
 	private String roleCode;
 	private String token;
 	private String refreshToken;
+	private Boolean prem;
 	
+	public void setPrem(Boolean prem) {
+		this.prem = prem;
+	}
+	public Boolean getPrem() {
+		return prem;
+	}
 	public void setRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
 	}

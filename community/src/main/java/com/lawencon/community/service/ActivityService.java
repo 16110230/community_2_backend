@@ -235,7 +235,6 @@ public class ActivityService extends BaseService<Activity>{
 	
 	public ShowActivities showAllByCode(Integer startPage, Integer maxPage, String code) throws Exception {
 		String ActivityId = activityTypeDao.getByCode(code);
-		System.out.println(ActivityId+" - "+code);
 		ShowActivities response = activityDao.getAllByType(startPage, maxPage,ActivityId);
 
 		return response;
@@ -272,4 +271,17 @@ public class ActivityService extends BaseService<Activity>{
 		return response;
 	}
 	
+	public ShowActivities showAllByUserId(Integer startPage, Integer maxPage) throws Exception {
+		Users user = usersDao.getById(getUserId());
+		ShowActivities response = activityDao.getAllByUserId(startPage, maxPage, user.getId());
+		
+		return response;
+	}
+  
+  	public ShowActivities showAllByFilter(String type, String category, Integer startPage, Integer maxPage)
+			throws Exception {
+		
+        ShowActivities response = activityDao.getAllByFilter(type, category, startPage, maxPage);
+        return response;
+    }
 }

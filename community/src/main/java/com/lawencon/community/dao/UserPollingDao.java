@@ -1,5 +1,6 @@
 package com.lawencon.community.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -70,5 +71,29 @@ public class UserPollingDao extends AbstractJpaDao<UserPolling> {
 		} else {
 			return false;
 		}
+	}
+	
+	public Integer getAllByPollingDetail(String id) {
+		Integer response = 0;
+		
+		StringBuilder sqlBuilder = new StringBuilder()
+				.append("SELECT COUNT(up.polling_details_id) as count_polling_detail ")
+				.append("FROM user_polling up ")
+				.append("WHERE up.polling_details_id = :pollingDetailId ")
+				.append("GROUP BY up.polling_details_id ");
+
+		try {
+			Object result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("pollingDetailId", id)
+					.getSingleResult();
+
+			if (result != null) {
+				response = Integer.valueOf(result.toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return response;
 	}
 }

@@ -150,7 +150,7 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice> {
 		List<PojoActivityInvoice> res = new ArrayList<>();
 		ShowActivityInvoice response = new ShowActivityInvoice();
 		StringBuilder sqlBuilder = new StringBuilder()
-				.append("SELECT ai.id, ai.created_at, ai.invoice_code , ai.is_approved, aty.type_name, a.fee, a.file_id ")
+				.append("SELECT ai.id, ai.created_at, ai.invoice_code , ai.is_approved, aty.type_name, a.fee, a.file_id , a.activity_title ")
 				.append("FROM activity_invoice ai ")
 				.append("INNER JOIN users u ON u.id = ai.user_id ")
 				.append("INNER JOIN activity a ON a.id = ai.activity_id ")
@@ -177,12 +177,15 @@ public class ActivityInvoiceDao extends AbstractJpaDao<ActivityInvoice> {
 					data.setId(objArr[0].toString());
 					data.setOrderDate(((Timestamp) objArr[1]).toLocalDateTime());
 					data.setInvoiceCode(objArr[2].toString());
-					data.setIsApproved(Boolean.valueOf(objArr[3].toString()));
+					if(objArr[3] != null) {
+						data.setIsApproved(Boolean.valueOf(objArr[3].toString()));
+					}
 					data.setActivityType(objArr[4].toString());
 					data.setAmount(Integer.valueOf(objArr[5].toString()));
-					if (objArr[6].toString() != null) {
+					if (objArr[6] != null) {
 						data.setFile(objArr[6].toString());
 					}
+					data.setActivityName(objArr[7].toString());
 
 					res.add(data);
 				});
