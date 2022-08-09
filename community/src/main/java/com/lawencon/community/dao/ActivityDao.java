@@ -95,7 +95,8 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 		List<PojoActivity> res = new ArrayList<PojoActivity>();
 		ShowActivities response = new ShowActivities();
 		StringBuilder sqlBuilder = new StringBuilder()
-				.append("SELECT a.id, a.activity_title, a.activity_content, a.activity_category_id, a.started_at, a.ended_at, a.fee, a.quantity, a.provider, a.trainer, a.created_by, a.activity_type_id, a.file_id ")
+				.append("SELECT a.id, a.activity_title, a.activity_content, a.activity_category_id, a.started_at, a.ended_at, a.fee, a.quantity, a.provider, a.trainer, a.created_by, a.activity_type_id, a.file_id, ")
+				.append("ac.category_name, aty.type_name ")
 				.append("FROM activity as a ")
 				.append("INNER JOIN activity_category as ac ON ac.id = a.activity_category_id ")
 				.append("INNER JOIN activity_type as aty ON aty.id = a.activity_type_id ")
@@ -122,6 +123,7 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					data.setActivityTitle(objArr[1].toString());
 					data.setActivityContent(objArr[2].toString());
 					data.setActivityCategory(objArr[3].toString());
+					data.setActivityCategoryName(objArr[14].toString());
 					data.setStartedAt(((Timestamp) objArr[4]).toLocalDateTime());
 					data.setEndedAt(((Timestamp) objArr[5]).toLocalDateTime());
 					data.setFee(Integer.valueOf(objArr[6].toString()));
@@ -130,6 +132,8 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					data.setTrainer(objArr[9].toString());
 					data.setCreatedBy(objArr[10].toString());
 					data.setActivityType(objArr[11].toString());
+					data.setActivityTypeName(objArr[13].toString());
+					
 					if (objArr[12] != null) {
 						data.setFile(objArr[12].toString());
 					}
