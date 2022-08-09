@@ -18,8 +18,6 @@ import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.polling.PojoPolling;
 import com.lawencon.community.pojo.polling.PojoPollingDetails;
-import com.lawencon.community.pojo.polling.ShowPollingDetails;
-import com.lawencon.community.pojo.polling.ShowPollingHeader;
 import com.lawencon.community.pojo.polling.ShowPollingMain;
 import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.pojo.thread.ShowThreads;

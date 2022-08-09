@@ -20,7 +20,6 @@ import com.lawencon.community.model.File;
 import com.lawencon.community.model.Polling;
 import com.lawencon.community.model.PollingDetails;
 import com.lawencon.community.model.Thread;
-import com.lawencon.community.model.ThreadActivity;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.ThreadDetails;
 import com.lawencon.community.model.UserPolling;
@@ -38,8 +37,6 @@ import com.lawencon.community.pojo.thread.PojoThread;
 import com.lawencon.community.pojo.thread.ShowThreadById;
 import com.lawencon.community.pojo.thread.ShowThreads;
 import com.lawencon.community.pojo.thread.UpdateThreadReq;
-import com.lawencon.community.pojo.threadActivity.PojoThreadActivity;
-import com.lawencon.community.pojo.threadActivity.ShowThreadActivities;
 import com.lawencon.model.SearchQuery;
 
 @Service

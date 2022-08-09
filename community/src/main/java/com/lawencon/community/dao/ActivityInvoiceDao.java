@@ -7,9 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
-import com.lawencon.community.constant.ThreadCategoryType;
 import com.lawencon.community.model.ActivityInvoice;
-import com.lawencon.community.model.File;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoice;
 

@@ -19,11 +19,9 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.threadActivityCategory.InsertThreadActivityCategoryReq;
 import com.lawencon.community.pojo.threadActivityCategory.PojoThreadActivityCategory;
-import com.lawencon.community.pojo.threadActivityCategory.ShowThreadActivityCategories;
 import com.lawencon.community.pojo.threadActivityCategory.ShowThreadActivityCategoryById;
 import com.lawencon.community.pojo.threadActivityCategory.UpdateThreadActivityCategoryReq;
 import com.lawencon.community.service.ThreadActivityCategoryService;
-import com.lawencon.community.service.ThreadActivityService;
 import com.lawencon.model.SearchQuery;
 
 @RestController
