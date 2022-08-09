@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl"><name>DB Dummy</name><driver>org.postgresql.Driver</driver><username>postgres</username><password>postgres</password><savePassword>true</savePassword><url>jdbc:postgresql://localhost:5432/dummy</url><database></database><serverAddress></serverAddress></jdbcDataAdapter>
+<jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl">
+  <name>community</name>
+  <driver>org.postgresql.Driver</driver>
+  <username>postgres</username>
+  <password>postgres</password>
+  <url>jdbc:postgresql://localhost:5432/community</url>
+  <database></database>
+  <savePassword>true</savePassword>
+  <serverAddress></serverAddress>
+</jdbcDataAdapter>
