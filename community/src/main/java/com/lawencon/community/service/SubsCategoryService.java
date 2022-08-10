@@ -82,7 +82,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 			commit();
 
 			resData.setId(result.getId());
-			resData.setMessage("Successfully add new data!");
+			response.setMessage("Successfully add new data!");
 			response.setData(resData);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,7 +110,7 @@ public class SubsCategoryService extends BaseCoreService<SubscriptionCategory> {
 			commit();
 
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -256,7 +256,7 @@ public class ThreadService extends BaseService<Thread> {
 			}
 
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 			commit();
 
@@ -271,23 +271,21 @@ public class ThreadService extends BaseService<Thread> {
 
 	public PojoUpdateRes update(UpdateThreadReq data) throws Exception {
 		Thread update = threadDao.getById(data.getId());
-		ThreadCategory threadCategory = threadCategoryDao.getById(data.getThreadCategory());
 
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
 		update.setThreadTitle(data.getThreadTitle());
 		update.setThreadContent(data.getThreadContent());
-		update.setThreadCategory(threadCategory);
 		update.setIsActive(data.getIsActive());
 		update.setVersion(data.getVersion());
 
 		try {
 			begin();
 
-			Thread result = threadDao.save(update);
+			Thread result = threadDao.saveNew(update);
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 
 			commit();
@@ -441,16 +439,6 @@ public class ThreadService extends BaseService<Thread> {
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();
 
-		if (data.getFileName() != null) {
-			File file = new File();
-			file.setFileName(data.getFileName());
-			file.setFileExt(data.getFileExt());
-			file.setIsActive(data.getIsActive());
-			File fileResult = fileDao.save(file);
-
-			insert.setFile(fileResult);
-		}
-
 		insert.setThreadTitle(data.getThreadTitle());
 		insert.setThreadContent(data.getThreadContent());
 		insert.setThreadCategory(threadCategory);
@@ -459,6 +447,16 @@ public class ThreadService extends BaseService<Thread> {
 
 		try {
 			begin();
+			
+			if (data.getFileName() != null) {
+				File file = new File();
+				file.setFileName(data.getFileName());
+				file.setFileExt(data.getFileExt());
+				file.setIsActive(data.getIsActive());
+				File fileResult = fileDao.save(file);
+				
+				insert.setFile(fileResult);
+			}
 
 			Thread result = threadDao.saveNew(insert);
 
@@ -467,7 +465,7 @@ public class ThreadService extends BaseService<Thread> {
 			}
 
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 
 			commit();
