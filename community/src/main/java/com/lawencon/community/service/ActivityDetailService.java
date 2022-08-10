@@ -94,7 +94,7 @@ public class ActivityDetailService extends BaseService<ActivityDetails> {
 			insert.setFile(res);
 			ActivityDetails result = activityDetailsDao.saveNew(insert);
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 
 			commit();
@@ -132,7 +132,7 @@ public class ActivityDetailService extends BaseService<ActivityDetails> {
 			update.setFile(res);
 			ActivityDetails result = activityDetailsDao.saveNew(update);
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 
 			commit();

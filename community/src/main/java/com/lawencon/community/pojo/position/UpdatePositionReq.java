@@ -3,14 +3,18 @@ package com.lawencon.community.pojo.position;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
+
 public class UpdatePositionReq {
 	@NotBlank(message = "Id Can't Ve Null")
 	private String id;
 	
 	@NotBlank(message = "Position Name Can't Be Null")
+	@Length(min=4,max=35)
 	private String positionName;
 	
 	@NotBlank(message = "Position Code Can't Be Null")
+	@Length(min=2,max=10)
 	private String positionCode;
 	
 	@NotNull(message = "Active Can't Be Null")

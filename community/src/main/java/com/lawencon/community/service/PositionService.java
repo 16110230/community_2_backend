@@ -79,7 +79,7 @@ public class PositionService extends BaseCoreService<Position> {
 			commit();
 
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,7 +107,7 @@ public class PositionService extends BaseCoreService<Position> {
 			commit();
 
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 		} catch (Exception e) {
 			e.printStackTrace();

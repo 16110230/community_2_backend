@@ -79,7 +79,7 @@ public class ThreadCategoryService extends BaseService<ThreadCategory>{
 
 			ThreadCategory result = threadCategoryDao.saveNew(insert);
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 
 			commit();
@@ -107,7 +107,7 @@ public class ThreadCategoryService extends BaseService<ThreadCategory>{
 
 			ThreadCategory result = threadCategoryDao.saveNew(update);
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 
 			commit();

@@ -1,15 +1,39 @@
 package com.lawencon.community.pojo.users;
 
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
+
 public class InsertUserReq {
+	@NotBlank(message = "Full Name Can't Be Null")
+	@Length(min=4,max=35)
 	private String fullName;
+	
+	@NotBlank(message = "User Name Can't Be Null")
+	@Length(min=6,max=10)
 	private String username;
+	
+	@NotBlank(message = "Email Can't Be Null")
+	@Length(min=15,max=30)
 	private String email;
+	
 	private String verificationCode;
+	
+	@NotBlank(message = "Company Can't Be Null")
 	private String company;
+	
+	@NotBlank(message = "Industry Can't Be Null")
 	private String industry;
+	
+	@NotBlank(message = "Position Can't Be Null")
 	private String position;
+	
+	@NotBlank(message = "Password Can't Be Null")
+	@Length(min=6,max=10)
 	private String userPassword;
+	
 	private String role;
+	
 	
 	public void setRole(String role) {
 		this.role = role;

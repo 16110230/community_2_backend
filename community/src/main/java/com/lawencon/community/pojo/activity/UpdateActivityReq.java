@@ -1,9 +1,11 @@
 package com.lawencon.community.pojo.activity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class UpdateActivityReq {
 	
@@ -19,8 +21,11 @@ public class UpdateActivityReq {
 	@NotBlank(message = "Category Can't Be Null")
 	private String activityCategory;
 	
-	private LocalDateTime startedAt;
-	private LocalDateTime endedAt;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'+07:00'")
+	private Date startedAt;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'+07:00'")
+	private Date endedAt;
 	
 	@NotNull(message = "Fee Can't Be Null")
 	private Integer fee;
@@ -69,16 +74,16 @@ public class UpdateActivityReq {
 	public void setActivityCategory(String activityCategory) {
 		this.activityCategory = activityCategory;
 	}
-	public LocalDateTime getStartedAt() {
+	public Date getStartedAt() {
 		return startedAt;
 	}
-	public void setStartedAt(LocalDateTime startedAt) {
+	public void setStartedAt(Date startedAt) {
 		this.startedAt = startedAt;
 	}
-	public LocalDateTime getEndedAt() {
+	public Date getEndedAt() {
 		return endedAt;
 	}
-	public void setEndedAt(LocalDateTime endedAt) {
+	public void setEndedAt(Date endedAt) {
 		this.endedAt = endedAt;
 	}
 	public Integer getFee() {
