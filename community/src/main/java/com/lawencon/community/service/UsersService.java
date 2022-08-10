@@ -185,7 +185,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 			
 			Users result = userDao.saveNonLogin(insert, () -> userDao.findByRoleCode(Role.ADMIN.name()));
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 
 			commit();
@@ -208,10 +208,6 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		File file = new File();
 		
 		// File check
-		if(data.getFileName() != null) {
-			file.setFileName(data.getFileName());
-			file.setFileExt(data.getFileExt());
-		}
 		
 		update.setFullName(data.getFullName());
 		update.setUsername(data.getUsername());
@@ -225,12 +221,16 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		try {
 			begin();
 			
-			File fileResult = fileDao.saveNew(file);
-			update.setFile(fileResult);
+			if(data.getFileName() != null) {
+				file.setFileName(data.getFileName());
+				file.setFileExt(data.getFileExt());
+				File fileResult = fileDao.saveNew(file);
+				update.setFile(fileResult);
+			}
 			
 			Users result = userDao.saveNew(update);
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 
 			commit();
@@ -342,10 +342,10 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 				Users update = userDao.save(user);
 				commit();
 				
-				resData.setMessage("Successfully update the password!");
+				response.setMessage("Successfully update the password!");
 				resData.setVersion(update.getVersion());
 			} else {
-				resData.setMessage("Wrong old password!");
+				response.setMessage("Wrong old password!");
 				resData.setVersion(null);
 			}
 		} catch (Exception e) {
@@ -405,7 +405,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 
             PojoUpdateResData dataRes = new PojoUpdateResData();
             dataRes.setVersion(userResult.getVersion());
-            dataRes.setMessage("Logged out!");
+            response.setMessage("Logged out!");
 
             response.setData(dataRes);
 

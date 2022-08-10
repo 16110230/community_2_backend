@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.SubscriptionCategoryDao;
 import com.lawencon.community.dao.SubscriptionDao;
-import com.lawencon.community.dao.UserSubscriptionDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.model.File;
 import com.lawencon.community.model.Subscription;
 import com.lawencon.community.model.SubscriptionCategory;
-import com.lawencon.community.model.UserSubscription;
 import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
@@ -42,9 +40,6 @@ public class SubscriptionService extends BaseService<Subscription> {
 
 	@Autowired
 	private UsersDao userDao;
-
-	@Autowired
-	private UserSubscriptionDao userSubsDao;
 	
 	@Autowired
 	private GenerateCode generateCode;
@@ -120,7 +115,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 			commit();
 
 			resData.setId(result.getId());
-			resData.setMessage("Successfully add new data!");
+			response.setMessage("Successfully add new data!");
 			response.setData(resData);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -151,7 +146,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 			commit();
 
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -203,6 +198,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 				data.setOrderDate(val.getCreatedAt());
 				data.setAmount(subsCategory.getPrice());
 				data.setFile(file.getId());
+				data.setSubscriptionCode(val.getSubscriptionCode());
 				
 				result.add(data);	
 			}

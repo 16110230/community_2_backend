@@ -94,7 +94,7 @@ public class PollingService extends BaseCoreService<Polling> {
 		}
 		
 		resData.setId(result.getId());
-		resData.setMessage("Successfully add new data!");
+		response.setMessage("Successfully add new data!");
 		response.setData(resData);
 
 		return response;

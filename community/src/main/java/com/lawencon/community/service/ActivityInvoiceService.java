@@ -106,7 +106,7 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 			insert.setFile(res);
 			ActivityInvoice result = activityInvoiceDao.saveNew(insert);
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 
 			commit();
@@ -145,7 +145,7 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 			usersDao.saveNew(userAdmin);
 			usersDao.saveNew(userCreatedby);
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 			
 			commit();

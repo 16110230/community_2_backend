@@ -77,7 +77,7 @@ public class ThreadActivityCategoryService extends BaseService<ThreadActivityCat
 
 			ThreadActivityCategory result = threadActivityCategoryDao.saveNew(insert);
 			resData.setId(result.getId());
-			resData.setMessage("Successfully insert new data!");
+			response.setMessage("Successfully insert new data!");
 			response.setData(resData);
 
 			commit();
@@ -105,7 +105,7 @@ public class ThreadActivityCategoryService extends BaseService<ThreadActivityCat
 
 			ThreadActivityCategory result = threadActivityCategoryDao.saveNew(update);
 			resData.setVersion(result.getVersion());
-			resData.setMessage("Successfully update the data!");
+			response.setMessage("Successfully update the data!");
 			response.setData(resData);
 
 			commit();
