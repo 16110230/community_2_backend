@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.ThreadActivityType;
 import com.lawencon.community.dao.ThreadActivityCategoryDao;
 import com.lawencon.community.dao.ThreadActivityDao;
 import com.lawencon.community.dao.ThreadDao;
@@ -113,7 +114,11 @@ public class ThreadActivityService extends BaseService<ThreadActivity> {
 
 			ThreadActivity result = threadActivityDao.saveNew(insert);
 			resData.setId(result.getId());
-			response.setMessage("Successfully insert new data!");
+			if(data.getThreadActivityCategory().equals(ThreadActivityType.LIKE.name())) {
+				response.setMessage("You liked a thread!");
+			} else {
+				response.setMessage("You bookmarked a thread!");
+			}
 			response.setData(resData);
 
 			commit();
@@ -182,7 +187,6 @@ public class ThreadActivityService extends BaseService<ThreadActivity> {
 		
 		String id = threadActivityDao.getIdByThreadId(getUserId(),
 				data.getThread(), data.getThreadActivityCategory());
-		
 
 		try {
 			begin();
@@ -190,7 +194,11 @@ public class ThreadActivityService extends BaseService<ThreadActivity> {
 			commit();
 
 			if (result) {
-				response.setMessage("Successfully delete the data!");
+				if(data.getThreadActivityCategory().equals(ThreadActivityType.LIKE.name())) {
+					response.setMessage("You unlike the thread!");
+				} else {
+					response.setMessage("You unbookmarked the thread!");
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

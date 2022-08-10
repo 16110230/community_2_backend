@@ -93,7 +93,7 @@ public class UserPollingService extends BaseService<UserPolling> {
 			commit();
 
 			resData.setId(result.getId());
-			response.setMessage("Successfully add new data!");
+			response.setMessage("Your vote has been collected!");
 			response.setData(resData);
 		} catch (Exception e) {
 			e.printStackTrace();
