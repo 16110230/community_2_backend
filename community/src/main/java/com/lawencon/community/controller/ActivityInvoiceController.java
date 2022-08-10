@@ -1,9 +1,15 @@
 package com.lawencon.community.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
+import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.community.pojo.activityInvoice.InsertActivityInvoiceReq;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoiceById;
 import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
 import com.lawencon.community.service.ActivityInvoiceService;
+import com.lawencon.community.service.ActivityService;
 import com.lawencon.model.SearchQuery;
+import com.lawencon.util.JasperUtil;
 
 @RestController
 @RequestMapping("activity-invoices")
@@ -31,6 +40,12 @@ public class ActivityInvoiceController {
 
 	@Autowired
 	private ActivityInvoiceService activityInvoiceService;
+	
+	@Autowired
+	private ActivityService activityService;
+	
+	@Autowired
+	private JasperUtil jasUtil;
 
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
@@ -75,8 +90,22 @@ public class ActivityInvoiceController {
 	}
 	
 	@GetMapping("download")
-	public ResponseEntity<?> getAllByActivity(Integer id) throws Exception{
-		ShowActivityInvoice result = null;
-		return new ResponseEntity<>(result, HttpStatus.OK);
+	public ResponseEntity<?> getAllByActivity(String id, String startDate, String endDate) throws Exception{
+		System.err.println(startDate);
+		List<?> listData = activityInvoiceService.showActivityInvoiceReport(id).getData();
+		ShowActivityById result = activityService.showById(id);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("activityType", result.getData().getActivityTypeName());
+		map.put("activityName", result.getData().getActivityTitle());
+
+		byte[] out = jasUtil.responseToByteArray(listData, map,"activity_balance");
+		
+		String fileName = "report.pdf";
+		
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
+				.body(out);
 	}
 }
