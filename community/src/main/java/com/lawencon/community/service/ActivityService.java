@@ -1,5 +1,8 @@
 package com.lawencon.community.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,8 +106,8 @@ public class ActivityService extends BaseService<Activity>{
 		insert.setActivityTitle(data.getActivityTitle());
 		insert.setActivityContent(data.getActivityContent());
 		insert.setActivityCategory(actCat);
-		insert.setStartedAt(data.getStartedAt());
-		insert.setEndedAt(data.getEndedAt());
+		insert.setStartedAt(stringToLocalDateTime(data.getStartedAt()));
+		insert.setEndedAt(stringToLocalDateTime(data.getEndedAt()));
 		insert.setFee(data.getFee());
 		insert.setQuantity(data.getQuantity());
 		insert.setIsLimit(data.getIsLimit());
@@ -144,6 +147,11 @@ public class ActivityService extends BaseService<Activity>{
 		
 	}
 	
+	private LocalDateTime stringToLocalDateTime(String dateTimeStr) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        return LocalDateTime.parse(dateTimeStr, formatter);
+    }
+	
 	public PojoUpdateRes update(UpdateActivityReq data)throws Exception{
 		Activity update = activityDao.getById(data.getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
@@ -154,8 +162,8 @@ public class ActivityService extends BaseService<Activity>{
 		update.setActivityTitle(data.getActivityTitle());
 		update.setActivityContent(data.getActivityContent());
 		update.setActivityCategory(actCat);
-		update.setStartedAt(data.getStartedAt());
-		update.setEndedAt(data.getEndedAt());
+		update.setStartedAt(new Timestamp(data.getStartedAt().getTime()).toLocalDateTime());
+		update.setEndedAt(new Timestamp(data.getEndedAt().getTime()).toLocalDateTime());
 		update.setFee(data.getFee());
 		update.setQuantity(data.getQuantity());
 		update.setIsLimit(data.getIsLimit());

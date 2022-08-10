@@ -271,21 +271,19 @@ public class ThreadService extends BaseService<Thread> {
 
 	public PojoUpdateRes update(UpdateThreadReq data) throws Exception {
 		Thread update = threadDao.getById(data.getId());
-		ThreadCategory threadCategory = threadCategoryDao.getById(data.getThreadCategory());
 
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
 		update.setThreadTitle(data.getThreadTitle());
 		update.setThreadContent(data.getThreadContent());
-		update.setThreadCategory(threadCategory);
 		update.setIsActive(data.getIsActive());
 		update.setVersion(data.getVersion());
 
 		try {
 			begin();
 
-			Thread result = threadDao.save(update);
+			Thread result = threadDao.saveNew(update);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
