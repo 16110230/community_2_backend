@@ -99,7 +99,6 @@ public class ThreadActivityService extends BaseService<ThreadActivity> {
 		Thread thread = threadDao.getById(data.getThread());
 		ThreadActivityCategory threadActivityCategory = threadActivityCategoryDao
 				.findByCode(data.getThreadActivityCategory());
-		System.err.println(threadActivityCategory.getId());
 		Users user = usersDao.getById(getUserId());
 		PojoInsertResData resData = new PojoInsertResData();
 		PojoInsertRes response = new PojoInsertRes();

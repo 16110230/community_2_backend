@@ -155,7 +155,7 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 		ShowActivities response = new ShowActivities();
 		StringBuilder sqlBuilder = new StringBuilder()
 			.append("SELECT a.id, a.activity_title, a.fee, a.is_limit, a.is_active, acc.category_name, a.started_at, ")
-			.append("a.ended_at, act.type_name ")
+			.append("a.ended_at, act.type_name, a.file_id ")
 			.append("FROM activity as a ")
 			.append("INNER JOIN activity_type as act ON a.activity_type_id = act.id ")
 			.append("INNER JOIN activity_category as acc ON a.activity_category_id = acc.id ")
@@ -181,13 +181,13 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					Object[] objArr = (Object[]) obj;
 					PojoActivity data = new PojoActivity();
 					
-					
 					data.setId(objArr[0].toString());
 					data.setActivityTitle(objArr[1].toString());
 					data.setActivityCategoryName(objArr[5].toString());
 					data.setStartedAt(((Timestamp) objArr[6]).toLocalDateTime());
 					data.setEndedAt(((Timestamp) objArr[7]).toLocalDateTime());
 					data.setActivityTypeName(objArr[8].toString());
+					data.setFile(objArr[9].toString());
 					
 					if(objArr[2] != null) {
 						data.setFee(Integer.valueOf(objArr[2].toString()));
