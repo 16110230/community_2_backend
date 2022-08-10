@@ -60,4 +60,10 @@ public class SubscriptionController {
 		PojoDeleteRes result = subscriptionService.delete(id);
 		return new ResponseEntity<PojoDeleteRes>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("validate")
+	public ResponseEntity<?> getAllByValidate(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<PojoSubscription> result = subscriptionService.showAllByValidate(query, startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

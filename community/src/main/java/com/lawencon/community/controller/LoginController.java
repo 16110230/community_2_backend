@@ -25,7 +25,7 @@ import com.lawencon.util.JwtUtil;
 import com.lawencon.util.JwtUtil.ClaimKey;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("login")
 public class LoginController {
 	@Autowired
 	private UsersService userService;

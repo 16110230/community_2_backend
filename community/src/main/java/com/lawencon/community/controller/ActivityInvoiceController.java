@@ -73,4 +73,10 @@ public class ActivityInvoiceController {
 		ShowActivityInvoice result = activityInvoiceService.showAllByUserId(startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("download")
+	public ResponseEntity<?> getAllByActivity(Integer id) throws Exception{
+		ShowActivityInvoice result = null;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

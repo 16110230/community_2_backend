@@ -121,6 +121,7 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 
 	public PojoUpdateRes update(UpdateActivityInvoiceReq data) throws Exception {
 		ActivityInvoice update = activityInvoiceDao.getById(data.getId());
+		Activity activity = activityDao.getById(update.getActivity().getId());
 		PojoUpdateResData resData = new PojoUpdateResData();
 		PojoUpdateRes response = new PojoUpdateRes();
 
@@ -128,16 +129,25 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		update.setIsApproved(data.getIsApproved());
 		update.setIsActive(data.getIsActive());
 		update.setVersion(data.getVersion());
+		Users userAdmin = usersDao.getById(getUserId());
+		Users userCreatedby = usersDao.getById(activity.getCreatedBy());
+		Integer balanceAdmin = userAdmin.getBalance();
+		Integer balanceOwner = userCreatedby.getBalance();
+		Integer fee = update.getActivity().getFee();
+		Integer tenPercent = fee * 10/100;
+		userAdmin.setBalance(balanceAdmin + tenPercent);
+		userCreatedby.setBalance(balanceOwner + (fee - tenPercent));
 		
-
 		try {
 			begin();
 			
 			ActivityInvoice result = activityInvoiceDao.saveNew(update);
+			usersDao.saveNew(userAdmin);
+			usersDao.saveNew(userCreatedby);
 			resData.setVersion(result.getVersion());
 			resData.setMessage("Successfully update the data!");
 			response.setData(resData);
-
+			
 			commit();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -19,6 +19,7 @@ import com.lawencon.community.dao.CompanyDao;
 import com.lawencon.community.dao.FileDao;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
+import com.lawencon.community.dao.TokenDao;
 import com.lawencon.community.dao.UserRoleDao;
 import com.lawencon.community.dao.UsersDao;
 import com.lawencon.community.exception.InvalidLoginException;
@@ -86,6 +87,9 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 	
 	@Autowired
 	private VerificationCodeUtil verificationUtil;
+	
+	@Autowired
+	private TokenDao tokenDao;
 	
 	public SearchQuery<PojoUsers> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<Users> users = userDao.findAll(query, startPage, maxPage);
@@ -173,6 +177,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		insert.setIndustry(industry);
 		insert.setPosition(position);
 		insert.setRole(role);
+		insert.setBalance(0);
 		insert.setUserPassword(passwordEncoder.encode(data.getUserPassword()));
 
 		try {
@@ -383,4 +388,33 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 
 		return response;
 	}
+	
+	public PojoUpdateRes logout() throws Exception {
+		PojoUpdateRes response = new PojoUpdateRes();
+
+        try {
+            begin();
+            Users user = userDao.getById(getUserId());
+            String currentTokenId = user.getToken().getId();
+            user.setToken(null);
+
+            tokenDao.deleteById(currentTokenId);
+            
+            Users userResult = userDao.saveNew(user);
+            commit();
+
+            PojoUpdateResData dataRes = new PojoUpdateResData();
+            dataRes.setVersion(userResult.getVersion());
+            dataRes.setMessage("Logged out!");
+
+            response.setData(dataRes);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            rollback();
+            throw new Exception(e);
+        }
+
+        return response;
+    }
 }
