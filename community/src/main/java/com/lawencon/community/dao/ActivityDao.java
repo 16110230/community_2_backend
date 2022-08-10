@@ -223,8 +223,7 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
   		List<PojoActivityReport> res = new ArrayList<PojoActivityReport>();  
   		ShowActivityReports response = new ShowActivityReports();
   		StringBuilder sqlBuilder = new StringBuilder()
-  				.append("SELECT ROW_NUMBER() OVER (	ORDER BY u2.full_name) AS no, ")
-  				.append("u2.full_name AS fullName, u2.email AS email,  ")
+  				.append("SELECT u2.full_name AS fullName, u2.email AS email,  ")
   				.append("to_char(a.fee, 'L999G999D99') AS fee, ")
   				.append("ai.created_at AS purchaseDate, ")
   				.append("CASE WHEN ai.is_approved = true THEN 'Paid' ELSE 'Pending' END AS paymentStatus ")
@@ -233,7 +232,7 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
   				.append("JOIN activity_invoice ai ON ai.user_id = u.id  ")
   				.append("JOIN activity a ON a.id = ai.activity_id ")
   				.append("JOIN users u2 ON u2.id = ai.user_id ")
-  				.append("where u.id = :id ");
+  				.append("where act.id = :id ");
   		
   		try {
   			Integer size = createNativeQuery(sqlBuilder.toString())
@@ -250,13 +249,15 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					Object[] objArr = (Object[]) obj;
 					PojoActivityReport data = new PojoActivityReport();
 					
-					data.setNo(objArr[0].toString());
-					data.setFullName(objArr[1].toString());
-					data.setEmail(objArr[2].toString());
-					data.setFee(objArr[3].toString());
+					data.setFullName(objArr[0].toString());
+					data.setEmail(objArr[1].toString());
+					data.setFee(objArr[2].toString());
+					data.setPurchaseDate(((Timestamp) objArr[3]).toLocalDateTime());
+					data.setPaymentStatus(objArr[4].toString());
 					res.add(data);
 				});
 			}
+			response.setData(res);
 			
 			
 		} catch (Exception e) {

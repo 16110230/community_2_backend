@@ -1,7 +1,6 @@
 package com.lawencon.community.controller;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +31,8 @@ import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoiceById;
 import com.lawencon.community.pojo.activityInvoice.UpdateActivityInvoiceReq;
 import com.lawencon.community.service.ActivityInvoiceService;
 import com.lawencon.community.service.ActivityService;
-import com.lawencon.community.util.JasperUtil;
 import com.lawencon.model.SearchQuery;
+import com.lawencon.util.JasperUtil;
 
 @RestController
 @RequestMapping("activity-invoices")
@@ -44,6 +43,9 @@ public class ActivityInvoiceController {
 	
 	@Autowired
 	private ActivityService activityService;
+	
+	@Autowired
+	private JasperUtil jasUtil;
 
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
@@ -88,17 +90,16 @@ public class ActivityInvoiceController {
 	}
 	
 	@GetMapping("download")
-	public ResponseEntity<?> getAllByActivity(String id) throws Exception{
-		List<?> listData = (List<?>) activityInvoiceService.showById(id);
+	public ResponseEntity<?> getAllByActivity(String id, String startDate, String endDate) throws Exception{
+		System.err.println(startDate);
+		List<?> listData = activityInvoiceService.showActivityInvoiceReport(id).getData();
 		ShowActivityById result = activityService.showById(id);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("activityType", result.getData().getActivityTypeName());
-		
-		Map<String, Object> map2 = new HashMap<>();
 		map.put("activityName", result.getData().getActivityTitle());
 
-		byte[] out = JasperUtil.responseToByteArray(listData, map, map2, "sample");
+		byte[] out = jasUtil.responseToByteArray(listData, map,"activity_balance");
 		
 		String fileName = "report.pdf";
 		
@@ -106,6 +107,5 @@ public class ActivityInvoiceController {
 				.contentType(MediaType.APPLICATION_PDF)
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
 				.body(out);
-	
 	}
 }

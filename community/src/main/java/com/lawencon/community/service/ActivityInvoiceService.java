@@ -21,6 +21,7 @@ import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoInsertResData;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.PojoUpdateResData;
+import com.lawencon.community.pojo.activity.ShowActivityReports;
 import com.lawencon.community.pojo.activityInvoice.InsertActivityInvoiceReq;
 import com.lawencon.community.pojo.activityInvoice.PojoActivityInvoice;
 import com.lawencon.community.pojo.activityInvoice.ShowActivityInvoice;
@@ -241,6 +242,11 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		Users user = usersDao.getById(getUserId());
 		ShowActivityInvoice response = activityInvoiceDao.getAllByUserId(startPage, maxPage, user.getId());
 		
+		return response;
+	}
+	
+	public ShowActivityReports showActivityInvoiceReport(String id) {
+		ShowActivityReports response = activityDao.getReportData(id);
 		return response;
 	}
 }

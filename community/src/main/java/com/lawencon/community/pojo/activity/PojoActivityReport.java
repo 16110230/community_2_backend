@@ -3,20 +3,11 @@ package com.lawencon.community.pojo.activity;
 import java.time.LocalDateTime;
 
 public class PojoActivityReport {
-	public String no;
 	public String fullName;
 	public String email;
 	public String fee;
-	public LocalDateTime purchasedDate;
+	public LocalDateTime purchaseDate;
 	public String paymentStatus;
-
-	public void setNo(String no) {
-		this.no = no;
-	}
-
-	public String getNo() {
-		return no;
-	}
 
 	public String getFullName() {
 		return fullName;
@@ -42,12 +33,12 @@ public class PojoActivityReport {
 		this.fee = fee;
 	}
 
-	public LocalDateTime getPurchasedDate() {
-		return purchasedDate;
+	public LocalDateTime getPurchaseDate() {
+		return purchaseDate;
 	}
 
-	public void setPurchasedDate(LocalDateTime purchasedDate) {
-		this.purchasedDate = purchasedDate;
+	public void setPurchaseDate(LocalDateTime purchaseDate) {
+		this.purchaseDate = purchaseDate;
 	}
 
 	public String getPaymentStatus() {

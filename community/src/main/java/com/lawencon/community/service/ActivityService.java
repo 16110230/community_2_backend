@@ -186,6 +186,7 @@ public class ActivityService extends BaseService<Activity>{
 		Activity acts = activityDao.getById(id);
 		PojoActivity act = new PojoActivity();
 		ActivityCategory actCat = activityCategoryDao.getById(acts.getActivityCategory().getId());
+		ActivityType actType = activityTypeDao.getById(acts.getActivityType().getId());
 		Users users = usersDao.getById(acts.getCreatedBy());
 		
 		act.setId(acts.getId());
@@ -193,6 +194,8 @@ public class ActivityService extends BaseService<Activity>{
 		act.setActivityContent(acts.getActivityContent());
 		act.setActivityCategory(actCat.getId());
 		act.setActivityCategoryName(actCat.getCategoryName());
+		act.setActivityType(acts.getActivityType().getId());
+		act.setActivityTypeName(actType.getTypeCode());
 		act.setStartedAt(acts.getStartedAt());
 		act.setEndedAt(acts.getEndedAt());
 		act.setFee(acts.getFee());
