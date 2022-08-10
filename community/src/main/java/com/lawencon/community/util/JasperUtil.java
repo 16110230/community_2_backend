@@ -19,7 +19,7 @@ public class JasperUtil {
 	private static final String mailTemplateFolder = "jasper-template";
 
 	public static byte[] responseToByteArray(Collection<?> data, 
-			Map<String, Object> mapParams,
+			Map<String, Object> mapParams,Map<String, Object> mapParams2,
 			String jrxmlName)
 			throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

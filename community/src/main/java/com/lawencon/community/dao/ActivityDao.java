@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.pojo.activity.PojoActivity;
+import com.lawencon.community.pojo.activity.PojoActivityReport;
 import com.lawencon.community.pojo.activity.ShowActivities;
+import com.lawencon.community.pojo.activity.ShowActivityReports;
 
 @Repository
 public class ActivityDao extends AbstractJpaDao<Activity>{
@@ -216,4 +218,51 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 		response.setData(res);
 		return response;
 	}
+  
+  	public ShowActivityReports getReportData(String id) {
+  		List<PojoActivityReport> res = new ArrayList<PojoActivityReport>();  
+  		ShowActivityReports response = new ShowActivityReports();
+  		StringBuilder sqlBuilder = new StringBuilder()
+  				.append("SELECT ROW_NUMBER() OVER (	ORDER BY u2.full_name) AS no, ")
+  				.append("u2.full_name AS fullName, u2.email AS email,  ")
+  				.append("to_char(a.fee, 'L999G999D99') AS fee, ")
+  				.append("ai.created_at AS purchaseDate, ")
+  				.append("CASE WHEN ai.is_approved = true THEN 'Paid' ELSE 'Pending' END AS paymentStatus ")
+  				.append("FROM activity act  ")
+  				.append("JOIN users u ON u.id = act.created_by ")
+  				.append("JOIN activity_invoice ai ON ai.user_id = u.id  ")
+  				.append("JOIN activity a ON a.id = ai.activity_id ")
+  				.append("JOIN users u2 ON u2.id = ai.user_id ")
+  				.append("where u.id = :id ");
+  		
+  		try {
+  			Integer size = createNativeQuery(sqlBuilder.toString())
+					.setParameter("id", id)
+					.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("id", id)
+					.getResultList();
+			
+			if(result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoActivityReport data = new PojoActivityReport();
+					
+					data.setNo(objArr[0].toString());
+					data.setFullName(objArr[1].toString());
+					data.setEmail(objArr[2].toString());
+					data.setFee(objArr[3].toString());
+					res.add(data);
+				});
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+  		
+		return response;
+    }
 }
