@@ -1,11 +1,28 @@
 package com.lawencon.community.pojo.users;
 
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
+
 public class UpdateUserReq {
 	private String id;
+	
+	@NotBlank(message = "Position Name Can't Be Null")
+	@Length(min=4,max=35)
 	private String fullName;
+	
+	@NotBlank(message = "Position Name Can't Be Null")
+	@Length(min=15,max=30)
 	private String email;
+	
+	@NotBlank(message = "Position Name Can't Be Null")
+	@Length(min=6,max=10)
 	private String username;
+	
+	@NotBlank(message = "Position Name Can't Be Null")
+	@Length(min=6,max=10)
 	private String userPassword;
+	
 	private String company;
 	private String industry;
 	private String position;

@@ -3,15 +3,19 @@ package com.lawencon.community.pojo.threadCategory;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
+
 public class UpdateThreadCategoryReq {
 	
 	@NotBlank(message = "Id Can't Be Null")
 	private String id;
 	
 	@NotBlank(message = "Category Name Can't Be Null")
+	@Length(min=4,max=35)
 	private String categoryName;
 	
 	@NotBlank(message = "Category Code Can't Be Null")
+	@Length(min=2,max=10)
 	private String categoryCode;
 	
 	@NotNull(message = "Active Can't Be Null")

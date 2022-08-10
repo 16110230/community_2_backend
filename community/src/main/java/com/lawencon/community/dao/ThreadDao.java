@@ -294,7 +294,7 @@ public class ThreadDao extends AbstractJpaDao<Thread> {
 		ShowThreads response = new ShowThreads();
 		StringBuilder sqlBuilder = new StringBuilder()
 				.append("SELECT t.id, t.thread_title, t.thread_content, t.thread_category_id, ")
-				.append("tc.category_name , t.file_id, t.user_id, u.username, t.created_at  ")
+				.append("tc.category_name , t.file_id, t.user_id, u.username, t.created_at ")
 				.append("FROM thread t ")
 				.append("JOIN thread_category tc ON tc.id = t.thread_category_id ")
 				.append("JOIN users u ON u.id = t.user_id ")
