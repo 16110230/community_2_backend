@@ -1,20 +1,27 @@
 package com.lawencon.community.pojo.company;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 public class InsertCompanyReq {
 	
 	@NotBlank(message = "Company name can't be empty")
+	@Length(min=4,max=35)
 	private String companyName;
 	
 	@NotBlank(message = "Company code can't be empty")
+	@Length(min=2,max=10)
 	private String companyCode;
 	
-	@NotBlank(message = "Company email can't be empty")
+	@NotBlank(message = "Email can't be empty")
+	@Length(min=15,max=30)
 	private String email;
 	
 	@NotBlank(message = "Company address can't be empty")
+	@Column(columnDefinition = "TEXT")
 	private String address;
 	
 	@NotNull(message = "Is active company can't be null")

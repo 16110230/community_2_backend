@@ -3,15 +3,19 @@ package com.lawencon.community.pojo.industry;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
+
 public class UpdateIndustryReq {
 	
 	@NotNull(message = "Id can't be null")
 	private String id;
 	
 	@NotBlank(message = "Industry name can't be empty")
+	@Length(min=4,max=35)
 	private String industryName;
 	
 	@NotBlank(message = "Industry code can't be empty")
+	@Length(min=2,max=10)
 	private String industryCode;
 	
 	@NotNull(message = "Is active can't be null")
