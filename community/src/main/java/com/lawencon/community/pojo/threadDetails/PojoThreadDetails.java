@@ -10,12 +10,21 @@ public class PojoThreadDetails {
 	private String threadDesc;
 	private String userId;
 	private String userName;
+	private String userFile;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime createdAt;
 	
 	private Boolean isActive;
 	private Integer version;
+	
+	public String getUserFile() {
+		return userFile;
+	}
+	
+	public void setUserFile(String userFile) {
+		this.userFile = userFile;
+	}
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;

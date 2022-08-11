@@ -64,6 +64,21 @@ public class AbstractJpaDao<T extends BaseEntity> {
 		return (Long) em().createQuery("SELECT COUNT(id) FROM " + clazz.getName())
 				.getSingleResult();
 	}
+	
+	public Long countAll(String whereClause, 
+			String[] parameterNames, String[] parameterValues) {
+		Query query = em().createQuery(
+				"SELECT COUNT(*) FROM " + clazz.getName() + (whereClause != null ? " " + whereClause : ""));
+
+		if (parameterNames != null && parameterValues != null) {
+			for (int i = 0; i < parameterValues.length; i++) {
+				query.setParameter(parameterNames[i], parameterValues[i]);
+			}
+		}
+
+		return (Long) query.getSingleResult();
+	}
+
 
 	public List<T> getAll(int startPage, int maxPage) {
 		return em().createQuery("FROM " + clazz.getName(), clazz)
@@ -71,118 +86,83 @@ public class AbstractJpaDao<T extends BaseEntity> {
 				.setMaxResults(maxPage)
 				.getResultList();
 	}
+	
+	public List<T> getAll(String whereClause, 
+			String[] parameterNames, String[] parameterValues, 
+			Integer startPosition, Integer limit) {
+		TypedQuery<T> typedQuery = em().createQuery(
+				"FROM " + clazz.getName() + (whereClause != null ? " " + whereClause : ""), clazz);
 
-	private SearchQuery<T> getAll(String query, int startPage, int maxPage, String... fields) {
-		SearchFetchable<T> searchObj = Search.session(ConnHandler.getManager())
-				.search(clazz)
-				.where(f -> f.wildcard().fields(fields).matching("*" + query + "*"));
+		if (parameterNames != null && parameterValues != null) {
+			for (int i = 0; i < parameterValues.length; i++) {
+				typedQuery.setParameter(parameterNames[i], parameterValues[i]);
+			}
+		}
 
-		List<T> result = searchObj.fetch(startPage, maxPage).hits();
-		List<T> resultAll = searchObj.fetchAllHits();
+		if (startPosition != null)
+			typedQuery.setFirstResult(startPosition);
+		if (limit != null)
+			typedQuery.setMaxResults(limit);
 
+		return typedQuery.getResultList();
+	}
+	
+	public SearchQuery<T> searchQuery(String whereClause, String[] parameterNames, String[] parameterValues, 
+			Integer startPosition, Integer limit) {
+		List<T> resultData = getAll(whereClause, parameterNames, parameterValues, startPosition, limit);
+		Integer countData = countAll(whereClause, parameterNames, parameterValues).intValue();
+		
 		SearchQuery<T> data = new SearchQuery<>();
-		data.setData(result);
-		data.setCount(resultAll.size());
+		data.setData(resultData);
+		data.setCount(countData);
 
 		return data;
 	}
 
 	public SearchQuery<T> searchQuery(String textQuery, 
 			int startPosition, int limit,
+			String orderBy,
 			String... fields) {
 
-		EntityManager em = em();
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-
-		CriteriaQuery<T> criteriaQueryData = criteriaBuilder.createQuery(clazz);
-
-		Root<T> rootData = criteriaQueryData.from(clazz);
-
 		String[] querySplit = extractQuery(textQuery);
-
-		List<Predicate> predicates = new ArrayList<>();
-
-		Map<String, Join<Object, Object>> joinMap = new HashMap<>();
+		
+		StringBuilder whereCriteriaBuilder = new StringBuilder("");
 		
 		for (String field : fields) {
 			String fieldTrim = field.trim();
-			if (fieldTrim.contains(".")) {
-				doJoin(criteriaBuilder, rootData, fieldTrim, querySplit, predicates, joinMap);
-			} else {
-				for (String subQuery : querySplit) {
-					Predicate condition = criteriaBuilder.like(
-							criteriaBuilder.lower(rootData.get(field)), "%" + subQuery.toLowerCase() + "%"
-					);
-					predicates.add(condition);
-				}
+			for (String subQuery : querySplit) {				
+				whereCriteriaBuilder.append("OR LOWER")
+					.append("(")
+					.append(fieldTrim)
+					.append(") ")
+					.append("LIKE CONCAT('%'")
+					.append(",")
+					.append("'")
+					.append(subQuery.toLowerCase())
+					.append("'")
+					.append(",")
+					.append("'%')");
 			}
 		}
-
-		Predicate[] predicateArr = new Predicate[predicates.size()];
-		for (int i = 0; i < predicates.size(); i++) {
-			predicateArr[i] = predicates.get(i);
-		}
-		Predicate predicate = criteriaBuilder.or(predicateArr);
-
-		//TODO : query count not yet works :(
-		//criteriaQueryCount
-		//	.select(criteriaBuilderCount.count(rootCount))
-		//	.where(predicate);
-
-		//Long resultCount = em().createQuery(criteriaQueryCount)
-		//		.getSingleResult();
 		
-		criteriaQueryData
-			.where(predicate)
-			.orderBy(criteriaBuilder.asc(rootData.get("createdAt")));
-
-
-		List<T> resultData = em().createQuery(criteriaQueryData)
+		String whereCriteria = whereCriteriaBuilder.toString().replaceFirst("OR", "");
+			
+		Long resultCount = (Long) em()
+				.createQuery("SELECT COUNT(*) FROM " + clazz.getName() + (whereCriteria != null ? " WHERE " + whereCriteria : ""))
+				.getSingleResult(); 
+		
+		List<T> resultData = em().createQuery("FROM " + clazz.getName() + (whereCriteria != null ? " WHERE " + whereCriteria + orderBy: ""), clazz)
 				.setFirstResult(startPosition)
 				.setMaxResults(limit)
 				.getResultList();
-
-		int resultCount = em().createQuery(criteriaQueryData)
-				.getResultList()
-				.size();
-
+		
 		SearchQuery<T> data = new SearchQuery<>();
 		data.setData(resultData);
-		data.setCount(resultCount);
+		data.setCount(resultCount.intValue());
 
 		return data;
 	}
-	
-	private <T> void doJoin(CriteriaBuilder criteriaBuilder, 
-			Root<T> rootData, 
-			String field, String[] extractQuery,
-			List<Predicate> predicates,
-			Map<String, Join<Object, Object>> joinMap) {
-		
-		Join<Object, Object> joinData = null;
-		
-		String[] fieldSplit = field.split("\\.");
 
-		for (int i = 0; i < fieldSplit.length - 1; i++) {
-			if (!joinMap.containsKey(fieldSplit[i])) {
-				if (i == 0) {
-					joinData = rootData.join(fieldSplit[i]);
-				} else {
-					joinData = joinData.join(fieldSplit[i]);
-				}
-				joinMap.put(fieldSplit[i], joinData);
-			} else {
-				joinData = joinMap.get(fieldSplit[i]);
-			}
-		}
-		
-		for (String subQuery : extractQuery) {
-			Predicate condition = criteriaBuilder.like(
-					criteriaBuilder.lower(joinData.get(fieldSplit[fieldSplit.length - 1])), "%" + subQuery.toLowerCase() + "%"
-			);
-			predicates.add(condition);
-		}
-	}
 
 	
 	public SearchQuery<T> findAll(String textQuery, 
@@ -202,7 +182,32 @@ public class AbstractJpaDao<T extends BaseEntity> {
 				sq.setData(data);
 				sq.setCount(count);
 			} else {
-				return searchQuery(textQuery, startPosition, limit, fields);
+				return searchQuery(textQuery, startPosition, limit,null, fields);
+			}
+		}
+
+		return sq;
+	}
+	
+	public SearchQuery<T> findAllAndOrder(String textQuery, 
+			Integer startPosition, Integer limit,
+			String orderBy,
+			String... fields) throws Exception {
+		SearchQuery<T> sq = new SearchQuery<>();
+		List<T> data = null;
+
+		if (startPosition == null || limit == null) {
+			data = getAll();
+			sq.setData(data);
+		} else {
+			if (textQuery == null) {
+				data = getAll(startPosition, limit);
+				Integer count = countAll().intValue();
+
+				sq.setData(data);
+				sq.setCount(count);
+			} else {
+				return searchQuery(textQuery, startPosition, limit, orderBy, fields);
 			}
 		}
 

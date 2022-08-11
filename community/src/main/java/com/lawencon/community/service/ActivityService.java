@@ -191,7 +191,7 @@ public class ActivityService extends BaseService<Activity>{
 	}
 	
 	public ShowActivityById showById(String id) {
-		Activity acts = activityDao.getById(id);
+		Activity acts = activityDao.getByIdWithoutDetach(id);
 		PojoActivity act = new PojoActivity();
 		ActivityCategory actCat = activityCategoryDao.getById(acts.getActivityCategory().getId());
 		ActivityType actType = activityTypeDao.getById(acts.getActivityType().getId());
