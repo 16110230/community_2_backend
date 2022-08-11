@@ -19,10 +19,7 @@ public class UpdateUserReq {
 	@Length(min=6,max=10)
 	private String username;
 	
-	@NotBlank(message = "Position Name Can't Be Null")
-	@Length(min=6,max=10)
 	private String userPassword;
-	
 	private String company;
 	private String industry;
 	private String position;
