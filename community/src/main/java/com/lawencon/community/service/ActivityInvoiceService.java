@@ -1,5 +1,7 @@
 package com.lawencon.community.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +46,10 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 
 	@Autowired
 	private FileDao fileDao;
-	
+
 	@Autowired
 	private ActivityTypeDao activityTypeDao;
-	
+
 	@Autowired
 	private GenerateCode generateCode;
 
@@ -73,7 +75,7 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 			actInv.setVersion(val.getVersion());
 			actInv.setOrderDate(val.getActivity().getCreatedAt());
 			actInv.setAmount(val.getActivity().getFee());
-			
+
 			result.add(actInv);
 		});
 
@@ -91,7 +93,7 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		Activity act = activityDao.getById(data.getActivity());
 		Users usr = usersDao.getById(getUserId());
 		File fileIns = new File();
-		
+
 		fileIns.setFileName(data.getFileName());
 		fileIns.setFileExt(data.getFileExt());
 
@@ -135,20 +137,20 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		Integer balanceAdmin = userAdmin.getBalance();
 		Integer balanceOwner = userCreatedby.getBalance();
 		Integer fee = update.getActivity().getFee();
-		Integer tenPercent = fee * 10/100;
+		Integer tenPercent = fee * 10 / 100;
 		userAdmin.setBalance(balanceAdmin + tenPercent);
 		userCreatedby.setBalance(balanceOwner + (fee - tenPercent));
-		
+
 		try {
 			begin();
-			
+
 			ActivityInvoice result = activityInvoiceDao.saveNew(update);
 			usersDao.saveNew(userAdmin);
 			usersDao.saveNew(userCreatedby);
 			resData.setVersion(result.getVersion());
 			response.setMessage("Successfully update the data!");
 			response.setData(resData);
-			
+
 			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -200,23 +202,24 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 
 		return response;
 	}
-	
-	public SearchQuery<PojoActivityInvoice> showAllByTypePending(String query, Integer startPage, Integer maxPage) throws Exception {
+
+	public SearchQuery<PojoActivityInvoice> showAllByTypePending(String query, Integer startPage, Integer maxPage)
+			throws Exception {
 		SearchQuery<ActivityInvoice> activities = activityInvoiceDao.findAll(query, startPage, maxPage);
 		List<PojoActivityInvoice> result = new ArrayList<>();
-		
+
 		activities.getData().forEach(val -> {
 			if (val.getIsApproved() == null) {
 				PojoActivityInvoice activity = new PojoActivityInvoice();
 				Activity act = activityDao.getById(val.getActivity().getId());
 				ActivityType activityType = activityTypeDao.getById(val.getActivity().getActivityType().getId());
 				Users users = usersDao.getById(val.getCreatedBy());
-				
+
 				if (val.getFile() != null) {
 					File file = fileDao.getById(val.getFile().getId());
-					activity.setFile(file.getId());				
+					activity.setFile(file.getId());
 				}
-				
+
 				activity.setId(val.getId());
 				activity.setUser(users.getId());
 				activity.setInvoiceCode(val.getInvoiceCode());
@@ -229,34 +232,40 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 				activity.setOrderDate(val.getActivity().getCreatedAt());
 				activity.setAmount(val.getActivity().getFee());
 				activity.setActivityType(activityType.getTypeCode());
-				
+
 				result.add(activity);
 			}
 		});
-		
+
 		SearchQuery<PojoActivityInvoice> response = new SearchQuery<PojoActivityInvoice>();
 		response.setData(result);
 		response.setCount(activities.getCount());
 
 		return response;
 	}
-	
+
 	public ShowActivityInvoice showAllByType(Integer startPage, Integer maxPage, String code) throws Exception {
 		String activityId = activityTypeDao.getByCode(code);
 		ShowActivityInvoice response = activityInvoiceDao.getAllByType(startPage, maxPage, activityId);
-		
+
 		return response;
 	}
 
 	public ShowActivityInvoice showAllByUserId(Integer startPage, Integer maxPage) throws Exception {
 		Users user = usersDao.getById(getUserId());
 		ShowActivityInvoice response = activityInvoiceDao.getAllByUserId(startPage, maxPage, user.getId());
-		
+
 		return response;
 	}
-	
-	public ShowActivityReports showActivityInvoiceReport(String id) {
-		ShowActivityReports response = activityDao.getReportData(id);
+
+	public ShowActivityReports showActivityInvoiceReport(String id, String startDate, String endDate) {
+		ShowActivityReports response = activityDao.getReportData(id, stringToLocalDate(startDate),
+				stringToLocalDate(endDate));
 		return response;
+	}
+
+	private LocalDate stringToLocalDate(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return LocalDate.parse(dateStr, formatter);
 	}
 }
