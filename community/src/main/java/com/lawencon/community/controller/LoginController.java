@@ -18,7 +18,7 @@ import com.lawencon.community.model.Users;
 import com.lawencon.community.pojo.PojoLoginReq;
 import com.lawencon.community.pojo.PojoLoginRes;
 import com.lawencon.community.pojo.PojoLoginResData;
-import com.lawencon.community.service.UserSubscriptionService;
+import com.lawencon.community.service.SubscriptionService;
 import com.lawencon.community.service.UsersService;
 import com.lawencon.security.ApiSecurity;
 import com.lawencon.util.JwtUtil;
@@ -37,7 +37,7 @@ public class LoginController {
 	private ApiSecurity apiSecurity;
 	
 	@Autowired
-	private UserSubscriptionService userSubsService;
+	private SubscriptionService subsService;
 	
 	@PostMapping
 	public ResponseEntity<PojoLoginRes> login(@RequestBody PojoLoginReq loginReq) throws Exception {
@@ -61,8 +61,8 @@ public class LoginController {
 		resData.setToken(token);
 		resData.setRefreshToken(userService.updateToken(user.getId())); 
 		
-		if(userSubsService.isPrem(user.getId())) {
-			resData.setPrem(userSubsService.isPrem(user.getId()));
+		if(subsService.isPrem(user.getId())) {
+			resData.setPrem(subsService.isPrem(user.getId()));
 		}
 		
 		response.setData(resData);
