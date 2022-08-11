@@ -1,5 +1,6 @@
 package com.lawencon.community.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,7 @@ public class ActivityInvoiceController {
 	@GetMapping("download")
 	public ResponseEntity<?> getAllByActivity(String id, String startDate, String endDate) throws Exception{
 		System.err.println(startDate);
+		System.err.println(new SimpleDateFormat("dd/MM/yyyy").parse(startDate) );
 		List<?> listData = activityInvoiceService.showActivityInvoiceReport(id).getData();
 		ShowActivityById result = activityService.showById(id);
 		
