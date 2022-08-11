@@ -73,7 +73,9 @@ public class ThreadService extends BaseService<Thread> {
 	private ThreadDetailsDao threadDetailsDao;
 
 	public SearchQuery<PojoThread> showAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchQuery<Thread> threads = threadDao.findAll(query, startPage, maxPage, "threadTitle", "threadContent");
+		SearchQuery<Thread> threads = threadDao.findAllAndOrder(query, startPage, maxPage, 
+				" ORDER BY createdAt DESC", 
+				"threadTitle", "threadContent");
 		List<PojoThread> result = new ArrayList<PojoThread>();
 
 		threads.getData().forEach(val -> {
@@ -207,6 +209,9 @@ public class ThreadService extends BaseService<Thread> {
 		thread.setThreadContent(threads.getThreadContent());
 		thread.setUser(user.getId());
 		thread.setUserName(user.getUsername());
+		if(user.getFile() != null) {				
+			thread.setUserFile(user.getFile().getId());
+		}
 		thread.setThreadcategory(threadCategory.getId());
 		thread.setThreadCategoryName(threadCategory.getCategoryName());
 		thread.setCreatedAt(threads.getCreatedAt());

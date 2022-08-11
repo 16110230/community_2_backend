@@ -1,6 +1,8 @@
 package com.lawencon.community.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +94,8 @@ public class ActivityInvoiceController {
 	
 	@GetMapping("download")
 	public ResponseEntity<?> getAllByActivity(String id, String startDate, String endDate) throws Exception{
-		System.err.println(startDate);
-		System.err.println(new SimpleDateFormat("dd/MM/yyyy").parse(startDate) );
-		List<?> listData = activityInvoiceService.showActivityInvoiceReport(id).getData();
+		
+		List<?> listData = activityInvoiceService.showActivityInvoiceReport(id, startDate, endDate).getData();
 		ShowActivityById result = activityService.showById(id);
 		
 		Map<String, Object> map = new HashMap<>();
@@ -108,6 +109,7 @@ public class ActivityInvoiceController {
 		return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_PDF)
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
+				.header("Access-Control-Allow-Origin", "*")
 				.body(out);
 	}
 }

@@ -1,6 +1,7 @@
 package com.lawencon.community.dao;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -219,7 +220,7 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 		return response;
 	}
   
-  	public ShowActivityReports getReportData(String id) {
+  	public ShowActivityReports getReportData(String id, LocalDate startDate, LocalDate endDate) {
   		List<PojoActivityReport> res = new ArrayList<PojoActivityReport>();  
   		ShowActivityReports response = new ShowActivityReports();
   		StringBuilder sqlBuilder = new StringBuilder()
@@ -232,16 +233,21 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
   				.append("JOIN activity_invoice ai ON ai.user_id = u.id  ")
   				.append("JOIN activity a ON a.id = ai.activity_id ")
   				.append("JOIN users u2 ON u2.id = ai.user_id ")
-  				.append("where act.id = :id ");
+  				.append("where act.id = :id ")
+  				.append("AND DATE(act.created_at) BETWEEN :startDate AND :endDate  ");
   		
   		try {
   			Integer size = createNativeQuery(sqlBuilder.toString())
 					.setParameter("id", id)
+					.setParameter("startDate", startDate)
+					.setParameter("endDate", endDate)
 					.getResultList().size();
 			response.setCountData(size);
 			
 			List<?> result = createNativeQuery(sqlBuilder.toString())
 					.setParameter("id", id)
+					.setParameter("startDate", startDate)
+					.setParameter("endDate", endDate)
 					.getResultList();
 			
 			if(result != null) {
