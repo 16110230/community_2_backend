@@ -1,6 +1,7 @@
 package com.lawencon.community.service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import com.lawencon.community.pojo.activity.InsertActivityReq;
 import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
+import com.lawencon.community.pojo.activity.ShowActivityReports;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.model.SearchQuery;
 
@@ -295,4 +297,15 @@ public class ActivityService extends BaseService<Activity>{
         ShowActivities response = activityDao.getAllByFilter(type, category, startPage, maxPage);
         return response;
     }
+  	
+  	public ShowActivityReports showActivityInvoiceReport(String id, String startDate, String endDate) {
+		ShowActivityReports response = activityDao.getReportData(id, stringToLocalDate(startDate),
+				stringToLocalDate(endDate));
+		return response;
+	}
+  	
+  	private LocalDate stringToLocalDate(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return LocalDate.parse(dateStr, formatter);
+	}
 }

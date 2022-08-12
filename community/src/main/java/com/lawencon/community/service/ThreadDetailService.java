@@ -135,7 +135,7 @@ public class ThreadDetailService extends BaseService<ThreadDetails> {
 
 			ThreadDetails result = threadDetailsDao.saveNew(insert);
 			resData.setId(result.getId());
-			response.setMessage("Successfully insert new data!");
+			response.setMessage("Your comment has been post");
 			response.setData(resData);
 
 			commit();
