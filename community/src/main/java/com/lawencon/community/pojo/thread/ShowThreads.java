@@ -6,6 +6,15 @@ public class ShowThreads {
 	
 	private List<PojoThread> data;
 	private Integer countData;
+	private Boolean isPremiumUser;
+	
+	public void setIsPremiumUser(Boolean isPremiumUser) {
+		this.isPremiumUser = isPremiumUser;
+	}
+	
+	public Boolean getIsPremiumUser() {
+		return isPremiumUser;
+	}
 	
 	public void setData(List<PojoThread> data) {
 		this.data = data;

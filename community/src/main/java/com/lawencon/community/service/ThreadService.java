@@ -194,6 +194,7 @@ public class ThreadService extends BaseService<Thread> {
 				detail.setId(value.getId());
 				detail.setPolling(value.getPolling().getId());
 				detail.setPollingDetailsName(value.getPollingDetailsName());
+				detail.setCountVote(userPollingDao.getAllByPollingDetail(value.getId()));
 
 				pojoPollingDetail.add(detail);
 			});
@@ -261,7 +262,7 @@ public class ThreadService extends BaseService<Thread> {
 			}
 
 			resData.setId(result.getId());
-			response.setMessage("Successfully insert new data!");
+			response.setMessage("You create a new thread!");
 			response.setData(resData);
 			commit();
 
