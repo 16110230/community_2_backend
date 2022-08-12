@@ -105,8 +105,8 @@ public class ActivityInvoiceController {
 		
 		return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_PDF)
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
 				.header("Access-Control-Allow-Origin", "*")
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
 				.body(out);
 	}
 }
