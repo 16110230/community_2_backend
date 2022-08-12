@@ -219,6 +219,7 @@ public class ActivityService extends BaseService<Activity>{
 		act.setFile(file.getId());
 		act.setCreatedAt(acts.getCreatedAt());
 		act.setFullName(users.getFullName());
+		act.setUserFile(users.getFile().getId());
 
 		ShowActivityById response = new ShowActivityById();
 		response.setData(act);
