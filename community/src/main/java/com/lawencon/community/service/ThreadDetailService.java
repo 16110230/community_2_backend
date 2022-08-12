@@ -97,7 +97,6 @@ public class ThreadDetailService extends BaseService<ThreadDetails> {
 			Thread thread = threadDao.getById(val.getThread().getId());
 			Users user = usersDao.getById(val.getUser().getId());
 
-			System.err.println(user.getFile().getId());
 			if(user.getFile() != null) {				
 				threadDetail.setUserFile(user.getFile().getId());
 			}
@@ -135,7 +134,7 @@ public class ThreadDetailService extends BaseService<ThreadDetails> {
 
 			ThreadDetails result = threadDetailsDao.saveNew(insert);
 			resData.setId(result.getId());
-			response.setMessage("Successfully insert new data!");
+			response.setMessage("Your comment has been post");
 			response.setData(resData);
 
 			commit();

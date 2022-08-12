@@ -23,6 +23,7 @@ import com.lawencon.community.pojo.PojoUpdateResData;
 import com.lawencon.community.pojo.subscriptions.InsertSubscriptionReq;
 import com.lawencon.community.pojo.subscriptions.PojoSubscription;
 import com.lawencon.community.pojo.subscriptions.ShowSubscriptionById;
+import com.lawencon.community.pojo.subscriptions.ShowSubscriptions;
 import com.lawencon.community.pojo.subscriptions.UpdateSubscriptionReq;
 import com.lawencon.community.util.GenerateCode;
 import com.lawencon.model.SearchQuery;
@@ -247,8 +248,27 @@ public class SubscriptionService extends BaseService<Subscription> {
 		return response;
 	}
 	
-	public boolean isPrem(String id) throws Exception {
-		boolean response = subscriptionDao.isPremium(id);
+	public boolean isPrem() throws Exception {
+		boolean response = subscriptionDao.isPremium(getUserId());
+		
+		return response;
+	}
+	
+	public ShowSubscriptions showAllByUserId(Integer startPage, Integer maxPage) throws Exception {
+		Users user = userDao.getById(getUserId());
+		ShowSubscriptions response = subscriptionDao.getAllByUserId(startPage, maxPage, user.getId());
+		
+		return response;
+	}
+	
+	public ShowSubscriptions showAllUnApproved(Integer startPage, Integer maxPage) throws Exception {
+		ShowSubscriptions response = subscriptionDao.getAllUnApproved(startPage, maxPage);
+		
+		return response;
+	}
+	
+	public ShowSubscriptions showAllApproved(Integer startPage, Integer maxPage) throws Exception {
+		ShowSubscriptions response = subscriptionDao.getAllApproved(startPage, maxPage);
 		
 		return response;
 	}

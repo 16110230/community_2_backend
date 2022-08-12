@@ -1,8 +1,5 @@
 package com.lawencon.community.controller;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,8 +105,13 @@ public class ActivityInvoiceController {
 		
 		return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_PDF)
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
 				.header("Access-Control-Allow-Origin", "*")
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
 				.body(out);
+	}
+	@GetMapping("type-unapproved")
+	public ResponseEntity<?> getAllByTypeAndUnApproved(Integer startPage, Integer maxPage, String code) throws Exception {
+		ShowActivityInvoice result = activityInvoiceService.showAllByTypeAndUnApproved(startPage, maxPage, code);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

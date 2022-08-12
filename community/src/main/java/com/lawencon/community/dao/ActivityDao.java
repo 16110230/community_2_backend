@@ -10,8 +10,10 @@ import org.springframework.stereotype.Repository;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.community.model.Activity;
 import com.lawencon.community.pojo.activity.PojoActivity;
+import com.lawencon.community.pojo.activity.PojoActivityIncomeReport;
 import com.lawencon.community.pojo.activity.PojoActivityReport;
 import com.lawencon.community.pojo.activity.ShowActivities;
+import com.lawencon.community.pojo.activity.ShowActivityIncomeReport;
 import com.lawencon.community.pojo.activity.ShowActivityReports;
 
 @Repository
@@ -190,7 +192,7 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					data.setStartedAt(((Timestamp) objArr[6]).toLocalDateTime());
 					data.setEndedAt(((Timestamp) objArr[7]).toLocalDateTime());
 					data.setActivityTypeName(objArr[8].toString());
-					data.setFile(objArr[9].toString());
+					
 					
 					if(objArr[2] != null) {
 						data.setFee(Integer.valueOf(objArr[2].toString()));
@@ -207,6 +209,9 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 						data.setIsActive(true);
 					}else {
 						data.setIsActive(false);
+					}
+					if(objArr[9] != null) {
+						data.setFile(objArr[9].toString());
 					}
 					
 					res.add(data);
@@ -260,6 +265,61 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					data.setFee(objArr[2].toString());
 					data.setPurchaseDate(((Timestamp) objArr[3]).toLocalDateTime());
 					data.setPaymentStatus(objArr[4].toString());
+					res.add(data);
+				});
+			}
+			response.setData(res);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+  		
+		return response;
+    }
+  	
+  	public ShowActivityIncomeReport getIncomeReportData(String id, LocalDate startDate, LocalDate endDate) {
+  		List<PojoActivityIncomeReport> res = new ArrayList<PojoActivityIncomeReport>();  
+  		ShowActivityIncomeReport response = new ShowActivityIncomeReport();
+  		StringBuilder sqlBuilder = new StringBuilder()
+  				.append("SELECT ROW_NUMBER() OVER (	ORDER BY u2.full_name) as no,  ")
+  				.append("cast(to_char(ai.created_at, 'YYYY-MM-DD') as date) as dateIncome, ")
+  				.append("to_char(sum(a.fee), 'L999G999D99') as income, ")
+  				.append("to_char(sum(a.fee) * 5 / 100, 'L999G999D99') as tax, ")
+  				.append("to_char(sum(a.fee) - (sum(a.fee) * 5 / 100), 'L999G999D99') as fixIncome ")
+  				.append("FROM activity act  ")
+  				.append("JOIN users u ON u.id = act.created_by ")
+  				.append("JOIN activity_invoice ai ON ai.user_id = u.id  ")
+  				.append("JOIN activity a ON a.id = ai.activity_id ")
+  				.append("JOIN users u2 ON u2.id = ai.user_id ")
+  				.append("where act.id = :id ")
+  				.append("AND DATE(act.created_at) BETWEEN :startDate AND :endDate  ")
+  				.append("group by u2.full_name, u2.email, cast(to_char(ai.created_at, 'YYYY-MM-DD')as date), a.fee ");
+  		
+  		try {
+  			Integer size = createNativeQuery(sqlBuilder.toString())
+					.setParameter("id", id)
+					.setParameter("startDate", startDate)
+					.setParameter("endDate", endDate)
+					.getResultList().size();
+			response.setCountData(size);
+			
+			List<?> result = createNativeQuery(sqlBuilder.toString())
+					.setParameter("id", id)
+					.setParameter("startDate", startDate)
+					.setParameter("endDate", endDate)
+					.getResultList();
+			
+			if(result != null) {
+				result.forEach(obj -> {
+					Object[] objArr = (Object[]) obj;
+					PojoActivityIncomeReport data = new PojoActivityIncomeReport();
+					
+					data.setNo(objArr[0].toString());
+					data.setDateIncome(objArr[1].toString());
+					data.setIncome(objArr[2].toString());
+					data.setTax(objArr[3].toString());
+					data.setFixIncome(objArr[4].toString());
 					res.add(data);
 				});
 			}
