@@ -133,7 +133,7 @@ public class ActivityService extends BaseService<Activity>{
 			Activity result = activityDao.saveNew(insert);
       
 			resData.setId(result.getId());
-			response.setMessage("Successfully insert new data!");
+			response.setMessage("You create your own activity!");
 			response.setData(resData);
 
 			commit();
