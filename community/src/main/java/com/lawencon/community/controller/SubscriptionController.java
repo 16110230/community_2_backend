@@ -18,7 +18,9 @@ import com.lawencon.community.pojo.PojoDeleteRes;
 import com.lawencon.community.pojo.PojoInsertRes;
 import com.lawencon.community.pojo.PojoUpdateRes;
 import com.lawencon.community.pojo.subscriptions.InsertSubscriptionReq;
+import com.lawencon.community.pojo.subscriptions.PojoCheckSubs;
 import com.lawencon.community.pojo.subscriptions.PojoSubscription;
+import com.lawencon.community.pojo.subscriptions.ShowCheckSubs;
 import com.lawencon.community.pojo.subscriptions.ShowSubscriptionById;
 import com.lawencon.community.pojo.subscriptions.UpdateSubscriptionReq;
 import com.lawencon.community.service.SubscriptionService;
@@ -65,5 +67,15 @@ public class SubscriptionController {
 	public ResponseEntity<?> getAllByValidate(String query, Integer startPage, Integer maxPage) throws Exception {
 		SearchQuery<PojoSubscription> result = subscriptionService.showAllByValidate(query, startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("user-subs")
+	public ResponseEntity<?> getUserSub() throws Exception {
+		boolean result = subscriptionService.isPrem();
+		PojoCheckSubs isPrem = new PojoCheckSubs();
+		isPrem.setIsPremium(result);
+		ShowCheckSubs data = new ShowCheckSubs();
+		data.setData(isPrem);
+		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 }
