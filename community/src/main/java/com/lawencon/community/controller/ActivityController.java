@@ -1,9 +1,15 @@
 package com.lawencon.community.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +30,7 @@ import com.lawencon.community.pojo.activity.ShowActivityById;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.community.service.ActivityService;
 import com.lawencon.model.SearchQuery;
+import com.lawencon.util.JasperUtil;
 
 @RestController
 @RequestMapping("activities")
@@ -31,6 +38,9 @@ public class ActivityController {
 	
 	@Autowired
 	private ActivityService activityService;
+	
+	@Autowired
+	private JasperUtil jasUtil;
 	
 	@GetMapping
 	public ResponseEntity<?> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
@@ -80,5 +90,26 @@ public class ActivityController {
 		ShowActivities result = activityService.showAllByUserId(startPage, maxPage);
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("download")
+	public ResponseEntity<?> getAllByActivity(String id, String startDate, String endDate) throws Exception{
+		
+		List<?> listData = activityService.showActivityInvoiceReport(id, startDate, endDate).getData();
+		ShowActivityById result = activityService.showById(id);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("activityType", result.getData().getActivityTypeName());
+		map.put("activityName", result.getData().getActivityTitle());
+
+		byte[] out = jasUtil.responseToByteArray(listData, map,"activity_income_A4");
+		
+		String fileName = "report.pdf";
+		
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
+				.header("Access-Control-Allow-Origin", "*")
+				.body(out);
 	}
 }

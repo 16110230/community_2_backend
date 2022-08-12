@@ -61,8 +61,8 @@ public class LoginController {
 		resData.setToken(token);
 		resData.setRefreshToken(userService.updateToken(user.getId())); 
 		
-		if(subsService.isPrem(user.getId())) {
-			resData.setPrem(subsService.isPrem(user.getId()));
+		if(subsService.isPrem()){
+			resData.setPrem(subsService.isPrem());
 		}
 		
 		response.setData(resData);
