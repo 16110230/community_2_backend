@@ -97,7 +97,6 @@ public class ThreadDetailService extends BaseService<ThreadDetails> {
 			Thread thread = threadDao.getById(val.getThread().getId());
 			Users user = usersDao.getById(val.getUser().getId());
 
-			System.err.println(user.getFile().getId());
 			if(user.getFile() != null) {				
 				threadDetail.setUserFile(user.getFile().getId());
 			}

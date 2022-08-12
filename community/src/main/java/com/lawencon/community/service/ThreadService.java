@@ -194,6 +194,7 @@ public class ThreadService extends BaseService<Thread> {
 				detail.setId(value.getId());
 				detail.setPolling(value.getPolling().getId());
 				detail.setPollingDetailsName(value.getPollingDetailsName());
+				detail.setCountVote(userPollingDao.getAllByPollingDetail(value.getId()));
 
 				pojoPollingDetail.add(detail);
 			});
