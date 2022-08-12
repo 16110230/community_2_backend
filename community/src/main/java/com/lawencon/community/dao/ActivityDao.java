@@ -192,7 +192,7 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					data.setStartedAt(((Timestamp) objArr[6]).toLocalDateTime());
 					data.setEndedAt(((Timestamp) objArr[7]).toLocalDateTime());
 					data.setActivityTypeName(objArr[8].toString());
-					data.setFile(objArr[9].toString());
+					
 					
 					if(objArr[2] != null) {
 						data.setFee(Integer.valueOf(objArr[2].toString()));
@@ -209,6 +209,9 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 						data.setIsActive(true);
 					}else {
 						data.setIsActive(false);
+					}
+					if(objArr[9] != null) {
+						data.setFile(objArr[9].toString());
 					}
 					
 					res.add(data);

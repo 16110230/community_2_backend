@@ -216,7 +216,6 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 		update.setPosition(position);
 		update.setVersion(data.getVersion());
 		update.setIsActive(data.getIsActive());
-		update.setBalance(data.getBalance());
 
 		try {
 			begin();
@@ -284,7 +283,7 @@ public class UsersService extends BaseService<Users> implements UserDetailsServi
 
 		return new User(username, user.getUserPassword(), new ArrayList<>());
 	}
-
+	
 	public PojoVerificationCode sendVerificationCode(PojoEmailReq email) throws Exception {
 		String code = generateCode.generate();
 		PojoVerificationCode response = new PojoVerificationCode();

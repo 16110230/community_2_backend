@@ -198,6 +198,7 @@ public class ActivityService extends BaseService<Activity>{
 		ActivityCategory actCat = activityCategoryDao.getById(acts.getActivityCategory().getId());
 		ActivityType actType = activityTypeDao.getById(acts.getActivityType().getId());
 		Users users = usersDao.getById(acts.getCreatedBy());
+		File file = fileDao.getById(acts.getFile().getId());
 		
 		act.setId(acts.getId());
 		act.setActivityTitle(acts.getActivityTitle());
@@ -215,8 +216,10 @@ public class ActivityService extends BaseService<Activity>{
 		act.setTrainer(acts.getTrainer());
 		act.setIsActive(acts.getIsActive());
 		act.setVersion(acts.getVersion());
+		act.setFile(file.getId());
 		act.setCreatedAt(acts.getCreatedAt());
 		act.setFullName(users.getFullName());
+		act.setUserFile(users.getFile().getId());
 
 		ShowActivityById response = new ShowActivityById();
 		response.setData(act);

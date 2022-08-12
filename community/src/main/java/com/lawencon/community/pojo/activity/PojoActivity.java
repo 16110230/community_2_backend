@@ -22,8 +22,15 @@ public class PojoActivity {
 	private String file;
 	private LocalDateTime createdAt;
 	private String fullName;
+	private String userFile;
 	public String getCreatedBy() {
 		return createdBy;
+	}
+	public String getUserFile() {
+		return userFile;
+	}
+	public void setUserFile(String userFile) {
+		this.userFile = userFile;
 	}
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
