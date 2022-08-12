@@ -112,4 +112,9 @@ public class ActivityInvoiceController {
 				.header("Access-Control-Allow-Origin", "*")
 				.body(out);
 	}
+	@GetMapping("type-unapproved")
+	public ResponseEntity<?> getAllByTypeAndUnApproved(Integer startPage, Integer maxPage, String code) throws Exception {
+		ShowActivityInvoice result = activityInvoiceService.showAllByTypeAndUnApproved(startPage, maxPage, code);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

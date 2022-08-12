@@ -268,4 +268,11 @@ public class ActivityInvoiceService extends BaseService<ActivityInvoice> {
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		return LocalDate.parse(dateStr, formatter);
 	}
+	
+	public ShowActivityInvoice showAllByTypeAndUnApproved(Integer startPage, Integer maxPage, String code) throws Exception {
+		String activityId = activityTypeDao.getByCode(code);
+		ShowActivityInvoice response = activityInvoiceDao.getAllByTypeAndUnApproved(startPage, maxPage, activityId);
+
+		return response;
+	}
 }

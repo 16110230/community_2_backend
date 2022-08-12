@@ -14,6 +14,7 @@ public class PojoSubscription {
 	private LocalDateTime orderDate;
 	private Long amount;
 	private String subscriptionCode;
+	private LocalDateTime expiredData;
 
 	public String getSubscriptionCode() {
 		return subscriptionCode;
@@ -102,4 +103,13 @@ public class PojoSubscription {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
+
+	public LocalDateTime getExpiredData() {
+		return expiredData;
+	}
+
+	public void setExpiredData(LocalDateTime expiredData) {
+		this.expiredData = expiredData;
+	}
+	
 }
