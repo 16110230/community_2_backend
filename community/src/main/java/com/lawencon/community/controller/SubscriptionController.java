@@ -22,6 +22,7 @@ import com.lawencon.community.pojo.subscriptions.PojoCheckSubs;
 import com.lawencon.community.pojo.subscriptions.PojoSubscription;
 import com.lawencon.community.pojo.subscriptions.ShowCheckSubs;
 import com.lawencon.community.pojo.subscriptions.ShowSubscriptionById;
+import com.lawencon.community.pojo.subscriptions.ShowSubscriptions;
 import com.lawencon.community.pojo.subscriptions.UpdateSubscriptionReq;
 import com.lawencon.community.service.SubscriptionService;
 import com.lawencon.model.SearchQuery;
@@ -69,6 +70,23 @@ public class SubscriptionController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping("user")
+	public ResponseEntity<?> getAllByUserId( Integer startPage, Integer maxPage) throws Exception {
+		ShowSubscriptions result = subscriptionService.showAllByUserId(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("unapproved")
+	public ResponseEntity<?> getAllUnApproved( Integer startPage, Integer maxPage) throws Exception {
+		ShowSubscriptions result = subscriptionService.showAllUnApproved(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("approved")
+	public ResponseEntity<?> getAllApproved( Integer startPage, Integer maxPage) throws Exception {
+		ShowSubscriptions result = subscriptionService.showAllApproved(startPage, maxPage);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
 	@GetMapping("user-subs")
 	public ResponseEntity<?> getUserSub() throws Exception {
 		boolean result = subscriptionService.isPrem();

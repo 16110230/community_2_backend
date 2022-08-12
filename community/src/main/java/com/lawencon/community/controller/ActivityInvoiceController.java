@@ -109,4 +109,9 @@ public class ActivityInvoiceController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
 				.body(out);
 	}
+	@GetMapping("type-unapproved")
+	public ResponseEntity<?> getAllByTypeAndUnApproved(Integer startPage, Integer maxPage, String code) throws Exception {
+		ShowActivityInvoice result = activityInvoiceService.showAllByTypeAndUnApproved(startPage, maxPage, code);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }
