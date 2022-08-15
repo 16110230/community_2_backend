@@ -86,7 +86,7 @@ public class SubscriptionController {
 	public ResponseEntity<?> getAllApproved( Integer startPage, Integer maxPage) throws Exception {
 		ShowSubscriptions result = subscriptionService.showAllApproved(startPage, maxPage);
 		return new ResponseEntity<>(result, HttpStatus.OK);
-
+	}
 	@GetMapping("user-subs")
 	public ResponseEntity<?> getUserSub() throws Exception {
 		boolean result = subscriptionService.isPrem();

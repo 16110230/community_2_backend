@@ -142,7 +142,7 @@
                                     <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><span style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">${code}</span></td>
+                                                <td align="center" style="border-radius: 3px;" bgcolor="#efa738"><span style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #efa738; display: inline-block;">${code}</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -161,6 +161,32 @@
                             <p style="margin: 0;">Regards,<br>Lunity Team</p>
                         </td>
                     </tr>
+                    <td style="padding:30px;background:#efa738;">
+		              <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;">
+		                <tr>
+		                  <td style="padding:0;width:50%;" align="left">
+		                    <p style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
+		                      &copy; Lunity 2022
+		                      <br/>+62 812 4432 7521 
+		                      <br/>hr@lunity.com                       	
+		                      <br/>Jl. Casablanca No.Kav 88, Kota Jakarta Selatan, 12870
+		                    </p>
+		                  </td>
+		                  <td style="padding:0;width:50%;" align="right">
+		                    <table role="presentation" style="border-collapse:collapse;border:0;border-spacing:0;">
+		                      <tr>
+		                        <td style="padding:0 0 0 10px;width:38px;">
+		                          <a href="http://www.twitter.com/" style="color:#ffffff;"><img src="https://assets.codepen.io/210284/tw_1.png" alt="Twitter" width="38" style="height:auto;display:block;border:0;" /></a>
+		                        </td>
+		                        <td style="padding:0 0 0 10px;width:38px;">
+		                          <a href="http://www.facebook.com/" style="color:#ffffff;"><img src="https://assets.codepen.io/210284/fb_1.png" alt="Facebook" width="38" style="height:auto;display:block;border:0;" /></a>
+		                        </td>
+		                      </tr>
+		                    </table>
+		                  </td>
+		                </tr>
+		              </table>
+            		</td>
                 </table>
             </td>
         </tr>

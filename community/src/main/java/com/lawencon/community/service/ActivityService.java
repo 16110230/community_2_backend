@@ -31,6 +31,7 @@ import com.lawencon.community.pojo.activity.InsertActivityReq;
 import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
+import com.lawencon.community.pojo.activity.ShowActivityIncomeReport;
 import com.lawencon.community.pojo.activity.ShowActivityReports;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.model.SearchQuery;
@@ -198,7 +199,15 @@ public class ActivityService extends BaseService<Activity>{
 		ActivityCategory actCat = activityCategoryDao.getById(acts.getActivityCategory().getId());
 		ActivityType actType = activityTypeDao.getById(acts.getActivityType().getId());
 		Users users = usersDao.getById(acts.getCreatedBy());
-		File file = fileDao.getById(acts.getFile().getId());
+		
+		if(acts.getFile() != null) {
+			File file = fileDao.getById(acts.getFile().getId());
+			act.setFile(file.getId());
+		}
+		
+		if(users.getFile() != null) {
+			act.setUserFile(users.getFile().getId());
+		}
 		
 		act.setId(acts.getId());
 		act.setActivityTitle(acts.getActivityTitle());
@@ -216,10 +225,8 @@ public class ActivityService extends BaseService<Activity>{
 		act.setTrainer(acts.getTrainer());
 		act.setIsActive(acts.getIsActive());
 		act.setVersion(acts.getVersion());
-		act.setFile(file.getId());
 		act.setCreatedAt(acts.getCreatedAt());
 		act.setFullName(users.getFullName());
-		act.setUserFile(users.getFile().getId());
 
 		ShowActivityById response = new ShowActivityById();
 		response.setData(act);
@@ -301,8 +308,8 @@ public class ActivityService extends BaseService<Activity>{
         return response;
     }
   	
-  	public ShowActivityReports showActivityInvoiceReport(String id, String startDate, String endDate) {
-		ShowActivityReports response = activityDao.getReportData(id, stringToLocalDate(startDate),
+  	public ShowActivityIncomeReport showActivityInvoiceReport(String id, String startDate, String endDate) {
+		ShowActivityIncomeReport response = activityDao.getIncomeReportData(id, stringToLocalDate(startDate),
 				stringToLocalDate(endDate));
 		return response;
 	}
