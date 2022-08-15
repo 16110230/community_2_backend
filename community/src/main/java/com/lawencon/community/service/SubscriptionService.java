@@ -72,7 +72,7 @@ public class SubscriptionService extends BaseService<Subscription> {
 	public ShowSubscriptionById showById(String id) throws Exception {
 		ShowSubscriptionById response = new ShowSubscriptionById();			
 		PojoSubscription result = new PojoSubscription();
-		Subscription subscription = subscriptionDao.getById(getUserId());
+		Subscription subscription = subscriptionDao.getById(id);
 //		if() {
 //		}
 		result.setId(subscription.getId());
