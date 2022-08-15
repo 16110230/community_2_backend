@@ -282,8 +282,8 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
   		List<PojoActivityIncomeReport> res = new ArrayList<PojoActivityIncomeReport>();  
   		ShowActivityIncomeReport response = new ShowActivityIncomeReport();
   		StringBuilder sqlBuilder = new StringBuilder()
-  				.append("SELECT ROW_NUMBER() OVER (	ORDER BY u2.full_name) as no,  ")
-  				.append("cast(to_char(ai.created_at, 'YYYY-MM-DD') as date) as dateIncome, ")
+  				.append("SELECT  ")
+//  				.append("cast(to_char(ai.created_at, 'YYYY-MM-DD') as date) as dateIncome, ")
   				.append("to_char(sum(a.fee), 'L999G999D99') as income, ")
   				.append("to_char(sum(a.fee) * 5 / 100, 'L999G999D99') as tax, ")
   				.append("to_char(sum(a.fee) - (sum(a.fee) * 5 / 100), 'L999G999D99') as fixIncome ")
@@ -315,11 +315,10 @@ public class ActivityDao extends AbstractJpaDao<Activity>{
 					Object[] objArr = (Object[]) obj;
 					PojoActivityIncomeReport data = new PojoActivityIncomeReport();
 					
-					data.setNo(objArr[0].toString());
-					data.setDateIncome(objArr[1].toString());
-					data.setIncome(objArr[2].toString());
-					data.setTax(objArr[3].toString());
-					data.setFixIncome(objArr[4].toString());
+//					data.setDateIncome(objArr[0].toString());
+					data.setIncome(objArr[0].toString());
+					data.setTax(objArr[1].toString());
+					data.setFixIncome(objArr[2].toString());
 					res.add(data);
 				});
 			}

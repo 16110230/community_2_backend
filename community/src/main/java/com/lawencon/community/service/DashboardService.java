@@ -45,8 +45,8 @@ public class DashboardService {
 		Long usersDaily = userDao.countAllByToday();
 		Long users = userDao.countAll();
 		
-		String activityTypeEventId = activityTypeDao.getByCode(ActivityTypeCategory.EVENT.getCode());
-		String activityTypeCourseId = activityTypeDao.getByCode(ActivityTypeCategory.COURSE.getCode());
+		String activityTypeEventId = activityTypeDao.getByCode(ActivityTypeCategory.EVENT.name());
+		String activityTypeCourseId = activityTypeDao.getByCode(ActivityTypeCategory.COURSE.name());
 		
 		Long activityEvent = activityDao.countAllByToday(activityTypeEventId);
 		Long activityCourse = activityDao.countAllByToday(activityTypeCourseId);

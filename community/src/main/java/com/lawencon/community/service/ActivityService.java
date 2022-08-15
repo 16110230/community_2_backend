@@ -31,6 +31,7 @@ import com.lawencon.community.pojo.activity.InsertActivityReq;
 import com.lawencon.community.pojo.activity.PojoActivity;
 import com.lawencon.community.pojo.activity.ShowActivities;
 import com.lawencon.community.pojo.activity.ShowActivityById;
+import com.lawencon.community.pojo.activity.ShowActivityIncomeReport;
 import com.lawencon.community.pojo.activity.ShowActivityReports;
 import com.lawencon.community.pojo.activity.UpdateActivityReq;
 import com.lawencon.model.SearchQuery;
@@ -301,8 +302,8 @@ public class ActivityService extends BaseService<Activity>{
         return response;
     }
   	
-  	public ShowActivityReports showActivityInvoiceReport(String id, String startDate, String endDate) {
-		ShowActivityReports response = activityDao.getReportData(id, stringToLocalDate(startDate),
+  	public ShowActivityIncomeReport showActivityInvoiceReport(String id, String startDate, String endDate) {
+		ShowActivityIncomeReport response = activityDao.getIncomeReportData(id, stringToLocalDate(startDate),
 				stringToLocalDate(endDate));
 		return response;
 	}
